@@ -88,7 +88,22 @@
         .btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 10px; justify-items: center; }
+        .team-grid { 
+            display: grid; 
+            /* Fixed 180px width so cards don't stretch */
+            grid-template-columns: repeat(auto-fill, 180px); 
+            /* Increased spacing between rows and columns */
+            gap: 10px 45px; 
+            /* More breathing room around the edges of the screen */
+            padding: 40px; 
+            /* Centers the grid within the container */
+            justify-content: center; 
+            margin: 0 auto;
+            /* This width ensures exactly 5 columns + the gaps */
+            max-width: 1150px; 
+
+
+}
     </style>
 </head>
 <body>
@@ -196,7 +211,20 @@
         </div>
     </div>
 
-    <div id="view-team" class="view"><div id="teamGrid" class="team-grid"></div></div>
+    <div id="view-team" class="view">
+    <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
+        <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
+        <select id="squad-sort" class="login-input" style="width: 220px; margin: 0; padding: 8px; font-size: 0.8rem; border-color: #333;" onchange="renderSquad()">
+            <option value="date-desc">Date Collected (Newest)</option>
+            <option value="date-asc">Date Collected (Oldest)</option>
+            <option value="value-desc">Market Value (Highest)</option>
+            <option value="value-asc">Market Value (Lowest)</option>
+            <option value="rating-desc">Rating (Highest)</option>
+        </select>
+    </div>
+
+    <div id="teamGrid" class="team-grid"></div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -565,10 +593,33 @@ async function openPack() {
         }
 
         function renderSquad() {
-            const grid = document.getElementById('teamGrid');
-            grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
-            updateUI();
+    const grid = document.getElementById('teamGrid');
+    const sortVal = document.getElementById('squad-sort').value;
+
+    // 1. Apply Sort Logic
+    mySquad.sort((a, b) => {
+        if (sortVal === 'date-desc') {
+            // We use instanceId because it contains the timestamp from Date.now()
+            return b.instanceId.split('_')[1] - a.instanceId.split('_')[1];
+        } 
+        else if (sortVal === 'date-asc') {
+            return a.instanceId.split('_')[1] - b.instanceId.split('_')[1];
+        } 
+        else if (sortVal === 'value-desc') {
+            return getCardValue(b) - getCardValue(a);
+        } 
+        else if (sortVal === 'value-asc') {
+            return getCardValue(a) - getCardValue(b);
         }
+        else if (sortVal === 'rating-desc') {
+            return b.rating - a.rating;
+        }
+    });
+
+    // 2. Render the sorted grid
+    grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
+    updateUI();
+}
 
         // ─── CARD DATABASE CATALOG ───────────────────────────────────────────────
         function openCatalog() {
