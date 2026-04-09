@@ -250,7 +250,7 @@
             <div id="packArea">
                 <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10 🪙)</button>
                 <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (800 🪙)</button>
-                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (2000 🪙)</button>
+                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1400 🪙)</button>
             </div>
         </div>
 
@@ -539,7 +539,7 @@
 
 
         async function openPack() {
-            const costs = { std: 10, pre: 800, elt: 2000 };
+            const costs = { std: 10, pre: 800, elt: 1400 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             
             balance -= costs[activeTier];
