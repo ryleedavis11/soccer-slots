@@ -43,34 +43,34 @@
         #welcome-msg { color: #888; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; }
 
         /* Dramatic Shake for the pack */
-.suspense-shake {
-    animation: packShake 0.1s infinite;
-}
+        .suspense-shake {
+            animation: packShake 0.1s infinite;
+        }
 
-@keyframes packShake {
-    0% { transform: translate(1px, 1px) rotate(0deg); }
-    25% { transform: translate(-1px, -2px) rotate(-1deg); }
-    50% { transform: translate(-3px, 0px) rotate(1deg); }
-    75% { transform: translate(3px, 2px) rotate(0deg); }
-    100% { transform: translate(1px, -1px) rotate(1deg); }
-}
+        @keyframes packShake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            25% { transform: translate(-1px, -2px) rotate(-1deg); }
+            50% { transform: translate(-3px, 0px) rotate(1deg); }
+            75% { transform: translate(3px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -1px) rotate(1deg); }
+        }
 
-/* Flash effect for the background */
-.walkout-flash {
-    position: fixed;
-    inset: 0;
-    background: white;
-    z-index: 10000;
-    opacity: 0;
-    pointer-events: none;
-    animation: flashTrigger 1.5s ease-out;
-}
+        /* Flash effect for the background */
+        .walkout-flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            animation: flashTrigger 1.5s ease-out;
+        }
 
-@keyframes flashTrigger {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    100% { opacity: 0; }
-}
+        @keyframes flashTrigger {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 0; }
+        }
 
         /* FOIL PACKS */
         .pack-container { position: relative; width: 220px; height: 320px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 10px; }
@@ -79,14 +79,14 @@
         .galaxy-nebula { position: absolute; inset: -50%; background: radial-gradient(circle at 30% 30%, rgba(188, 19, 254, 0.6) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(75, 0, 130, 0.6) 0%, transparent 50%); filter: blur(40px); animation: nebulaShift 8s infinite alternate ease-in-out; z-index: 1; }
         @keyframes nebulaShift { from { transform: rotate(0deg) scale(1); } to { transform: rotate(20deg) scale(1.3); } }
         .premium-glow { position: absolute; inset: -20%; background: radial-gradient(circle at center, rgba(255, 217, 0, 0.658) 0%, transparent 70%);  filter: blur(30px); 
-    animation: goldPulse 4s infinite alternate ease-in-out; 
-    z-index: 1; 
-}
+            animation: goldPulse 4s infinite alternate ease-in-out; 
+            z-index: 1; 
+        }
 
-@keyframes goldPulse { 
-    from { opacity: 0.5; transform: scale(1); } 
-    to { opacity: 0.8; transform: scale(1.2); } 
-}
+        @keyframes goldPulse { 
+            from { opacity: 0.5; transform: scale(1); } 
+            to { opacity: 0.8; transform: scale(1.2); } 
+        }
         .sealed-player-render { width: 90%; height: 80%; object-fit: contain; z-index: 4; filter: drop-shadow(0 0 15px rgba(0,0,0,0.8)); pointer-events: none; }
         .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
         .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
@@ -107,6 +107,13 @@
         .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
+
+        /* LEADERBOARD TABLE */
+        .rank-table { width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse; background: #161616; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .rank-table th { background: #222; color: #3ecf8e; padding: 15px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .rank-table td { padding: 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
+        .rank-table tr:hover { background: #1a1a1a; }
+        .rank-gold { color: #ffd700; font-weight: bold; }
 
         /* MODAL */
         #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
@@ -140,9 +147,7 @@
             margin: 0 auto;
             /* This width ensures exactly 5 columns + the gaps */
             max-width: 1150px; 
-
-
-}
+        }
     </style>
 </head>
 <body>
@@ -180,6 +185,7 @@
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
             <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>)</button>
+            <button id="nav-rank" onclick="showView('rank')">RANKINGS</button>
             <button id="logout-btn" onclick="handleLogout()">LOGOUT</button>
         </div>
         <div class="nav-metric nav-right">BALANCE: <span class="bal-text">0</span> 🪙</div>
@@ -250,20 +256,26 @@
         </div>
     </div>
 
-    <div id="view-team" class="view">
-    <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
-        <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
-        <select id="squad-sort" class="login-input" style="width: 220px; margin: 0; padding: 8px; font-size: 0.8rem; border-color: #333;" onchange="renderSquad()">
-            <option value="date-desc">Date Collected (Newest)</option>
-            <option value="date-asc">Date Collected (Oldest)</option>
-            <option value="value-desc">Market Value (Highest)</option>
-            <option value="value-asc">Market Value (Lowest)</option>
-            <option value="rating-desc">Rating (Highest)</option>
-        </select>
+    <div id="view-rank" class="view">
+        <h1 style="color: #3ecf8e; text-align: center;">GLOBAL RANKINGS</h1>
+        <p style="color: #888; text-align: center; margin-bottom: 30px;">TOP 25 EXECUTIVE CLUBS</p>
+        <div id="leaderboard-container"></div>
     </div>
 
-    <div id="teamGrid" class="team-grid"></div>
-</div>
+    <div id="view-team" class="view">
+        <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
+            <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
+            <select id="squad-sort" class="login-input" style="width: 220px; margin: 0; padding: 8px; font-size: 0.8rem; border-color: #333;" onchange="renderSquad()">
+                <option value="date-desc">Date Collected (Newest)</option>
+                <option value="date-asc">Date Collected (Oldest)</option>
+                <option value="value-desc">Market Value (Highest)</option>
+                <option value="value-asc">Market Value (Lowest)</option>
+                <option value="rating-desc">Rating (Highest)</option>
+            </select>
+        </div>
+
+        <div id="teamGrid" class="team-grid"></div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -364,6 +376,7 @@
                     username: username,
                     balance: 1000,
                     squad: [],
+                    club_value: 0,
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' })
                 .select();
@@ -441,11 +454,13 @@
                 mySquad = data.squad || [];
                 updateUI();
                 renderSquad();
+                saveGame();
             }
         }
 
         async function saveGame() {
             if (!currentUser) return;
+            const cv = mySquad.reduce((sum, p) => sum + getCardValue(p), 0);
             await _supabase
                 .from('user_saves')
                 .upsert({
@@ -454,6 +469,7 @@
                     username: currentUser.user_metadata?.username || '',
                     balance,
                     squad: mySquad,
+                    club_value: cv,
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' });
         }
@@ -472,111 +488,127 @@
         }
 
         function preparePack(tier) {
-    activeTier = tier;
-    document.getElementById('packArea').style.display = 'none';
-    document.getElementById('default-message').style.display = 'none';
-    
-    // DECIDE WHICH BACKGROUND TO SHOW
-    let specialLayer = '';
-    if (tier === 'elt') {
-        specialLayer = '<div class="galaxy-nebula"></div>';
-    } else if (tier === 'pre') {
-        specialLayer = '<div class="premium-glow"></div>';
-    }
+            activeTier = tier;
+            document.getElementById('packArea').style.display = 'none';
+            document.getElementById('default-message').style.display = 'none';
+            
+            // DECIDE WHICH BACKGROUND TO SHOW
+            let specialLayer = '';
+            if (tier === 'elt') {
+                specialLayer = '<div class="galaxy-nebula"></div>';
+            } else if (tier === 'pre') {
+                specialLayer = '<div class="premium-glow"></div>';
+            }
 
-    const visual = document.getElementById('pack-visual');
-    visual.innerHTML = `
-        <div class="pack-container" onclick="openPack()">
-            <div class="foil-pack">
-                ${specialLayer}  <div class="foil-shine"></div>
-                <div class="pack-label">${tier.toUpperCase()}</div>
-                <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
-            </div>
-        </div>
-        <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
-    
-    visual.style.display = 'block';
-}
+            const visual = document.getElementById('pack-visual');
+            visual.innerHTML = `
+                <div class="pack-container" onclick="openPack()">
+                    <div class="foil-pack">
+                        ${specialLayer}  <div class="foil-shine"></div>
+                        <div class="pack-label">${tier.toUpperCase()}</div>
+                        <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
+                    </div>
+                </div>
+                <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
+            
+            visual.style.display = 'block';
+        }
 
 
-async function openPack() {
-    const costs = { std: 10, pre: 800, elt: 2000 };
-    if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
-    
-    balance -= costs[activeTier];
-    const roll = Math.random() * 100;
-    let minR, maxR;
+        async function openPack() {
+            const costs = { std: 10, pre: 800, elt: 2000 };
+            if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
+            
+            balance -= costs[activeTier];
+            const roll = Math.random() * 100;
+            let minR, maxR;
 
-    // --- 1. RATING BRACKETS (Keep your existing logic here) ---
-    if (activeTier === 'std') {
-        if (roll < 50) { minR = 70; maxR = 79; }
-        else if (roll < 80) { minR = 80; maxR = 82; }
-        else if (roll < 90) { minR = 83; maxR = 83; }
-        else if (roll < 95) { minR = 84; maxR = 85; }
-        else if (roll < 98) { minR = 86; maxR = 86; }
-        else if (roll < 99.5) { minR = 87; maxR = 89; }
-        else { minR = 90; maxR = 99; }
-    } else if (activeTier === 'pre') {
-        if (roll < 50) { minR = 80; maxR = 82; }
-        else if (roll < 70) { minR = 83; maxR = 83; }
-        else if (roll < 80) { minR = 84; maxR = 85; }
-        else if (roll < 90) { minR = 86; maxR = 86; }
-        else if (roll < 95) { minR = 87; maxR = 88; }
-        else if (roll < 99) { minR = 89; maxR = 89; }
-        else { minR = 90; maxR = 99; }
-    } else {
-        if (roll < 50) { minR = 84; maxR = 86; }
-        else if (roll < 70) { minR = 87; maxR = 87; }
-        else if (roll < 87) { minR = 88; maxR = 88; }
-        else if (roll < 97) { minR = 89; maxR = 89; }
-        else { minR = 90; maxR = 99; }
-    }
+            // --- 1. RATING BRACKETS (Keep your existing logic here) ---
+            if (activeTier === 'std') {
+                if (roll < 50) { minR = 70; maxR = 79; }
+                else if (roll < 80) { minR = 80; maxR = 82; }
+                else if (roll < 90) { minR = 83; maxR = 83; }
+                else if (roll < 95) { minR = 84; maxR = 85; }
+                else if (roll < 98) { minR = 86; maxR = 86; }
+                else if (roll < 99.5) { minR = 87; maxR = 89; }
+                else { minR = 90; maxR = 99; }
+            } else if (activeTier === 'pre') {
+                if (roll < 50) { minR = 80; maxR = 82; }
+                else if (roll < 70) { minR = 83; maxR = 83; }
+                else if (roll < 80) { minR = 84; maxR = 85; }
+                else if (roll < 90) { minR = 86; maxR = 86; }
+                else if (roll < 95) { minR = 87; maxR = 88; }
+                else if (roll < 99) { minR = 89; maxR = 89; }
+                else { minR = 90; maxR = 99; }
+            } else {
+                if (roll < 50) { minR = 84; maxR = 86; }
+                else if (roll < 70) { minR = 87; maxR = 87; }
+                else if (roll < 87) { minR = 88; maxR = 88; }
+                else if (roll < 97) { minR = 89; maxR = 89; }
+                else { minR = 90; maxR = 99; }
+            }
 
-    // --- 2. FETCH PLAYER ---
-    let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR);
-    if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
+            // --- 2. FETCH PLAYER ---
+            let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR);
+            if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
 
-    currentPull = data[Math.floor(Math.random() * data.length)];
-    currentPull.instanceId = "inst_" + Date.now();
-    currentPull.collectedDate = new Date().toLocaleDateString();
-    
-    if (currentPull.rating >= 87 && Math.random() < 0.02) {
-        currentPull.isSuperHolo = true;
-    }
+            currentPull = data[Math.floor(Math.random() * data.length)];
+            currentPull.instanceId = "inst_" + Date.now();
+            currentPull.collectedDate = new Date().toLocaleDateString();
+            
+            if (currentPull.rating >= 87 && Math.random() < 0.02) {
+                currentPull.isSuperHolo = true;
+            }
 
-    // --- 3. SUSPENSE LOGIC (THE NEW PART) ---
-    const packVisual = document.getElementById('pack-visual');
-    
-    if (currentPull.rating > 87) {
-        // Trigger the suspense
-        packVisual.classList.add('suspense-shake');
-        
-        // Wait for 2 seconds (the suspense phase)
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Trigger the flash overlay
-        const flash = document.createElement('div');
-        flash.className = 'walkout-flash';
-        document.body.appendChild(flash);
-        setTimeout(() => flash.remove(), 1500);
-        
-        packVisual.classList.remove('suspense-shake');
-    }
+            // --- 3. SUSPENSE LOGIC (THE NEW PART) ---
+            const packVisual = document.getElementById('pack-visual');
+            
+            if (currentPull.rating > 87) {
+                // Trigger the suspense
+                packVisual.classList.add('suspense-shake');
+                
+                // Wait for 2 seconds (the suspense phase)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Trigger the flash overlay
+                const flash = document.createElement('div');
+                flash.className = 'walkout-flash';
+                document.body.appendChild(flash);
+                setTimeout(() => flash.remove(), 1500);
+                
+                packVisual.classList.remove('suspense-shake');
+            }
 
-    // --- 4. REVEAL ---
-    const val = getCardValue(currentPull);
-    const reveal = document.getElementById('pack-reveal');
-    reveal.innerHTML = generateCardHtml(currentPull, false);
-    
-    packVisual.style.display = 'none';
-    reveal.style.display = 'block';
-    document.getElementById('choiceArea').style.display = 'flex';
-    document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
-    
-    updateUI();
-    await saveGame(); 
+            // --- 4. REVEAL ---
+            const val = getCardValue(currentPull);
+            const reveal = document.getElementById('pack-reveal');
+            reveal.innerHTML = generateCardHtml(currentPull, false);
+            
+            packVisual.style.display = 'none';
+            reveal.style.display = 'block';
+            document.getElementById('choiceArea').style.display = 'flex';
+            document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
+            
+            updateUI();
+            await saveGame(); 
 
-}
+        }
+
+        // ─── LEADERBOARD LOGIC ───────────────────────────────────────────────────────
+        async function loadLeaderboard() {
+            const container = document.getElementById('leaderboard-container');
+            container.innerHTML = '<p style="text-align:center; color:#555;">FETCHING DATA...</p>';
+            const { data, error } = await _supabase.from('user_saves').select('username, club_value').order('club_value', { ascending: false }).limit(25);
+            if (error) { container.innerHTML = `<p style="color:red">Error: ${error.message}</p>`; return; }
+            
+            let html = `<table class="rank-table"><tr><th>Rank</th><th>Manager</th><th>Club Value</th></tr>`;
+            data.forEach((user, i) => {
+                const isTop = i < 3;
+                html += `<tr><td class="${isTop ? 'rank-gold' : ''}">#${i + 1}</td><td>${user.username || 'ANONYMOUS'}</td><td class="rank-gold">${user.club_value.toLocaleString()} 🪙</td></tr>`;
+            });
+            html += `</table>`;
+            container.innerHTML = html;
+        }
 
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
@@ -627,6 +659,7 @@ async function openPack() {
             document.getElementById('view-' + id).classList.add('active');
             const navBtn = document.getElementById('nav-' + id);
             if (navBtn) navBtn.classList.add('active');
+            if (id === 'rank') loadLeaderboard(); // Trigger Leaderboard
             if (id !== 'slots') resetUI();
         }
 
@@ -649,33 +682,32 @@ async function openPack() {
         }
 
         function renderSquad() {
-    const grid = document.getElementById('teamGrid');
-    const sortVal = document.getElementById('squad-sort').value;
+            const grid = document.getElementById('teamGrid');
+            const sortVal = document.getElementById('squad-sort').value;
 
-    // 1. Apply Sort Logic
-    mySquad.sort((a, b) => {
-        if (sortVal === 'date-desc') {
-            // We use instanceId because it contains the timestamp from Date.now()
-            return b.instanceId.split('_')[1] - a.instanceId.split('_')[1];
-        } 
-        else if (sortVal === 'date-asc') {
-            return a.instanceId.split('_')[1] - b.instanceId.split('_')[1];
-        } 
-        else if (sortVal === 'value-desc') {
-            return getCardValue(b) - getCardValue(a);
-        } 
-        else if (sortVal === 'value-asc') {
-            return getCardValue(a) - getCardValue(b);
-        }
-        else if (sortVal === 'rating-desc') {
-            return b.rating - a.rating;
-        }
-    });
+            // 1. Apply Sort Logic
+            mySquad.sort((a, b) => {
+                if (sortVal === 'date-desc') {
+                    return b.instanceId.split('_')[1] - a.instanceId.split('_')[1];
+                } 
+                else if (sortVal === 'date-asc') {
+                    return a.instanceId.split('_')[1] - b.instanceId.split('_')[1];
+                } 
+                else if (sortVal === 'value-desc') {
+                    return getCardValue(b) - getCardValue(a);
+                } 
+                else if (sortVal === 'value-asc') {
+                    return getCardValue(a) - getCardValue(b);
+                }
+                else if (sortVal === 'rating-desc') {
+                    return b.rating - a.rating;
+                }
+            });
 
-    // 2. Render the sorted grid
-    grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
-    updateUI();
-}
+            // 2. Render the sorted grid
+            grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
+            updateUI();
+        }
 
         // ─── CARD DATABASE CATALOG ───────────────────────────────────────────────
         function openCatalog() {
