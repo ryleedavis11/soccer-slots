@@ -15,7 +15,7 @@
         .auth-error { color: #ef4444; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
         .auth-success { color: #3ecf8e; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
         #auth-subtitle { color: #555; font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 1px; }
- 
+
         /* NAVIGATION */
         nav { background: #161616; padding: 0 20px; display: none; justify-content: space-between; align-items: center; height: 60px; border-bottom: 2px solid #333; z-index: 1000; flex-shrink: 0; }
         .nav-metric { width: 220px; font-weight: 900; font-size: 0.85rem; letter-spacing: 1px; }
@@ -26,12 +26,15 @@
         nav button.active { color: #3ecf8e; border-bottom: 2px solid #3ecf8e; padding-bottom: 5px; }
         #logout-btn { color: #ef4444 !important; font-size: 0.75rem !important; margin-left: 5px !important; }
         #logout-btn:hover { color: #ff6b6b !important; }
- 
+
         /* VIEW MANAGEMENT */
         .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
         .view.active { display: block; }
-        #view-home.active, #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
- 
+        
+        /* Updated layout rules to prevent the catalog top cutoff */
+        #view-home.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; padding-top: 30px; }
+
         /* HOME SCREEN */
         .marquee-container { position: absolute; top: 0; left: 0; width: 100%; height: 300px; z-index: 1; opacity: 0.15; pointer-events: none; overflow: hidden; white-space: nowrap; padding-top: 20px; }
         .marquee-track { display: flex; animation: scroll 60s linear infinite; gap: 20px; width: max-content; }
@@ -39,7 +42,7 @@
         .home-content { position: relative; z-index: 100; max-width: 500px; width: 90%; background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .home-logo { font-size: 3rem; font-weight: 900; color: #3ecf8e; margin-bottom: 5px; text-shadow: 0 0 20px rgba(62, 207, 142, 0.3); }
         #welcome-msg { color: #888; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; }
- 
+
         /* FOIL PACKS */
         .pack-container { position: relative; width: 220px; height: 320px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 10px; }
         .pack-container:hover { transform: scale(1.05); }
@@ -50,7 +53,7 @@
         .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
         .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
         @keyframes shine { from { transform: translateX(-100%) translateY(-100%); } to { transform: translateX(100%) translateY(100%); } }
- 
+
         /* CARD DESIGN */
         .premium-card { width: 180px; height: 250px; border-radius: 12px; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: inline-flex; flex-direction: column; justify-content: flex-end; padding: 10px; border: 2px solid rgba(255,255,255,0.1); margin: 10px; background-size: cover; background-position: center; vertical-align: top; text-align: left; cursor: pointer; flex-shrink: 0; z-index: 20; }
         .premium-card.common    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/bronze.jpg'); }
@@ -58,7 +61,7 @@
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
         .premium-card.legendary { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg'); border-color: #bc13fe; }
         .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
- 
+
         .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
         .card-pos { left: 10px; background: #3ecf8e; }
         .card-ovr { right: 10px; background: #ffd700; }
@@ -66,52 +69,51 @@
         .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
- 
+
         /* MODAL */
         #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; max-width: 400px; width: 90%; position: relative; }
         .data-point { margin: 15px 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         .data-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
         .data-value { font-size: 1.2rem; font-weight: bold; color: #3ecf8e; }
- 
+
         /* LOADING OVERLAY */
         #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
         #loading-overlay.active { display: flex; }
         .spinner { width: 40px; height: 40px; border: 3px solid #333; border-top-color: #3ecf8e; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
- 
+
         /* UI ELEMENTS */
         #slot-container { border: 2px solid #3ecf8e; display: flex; flex-direction: column; padding: 30px; border-radius: 25px; background: #161616; max-width: 450px; width: 100%; margin: 0 auto; position: relative; z-index: 50; }
         #display-area { min-height: 420px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 10px; justify-items: center; }
+        
+        /* Updated grid to exactly 180px to fit 5 cards across */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 10px; justify-items: center; }
     </style>
 </head>
 <body>
- 
-    <!-- LOADING OVERLAY -->
+
     <div id="loading-overlay">
         <div class="spinner"></div>
         <div style="color: #555; font-size: 0.85rem; letter-spacing: 2px;">LOADING...</div>
     </div>
- 
-    <!-- AUTH SCREEN -->
+
     <div id="view-login" class="active">
         <div class="login-box">
             <h1 style="color: #3ecf8e; margin-bottom: 0;">PRO EXECUTIVE</h1>
             <p id="auth-subtitle">CREATE ACCOUNT</p>
             <div id="auth-error" class="auth-error"></div>
             <div id="auth-success" class="auth-success"></div>
- 
-            <!-- Register fields (shown by default) -->
+
             <div id="field-username">
                 <input type="text" id="username" class="login-input" placeholder="USERNAME">
             </div>
- 
+
             <input type="email" id="email" class="login-input" placeholder="EMAIL">
             <input type="password" id="password" class="login-input" placeholder="PASSWORD">
- 
+
             <button class="btn" id="auth-submit-btn" style="background: #3ecf8e; color: black; margin-top: 15px;" onclick="handleAuth()">
                 CREATE ACCOUNT
             </button>
@@ -119,7 +121,7 @@
             <button class="auth-toggle" onclick="toggleAuthMode()">Already have an account? Sign In</button>
         </div>
     </div>
- 
+
     <nav id="main-nav">
         <div class="nav-metric nav-left">CLUB VALUE: <span id="nav-club-value">0</span> 🪙</div>
         <div class="nav-center">
@@ -130,7 +132,7 @@
         </div>
         <div class="nav-metric nav-right">BALANCE: <span class="bal-text">0</span> 🪙</div>
     </nav>
- 
+
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modal-card-render" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
@@ -140,7 +142,7 @@
             <button class="btn" style="background: #ef4444;" id="modal-sell-btn">QUICK SELL</button>
         </div>
     </div>
- 
+
     <div id="view-home" class="view">
         <div class="marquee-container"><div id="marquee-track" class="marquee-track"></div></div>
         <div class="home-content">
@@ -149,8 +151,12 @@
             <button class="btn" style="background: #3ecf8e; color: black; margin-top: 10px;" onclick="showView('slots')">GO TO STORE</button>
         </div>
     </div>
- 
+
     <div id="view-slots" class="view">
+        <button id="catalog-toggle-btn" class="btn" style="background: #2a2a2a; color: #3ecf8e; border: 1px solid #3ecf8e; max-width: 450px; margin: 0 auto 15px; display: block;" onclick="openCatalog()">
+            📖 VIEW CARD DATABASE
+        </button>
+
         <div id="slot-container">
             <div id="display-area">
                 <div id="default-message" style="font-size: 1.8rem; color: #3ecf8e; font-weight: bold;">SELECT A PACK</div>
@@ -167,10 +173,27 @@
                 <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (2000 🪙)</button>
             </div>
         </div>
+
+        <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #3ecf8e; margin: 0;">CARD DATABASE</h2>
+                <button class="btn" style="background: #ef4444; width: auto; padding: 8px 20px;" onclick="closeCatalog()">BACK TO PACKS</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn" style="background: #cd7f32; width: auto; padding: 10px 20px;" onclick="loadCatalog('common')">BRONZE</button>
+                <button class="btn" style="background: #c0c0c0; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('silver')">SILVER</button>
+                <button class="btn" style="background: #ffd700; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('gold')">GOLD</button>
+                <button class="btn" style="background: #bc13fe; width: auto; padding: 10px 20px;" onclick="loadCatalog('legendary')">LEGENDARY</button>
+                <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
+            </div>
+
+            <div id="catalog-grid" class="team-grid"></div>
+        </div>
     </div>
- 
+
     <div id="view-team" class="view"><div id="teamGrid" class="team-grid"></div></div>
- 
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ─── SUPABASE INIT ───────────────────────────────────────────────────────
@@ -178,7 +201,7 @@
             'https://owffrsfbnpnhdgizamhk.supabase.co',
             'sb_publishable_Xzup7yhRVD3INWoIJkk-9g_ZHnZSoq8'
         );
- 
+
         // ─── CONSTANTS ───────────────────────────────────────────────────────────
         const SELL_RATE = 0.65;
         const HOLO_MULTIPLIER = 3;
@@ -187,19 +210,19 @@
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
             elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png'
         };
- 
+
         // ─── STATE ───────────────────────────────────────────────────────────────
         let balance = 1000;
         let mySquad = [];
         let currentPull = null;
         let activeTier = null;
-        let currentUser = null;   // Supabase auth user object
-        let isLoginMode = false;  // false = register, true = login
- 
+        let currentUser = null;
+        let isLoginMode = false;
+
         // ─── LOADING HELPERS ─────────────────────────────────────────────────────
         function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
         function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
- 
+
         // ─── AUTH MODE TOGGLE ────────────────────────────────────────────────────
         function toggleAuthMode() {
             isLoginMode = !isLoginMode;
@@ -208,7 +231,7 @@
             const toggle = document.querySelector('.auth-toggle');
             const usernameField = document.getElementById('field-username');
             clearAuthMessages();
- 
+
             if (isLoginMode) {
                 subtitle.innerText = 'SIGN IN';
                 btn.innerText = 'SIGN IN';
@@ -221,80 +244,73 @@
                 usernameField.style.display = 'block';
             }
         }
- 
+
         function clearAuthMessages() {
             document.getElementById('auth-error').innerText = '';
             document.getElementById('auth-success').innerText = '';
         }
         function setAuthError(msg) { document.getElementById('auth-error').innerText = msg; }
         function setAuthSuccess(msg) { document.getElementById('auth-success').innerText = msg; }
- 
+
         // ─── HANDLE AUTH (REGISTER OR LOGIN) ────────────────────────────────────
         async function handleAuth() {
             clearAuthMessages();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const username = document.getElementById('username').value.trim();
- 
+
             if (!email || !password) { setAuthError('Email and password required.'); return; }
- 
+
             showLoading();
- 
+
             if (isLoginMode) {
-                // ── SIGN IN ──
                 const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) { hideLoading(); setAuthError(error.message); return; }
                 currentUser = data.user;
                 await loadCloudSave();
                 enterGame();
             } else {
-                // ── REGISTER ──
                 if (!username) { hideLoading(); setAuthError('Username is required.'); return; }
                 if (username.length < 3) { hideLoading(); setAuthError('Username must be at least 3 characters.'); return; }
                 if (password.length < 6) { hideLoading(); setAuthError('Password must be at least 6 characters.'); return; }
- 
+
                 const { data, error } = await _supabase.auth.signUp({
                     email,
                     password,
-                    options: { data: { username } }   // stored in auth.users.raw_user_meta_data
+                    options: { data: { username } }
                 });
- 
+
                 if (error) { hideLoading(); setAuthError(error.message); return; }
- 
+
                 const { data: sessionData } = await _supabase.auth.getSession();
-currentUser = sessionData.session?.user || data.user;
- 
-                // Create the cloud save row for this new user
-            // Create or update the cloud save row for this new user using UPSERT
-const { data: saveData, error: dbError } = await _supabase
-.from('user_saves')
-.upsert({
-    user_id: currentUser.id,
-    email: currentUser.email,
-    username: username,
-    balance: 1000,
-    squad: [],
-    updated_at: new Date().toISOString()
-}, { onConflict: 'user_id' })
-.select();
+                currentUser = sessionData.session?.user || data.user;
 
-console.log("UPSERT RESULT:", saveData);
-console.log("UPSERT ERROR:", dbError);
+                const { data: saveData, error: dbError } = await _supabase
+                .from('user_saves')
+                .upsert({
+                    user_id: currentUser.id,
+                    email: currentUser.email,
+                    username: username,
+                    balance: 1000,
+                    squad: [],
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'user_id' })
+                .select();
 
-if (dbError) {
-    console.error("Supabase Insert Error:", dbError);
-    hideLoading();
-    setAuthError("Database error: " + dbError.message);
-    return;
-}
- 
+                if (dbError) {
+                    console.error("Supabase Insert Error:", dbError);
+                    hideLoading();
+                    setAuthError("Database error: " + dbError.message);
+                    return;
+                }
+
                 balance = 1000;
                 mySquad = [];
                 hideLoading();
                 enterGame();
             }
         }
- 
+
         // ─── LOGOUT ──────────────────────────────────────────────────────────────
         async function handleLogout() {
             if (!confirm('Log out?')) return;
@@ -306,13 +322,12 @@ if (dbError) {
             document.getElementById('main-nav').style.display = 'none';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-login').classList.add('active');
-            // Reset auth form to register mode
-            isLoginMode = true; toggleAuthMode(); // flip back to login view on logout
+            isLoginMode = true; toggleAuthMode();
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
             document.getElementById('username').value = '';
         }
- 
+
         // ─── SESSION CHECK ON PAGE LOAD ──────────────────────────────────────────
         async function checkExistingSession() {
             showLoading();
@@ -325,7 +340,7 @@ if (dbError) {
                 hideLoading();
             }
         }
- 
+
         // ─── ENTER GAME ──────────────────────────────────────────────────────────
         function enterGame() {
             hideLoading();
@@ -335,15 +350,13 @@ if (dbError) {
             updateWelcomeMsg();
             initMarquee();
         }
- 
+
         function updateWelcomeMsg() {
             const username = currentUser?.user_metadata?.username || currentUser?.email || 'MANAGER';
             document.getElementById('welcome-msg').innerText = `WELCOME BACK, ${username.toUpperCase()}`;
         }
- 
+
         // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
- 
- 
         async function loadCloudSave() {
             if (!currentUser) return;
             const { data, error } = await _supabase
@@ -351,16 +364,15 @@ if (dbError) {
                 .select('balance, squad')
                 .eq('user_id', currentUser.id)
                 .single();
- 
+
             if (data) {
                 balance = data.balance ?? 1000;
                 mySquad = data.squad || [];
                 updateUI();
                 renderSquad();
             }
-            // If no row found (e.g. first login after sign-up race condition), defaults are fine
         }
- 
+
         async function saveGame() {
             if (!currentUser) return;
             await _supabase
@@ -374,20 +386,20 @@ if (dbError) {
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' });
         }
- 
+
         // ─── GAME LOGIC ──────────────────────────────────────────────────────────
         function getCardValue(p) {
             let val = p.base_price || 0;
             if (p.isSuperHolo) val *= HOLO_MULTIPLIER;
             return val;
         }
- 
+
         async function initMarquee() {
             const track = document.getElementById('marquee-track');
             const { data } = await _supabase.from('soccer_stars').select('*').gte('rating', 85);
             if (data) { track.innerHTML = [...data, ...data].map(p => generateCardHtml(p, false)).join(''); }
         }
- 
+
         function preparePack(tier) {
             activeTier = tier;
             document.getElementById('packArea').style.display = 'none';
@@ -404,24 +416,24 @@ if (dbError) {
                 <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
             visual.style.display = 'block';
         }
- 
+
         async function openPack() {
             const costs = { std: 10, pre: 800, elt: 2000 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
- 
+
             let query = _supabase.from('soccer_stars').select('*');
             if (activeTier === 'std') query = query.lte('rating', 82);
             else if (activeTier === 'pre') query = query.gte('rating', 83).lte('rating', 87);
             else query = query.gte('rating', 88);
- 
+
             const { data } = await query;
             if (data) {
                 currentPull = data[Math.floor(Math.random() * data.length)];
                 currentPull.instanceId = "inst_" + Date.now();
                 currentPull.collectedDate = new Date().toLocaleDateString();
                 if (currentPull.rating >= 85 && Math.random() < 0.02) currentPull.isSuperHolo = true;
- 
+
                 const val = getCardValue(currentPull);
                 const reveal = document.getElementById('pack-reveal');
                 reveal.innerHTML = generateCardHtml(currentPull, false);
@@ -432,7 +444,7 @@ if (dbError) {
                 updateUI();
             }
         }
- 
+
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
             const holoClass = p.isSuperHolo ? 'super-holo' : '';
@@ -448,7 +460,7 @@ if (dbError) {
                         </div>
                     </div>`;
         }
- 
+
         function showCardDetails(id) {
             const p = mySquad.find(player => player.instanceId == id);
             if (!p) return;
@@ -463,7 +475,7 @@ if (dbError) {
             };
             document.getElementById('modal-overlay').style.display = 'flex';
         }
- 
+
         async function finalizeSale(id) {
             const index = mySquad.findIndex(p => p.instanceId == id);
             if (index > -1) {
@@ -473,9 +485,9 @@ if (dbError) {
                 await saveGame();
             }
         }
- 
+
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
- 
+
         function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -484,10 +496,10 @@ if (dbError) {
             if (navBtn) navBtn.classList.add('active');
             if (id !== 'slots') resetUI();
         }
- 
+
         async function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); await saveGame(); }
         async function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); await saveGame(); }
- 
+
         function resetUI() {
             document.getElementById('choiceArea').style.display = 'none';
             document.getElementById('pack-reveal').style.display = 'none';
@@ -496,19 +508,69 @@ if (dbError) {
             document.getElementById('default-message').style.display = 'block';
             updateUI();
         }
- 
+
         function updateUI() {
             document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString());
             document.getElementById('nav-club-value').innerText = mySquad.reduce((sum, p) => sum + getCardValue(p), 0).toLocaleString();
             document.getElementById('team-count').innerText = mySquad.length;
         }
- 
+
         function renderSquad() {
             const grid = document.getElementById('teamGrid');
             grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
             updateUI();
         }
- 
+
+        // ─── CARD DATABASE CATALOG ───────────────────────────────────────────────
+        function openCatalog() {
+            document.getElementById('slot-container').style.display = 'none';
+            document.getElementById('catalog-toggle-btn').style.display = 'none';
+            document.getElementById('catalog-container').style.display = 'block';
+            loadCatalog('gold');
+        }
+
+        function closeCatalog() {
+            document.getElementById('catalog-container').style.display = 'none';
+            document.getElementById('slot-container').style.display = 'flex';
+            document.getElementById('catalog-toggle-btn').style.display = 'block';
+        }
+
+        async function loadCatalog(tier) {
+            showLoading();
+            
+            let query = _supabase.from('soccer_stars').select('*');
+            
+            if (tier === 'holo') {
+                query = query.gte('rating', 85);
+            } else {
+                query = query.ilike('rarity', tier);
+            }
+
+            const { data, error } = await query; 
+
+            hideLoading();
+
+            const grid = document.getElementById('catalog-grid');
+            
+            if (error) {
+                grid.innerHTML = `<p style="color:red">Database Error: ${error.message}</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                grid.innerHTML = `<p style="color:#888">No ${tier.toUpperCase()} cards currently available in packs.</p>`;
+                return;
+            }
+
+            if (tier === 'holo') {
+                data.forEach(p => p.isSuperHolo = true);
+            }
+
+            data.sort((a, b) => getCardValue(b) - getCardValue(a));
+
+            grid.innerHTML = data.map(p => generateCardHtml(p, false)).join('');
+        }
+
         // ─── BOOT ────────────────────────────────────────────────────────────────
         checkExistingSession();
     </script>
