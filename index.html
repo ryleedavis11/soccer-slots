@@ -97,13 +97,22 @@
         .premium-card.common    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/bronze.jpg'); }
         .premium-card.silver    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/silver.jpg'); }
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
-        .premium-card.legendary { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg'); border-color: #bc13fe; }
+        .premium-card.limited   { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/LimitedBackground.jpg'); border: 2px solid #bebebe; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
         .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
 
         .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
         .card-pos { left: 10px; background: #3ecf8e; }
         .card-ovr { right: 10px; background: #ffd700; }
+        .card-serial { bottom: 65px; right: 10px; background: #00f2ff; color: black; font-size: 0.6rem; padding: 2px 6px; border-radius: 3px; position: absolute; z-index: 30; font-weight: 900; }
+        
         .player-img { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 115%; height: auto; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); pointer-events: none; }
+        
+        /* FULL ART STYLE (ZOOMED OUT) */
+        .full-art .player-img {
+            width: 90% !important; /* Shrink from 115% to show more body */
+            top: 22% !important;   /* Push down slightly to frame the full body */
+        }
+
         .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
@@ -257,7 +266,7 @@
                 <button class="btn" style="background: #cd7f32; width: auto; padding: 10px 20px;" onclick="loadCatalog('common')">BRONZE</button>
                 <button class="btn" style="background: #c0c0c0; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('silver')">SILVER</button>
                 <button class="btn" style="background: #ffd700; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('gold')">GOLD</button>
-                <button class="btn" style="background: #bc13fe; width: auto; padding: 10px 20px;" onclick="loadCatalog('legendary')">LEGENDARY</button>
+                <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('limited')">LIMITED</button>
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
             </div>
 
@@ -518,7 +527,7 @@
             visual.innerHTML = `
                 <div class="pack-container" onclick="openPack()">
                     <div class="foil-pack">
-                        ${specialLayer}  <div class="foil-shine"></div>
+                        ${specialLayer}  <div class="foil-shine"></div>
                         <div class="pack-label">${tier.toUpperCase()}</div>
                         <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
                     </div>
@@ -535,38 +544,58 @@
             
             balance -= costs[activeTier];
             const roll = Math.random() * 100;
-            let minR, maxR;
+            
+            // --- EXECUTIVE PACK ODDS (RE-BALANCED) ---
+            const limitedOdds = { std: 0, pre: 0.01, elt: 0.1 };
+            let pulledPlayer = null;
 
-            // --- 1. RATING BRACKETS ---
-            if (activeTier === 'std') {
-                if (roll < 50) { minR = 70; maxR = 79; }
-                else if (roll < 80) { minR = 80; maxR = 82; }
-                else if (roll < 90) { minR = 83; maxR = 83; }
-                else if (roll < 95) { minR = 84; maxR = 85; }
-                else if (roll < 98) { minR = 86; maxR = 86; }
-                else if (roll < 99.5) { minR = 87; maxR = 89; }
-                else { minR = 90; maxR = 99; }
-            } else if (activeTier === 'pre') {
-                if (roll < 50) { minR = 80; maxR = 82; }
-                else if (roll < 70) { minR = 83; maxR = 83; }
-                else if (roll < 80) { minR = 84; maxR = 85; }
-                else if (roll < 90) { minR = 86; maxR = 86; }
-                else if (roll < 95) { minR = 87; maxR = 88; }
-                else if (roll < 99) { minR = 89; maxR = 89; }
-                else { minR = 90; maxR = 99; }
-            } else {
-                if (roll < 50) { minR = 84; maxR = 86; }
-                else if (roll < 70) { minR = 87; maxR = 87; }
-                else if (roll < 87) { minR = 88; maxR = 88; }
-                else if (roll < 97) { minR = 89; maxR = 89; }
-                else { minR = 90; maxR = 99; }
+            // 1. MASTER ROLL: Roll for Limited cards specifically
+            if (Math.random() * 100 < limitedOdds[activeTier]) {
+                const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
+                if (limitedPool && limitedPool.length > 0) {
+                    let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
+                    const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
+                    if ((countData || 0) < 10) {
+                        pulledPlayer = potential;
+                        pulledPlayer.serial = (countData || 0) + 1;
+                    }
+                }
             }
 
-            // --- 2. FETCH PLAYER ---
-            let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR);
-            if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
+            // 2. FALLBACK ROLL: Rating Brackets logic if no Limited card pull occurred
+            if (!pulledPlayer) {
+                let minR, maxR;
+                if (activeTier === 'std') {
+                    if (roll < 50) { minR = 70; maxR = 79; }
+                    else if (roll < 80) { minR = 80; maxR = 82; }
+                    else if (roll < 90) { minR = 83; maxR = 83; }
+                    else if (roll < 95) { minR = 84; maxR = 85; }
+                    else if (roll < 98) { minR = 86; maxR = 86; }
+                    else if (roll < 99.5) { minR = 87; maxR = 89; }
+                    else { minR = 90; maxR = 99; }
+                } else if (activeTier === 'pre') {
+                    if (roll < 50) { minR = 80; maxR = 82; }
+                    else if (roll < 70) { minR = 83; maxR = 83; }
+                    else if (roll < 80) { minR = 84; maxR = 85; }
+                    else if (roll < 90) { minR = 86; maxR = 86; }
+                    else if (roll < 95) { minR = 87; maxR = 88; }
+                    else if (roll < 99) { minR = 89; maxR = 89; }
+                    else { minR = 90; maxR = 99; }
+                } else {
+                    if (roll < 50) { minR = 84; maxR = 86; }
+                    else if (roll < 70) { minR = 87; maxR = 87; }
+                    else if (roll < 87) { minR = 88; maxR = 88; }
+                    else if (roll < 97) { minR = 89; maxR = 89; }
+                    else { minR = 90; maxR = 99; }
+                }
 
-            currentPull = data[Math.floor(Math.random() * data.length)];
+                // Filter out Limited cards from the regular pool so odds are exact
+                let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited');
+                if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
+                pulledPlayer = data[Math.floor(Math.random() * data.length)];
+            }
+
+            currentPull = pulledPlayer;
             currentPull.instanceId = "inst_" + Date.now();
             currentPull.collectedDate = new Date().toLocaleDateString();
             
@@ -576,7 +605,6 @@
 
             // --- 3. SUSPENSE LOGIC ---
             const packVisual = document.getElementById('pack-visual');
-            
             if (currentPull.rating > 87) {
                 packVisual.classList.add('suspense-shake');
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -655,11 +683,14 @@
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
             const holoClass = p.isSuperHolo ? 'super-holo' : '';
+            const artClass = p.id === 64 ? 'full-art' : '';
+
             const val = getCardValue(p);
             const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
-            return `<div class="premium-card ${rarity} ${holoClass}" ${clickAttr}>
+            return `<div class="premium-card ${rarity} ${holoClass} ${artClass}" ${clickAttr}>
                         <div class="badge card-pos">${p.position}</div>
                         <div class="badge card-ovr">${p.rating}</div>
+                        ${p.serial ? `<div class="card-serial">LIMITED ${p.serial}/10</div>` : ''}
                         <img src="${p.image_url}" class="player-img">
                         <div class="nameplate">
                             <div class="card-name">${p.name}</div>
