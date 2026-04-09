@@ -163,8 +163,8 @@
             </div>
             <div id="packArea">
                 <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10 🪙)</button>
-                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (100 🪙)</button>
-                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1000 🪙)</button>
+                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (800 🪙)</button>
+                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (2000 🪙)</button>
             </div>
         </div>
     </div>
@@ -261,15 +261,32 @@
  
                 if (error) { hideLoading(); setAuthError(error.message); return; }
  
-                currentUser = data.user;
+                const { data: sessionData } = await _supabase.auth.getSession();
+currentUser = sessionData.session?.user || data.user;
  
                 // Create the cloud save row for this new user
-                await _supabase.from('user_saves').insert({
-                    user_id: currentUser.id,
-                    username,
-                    balance: 1000,
-                    squad: []
-                });
+            // Create or update the cloud save row for this new user using UPSERT
+const { data: saveData, error: dbError } = await _supabase
+.from('user_saves')
+.upsert({
+    user_id: currentUser.id,
+    email: currentUser.email,
+    username: username,
+    balance: 1000,
+    squad: [],
+    updated_at: new Date().toISOString()
+}, { onConflict: 'user_id' })
+.select();
+
+console.log("UPSERT RESULT:", saveData);
+console.log("UPSERT ERROR:", dbError);
+
+if (dbError) {
+    console.error("Supabase Insert Error:", dbError);
+    hideLoading();
+    setAuthError("Database error: " + dbError.message);
+    return;
+}
  
                 balance = 1000;
                 mySquad = [];
@@ -326,21 +343,6 @@
  
         // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
  
-        // NOTE FOR SETUP: You need to create a table in your Supabase dashboard:
-        //
-        //   Table name: user_saves
-        //   Columns:
-        //     id          uuid  (primary key, default: gen_random_uuid())
-        //     user_id     uuid  (references auth.users.id, unique)
-        //     username    text
-        //     balance     int8  (default: 1000)
-        //     squad       jsonb (default: [])
-        //     updated_at  timestamptz (default: now())
-        //
-        //   Then in Row Level Security (RLS), enable RLS and add these policies:
-        //     SELECT: (auth.uid() = user_id)
-        //     INSERT: (auth.uid() = user_id)
-        //     UPDATE: (auth.uid() = user_id)
  
         async function loadCloudSave() {
             if (!currentUser) return;
@@ -365,6 +367,7 @@
                 .from('user_saves')
                 .upsert({
                     user_id: currentUser.id,
+                    email: currentUser.email,
                     username: currentUser.user_metadata?.username || '',
                     balance,
                     squad: mySquad,
@@ -403,7 +406,7 @@
         }
  
         async function openPack() {
-            const costs = { std: 10, pre: 100, elt: 1000 };
+            const costs = { std: 10, pre: 800, elt: 2000 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
  
