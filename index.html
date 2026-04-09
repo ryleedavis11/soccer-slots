@@ -31,7 +31,6 @@
         .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
         .view.active { display: block; }
         
-        /* Updated layout rules to prevent the catalog top cutoff */
         #view-home.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; padding-top: 30px; }
 
@@ -89,7 +88,6 @@
         .btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Updated grid to exactly 180px to fit 5 cards across */
         .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding: 10px; justify-items: center; }
     </style>
 </head>
@@ -175,9 +173,11 @@
         </div>
 
         <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
+            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="color: #3ecf8e; margin: 0;">CARD DATABASE</h2>
-                <button class="btn" style="background: #ef4444; width: auto; padding: 8px 20px;" onclick="closeCatalog()">BACK TO PACKS</button>
+                <div style="width: 160px;"></div> 
+                <h2 style="color: #3ecf8e; margin: 0; text-align: center;">CARD DATABASE</h2>
+                <button class="btn" style="background: #ef4444; width: 160px; padding: 8px 15px; margin: 0;" onclick="closeCatalog()">BACK TO PACKS</button>
             </div>
             
             <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;">
@@ -186,6 +186,10 @@
                 <button class="btn" style="background: #ffd700; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('gold')">GOLD</button>
                 <button class="btn" style="background: #bc13fe; width: auto; padding: 10px 20px;" onclick="loadCatalog('legendary')">LEGENDARY</button>
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
+            </div>
+
+            <div id="holo-note" style="display: none; color: #00f2ff; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;">
+                * Holos are rare every 85+ rated card you pull has a 2% chance to become a Holo.
             </div>
 
             <div id="catalog-grid" class="team-grid"></div>
@@ -539,10 +543,13 @@
             showLoading();
             
             let query = _supabase.from('soccer_stars').select('*');
+            const holoNote = document.getElementById('holo-note');
             
             if (tier === 'holo') {
+                holoNote.style.display = 'block';
                 query = query.gte('rating', 85);
             } else {
+                holoNote.style.display = 'none';
                 query = query.ilike('rarity', tier);
             }
 
