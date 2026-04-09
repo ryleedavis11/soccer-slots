@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soccer Slots: Pro Executive</title>
+    <style>
+        /* 1. GLOBAL THEME */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #0b0b0b; color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* 2. NAVIGATION */
+        nav { background: #161616; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 60px; border-bottom: 2px solid #333; z-index: 1000; flex-shrink: 0; }
+        .nav-metric { width: 220px; font-weight: 900; font-size: 0.85rem; letter-spacing: 1px; }
+        .nav-left { color: #3ecf8e; text-align: left; }
+        .nav-right { color: #ffd700; text-align: right; }
+        .nav-center { display: flex; justify-content: center; flex-grow: 1; }
+        nav button { background: none; border: none; color: #555; font-size: 0.9rem; font-weight: bold; margin: 0 15px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        nav button.active { color: #3ecf8e; border-bottom: 2px solid #3ecf8e; padding-bottom: 5px; }
+
+        /* 3. VIEW MANAGEMENT */
+        .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
+        .view.active { display: block; }
+        #view-home.active, #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+        /* 4. HOME SCREEN MARQUEE */
+        .marquee-container { position: absolute; top: 0; left: 0; width: 100%; height: 300px; z-index: 1; opacity: 0.15; pointer-events: none; overflow: hidden; white-space: nowrap; padding-top: 20px; }
+        .marquee-track { display: flex; animation: scroll 60s linear infinite; gap: 20px; width: max-content; }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .home-content { position: relative; z-index: 100; max-width: 500px; width: 90%; background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .home-logo { font-size: 3rem; font-weight: 900; color: #3ecf8e; margin-bottom: 5px; text-shadow: 0 0 20px rgba(62, 207, 142, 0.3); }
+
+        /* 5. THE FOIL PACK SYSTEM */
+        .pack-container { position: relative; width: 220px; height: 320px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 10px; }
+        .pack-container:hover { transform: scale(1.05); }
+        .foil-pack { position: absolute; inset: 0; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .galaxy-nebula { position: absolute; inset: -50%; background: radial-gradient(circle at 30% 30%, rgba(188, 19, 254, 0.6) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(75, 0, 130, 0.6) 0%, transparent 50%); filter: blur(40px); animation: nebulaShift 8s infinite alternate ease-in-out; z-index: 1; }
+        @keyframes nebulaShift { from { transform: rotate(0deg) scale(1); } to { transform: rotate(20deg) scale(1.3); } }
+        .sealed-player-render { width: 90%; height: 80%; object-fit: contain; z-index: 4; filter: drop-shadow(0 0 15px rgba(0,0,0,0.8)); pointer-events: none; }
+        .pack-container::before, .pack-container::after { content: ''; position: absolute; left: 0; width: 100%; height: 10px; background: repeating-linear-gradient(90deg, #222, #222 3px, #333 3px, #333 6px); z-index: 10; }
+        .pack-container::before { top: -5px; border-bottom: 1px solid #000; }
+        .pack-container::after { bottom: -5px; border-top: 1px solid #000; }
+        .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
+        .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
+        @keyframes shine { from { transform: translateX(-100%) translateY(-100%); } to { transform: translateX(100%) translateY(100%); } }
+
+        /* 6. CARD DESIGN */
+        .premium-card { width: 180px; height: 250px; border-radius: 12px; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: inline-flex; flex-direction: column; justify-content: flex-end; padding: 10px; border: 2px solid rgba(255,255,255,0.1); margin: 10px; background-size: cover; background-position: center; vertical-align: top; text-align: left; cursor: pointer; flex-shrink: 0; z-index: 20; }
+        .premium-card.common    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/bronze.jpg'); }
+        .premium-card.silver    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/silver.jpg'); }
+        .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
+        .premium-card.legendary { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg'); border-color: #bc13fe; }
+        .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
+
+        .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
+        .card-pos { left: 10px; background: #3ecf8e; } 
+        .card-ovr { right: 10px; background: #ffd700; }
+        .player-img { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 115%; height: auto; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); pointer-events: none; }
+        .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+        .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
+
+        /* 7. CARD DETAIL MODAL */
+        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; max-width: 400px; width: 90%; position: relative; }
+        .data-point { margin: 15px 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .data-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .data-value { font-size: 1.2rem; font-weight: bold; color: #3ecf8e; }
+        .close-modal { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #555; }
+
+        /* UI ELEMENTS */
+        #slot-container { border: 2px solid #3ecf8e; display: inline-block; padding: 30px; border-radius: 25px; background: #161616; max-width: 450px; width: 100%; margin: 0 auto; position: relative; z-index: 50; }
+        #display-area { min-height: 400px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        .btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 10px; justify-items: center; position: relative; z-index: 60; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-metric nav-left">CLUB VALUE: <span id="nav-club-value">0</span> 🪙</div>
+        <div class="nav-center">
+            <button id="nav-home" class="active" onclick="showView('home')">HOME</button>
+            <button id="nav-slots" onclick="showView('slots')">STORE</button>
+            <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>)</button>
+        </div>
+        <div class="nav-metric nav-right">BALANCE: <span class="bal-text">0</span> 🪙</div>
+    </nav>
+
+    <div id="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="close-modal" onclick="closeModal()">✕</div>
+            <div id="modal-card-render" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
+            <div class="data-point"><div class="data-label" id="modal-label">Market Value</div><div class="data-value" id="val-orig">0</div></div>
+            <div class="data-point"><div class="data-label">Quick Sell Price</div><div class="data-value" style="color: #ffd700;" id="val-sell">0</div></div>
+            <div class="data-point"><div class="data-label">Date Collected</div><div class="data-value" style="color: #fff;" id="val-date">-</div></div>
+            <button class="btn" style="background: #ef4444;" id="modal-sell-btn">QUICK SELL</button>
+        </div>
+    </div>
+
+    <div id="view-home" class="view active">
+        <div class="marquee-container"><div id="marquee-track" class="marquee-track"></div></div>
+        <div class="home-content">
+            <div class="home-logo">SOCCER SLOTS</div>
+            <button class="btn" style="background: #3ecf8e; color: black; margin-top: 20px;" onclick="showView('slots')">GO TO STORE</button>
+        </div>
+    </div>
+
+    <div id="view-slots" class="view">
+        <div id="slot-container">
+            <div id="display-area">
+                <div id="default-message" style="font-size: 1.8rem; color: #3ecf8e; font-weight: bold;">SELECT A PACK</div>
+                <div id="pack-visual" style="display: none;"></div>
+                <div id="pack-reveal" style="display: none;"></div>
+            </div>
+            <div id="choiceArea" class="choice-row" style="display: none; justify-content: space-between; width: 100%;">
+                <button class="btn" style="background: #3b82f6; width: 48%;" onclick="keepPlayer()">KEEP</button>
+                <button id="sellBtn" class="btn" style="background: #ef4444; width: 48%;" onclick="sellPlayer()">SELL</button>
+            </div>
+            <div id="packArea">
+                <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10)</button>
+                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (100)</button>
+                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1000)</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-team" class="view"><div id="teamGrid" class="team-grid"></div></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const _supabase = supabase.createClient('https://owffrsfbnpnhdgizamhk.supabase.co', 'sb_publishable_Xzup7yhRVD3INWoIJkk-9g_ZHnZSoq8');
+        const SELL_RATE = 0.65;
+        const HOLO_MULTIPLIER = 3; 
+        const PACK_IMAGES = {
+            std: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Barcelona%20team%20-%20FootyRenders.png',
+            pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
+            elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png'
+        };
+
+        let balance = 1000000, mySquad = [], currentPull = null, activeTier = null;
+
+        function saveGame() { localStorage.setItem('soccerSlots_saveFile', JSON.stringify({ balance, mySquad })); }
+        
+        function loadGame() {
+            const saved = localStorage.getItem('soccerSlots_saveFile');
+            if (saved) {
+                const data = JSON.parse(saved);
+                balance = data.balance ?? 1000000;
+                mySquad = data.mySquad || [];
+
+                // --- DATA MIGRATION ---
+                // Give unique IDs to cards that don't have them yet
+                mySquad.forEach(p => {
+                    if (!p.instanceId) p.instanceId = "legacy_" + Math.random().toString(36).substr(2, 9);
+                });
+
+                updateUI(); 
+                renderSquad();
+            }
+        }
+
+        function getCardValue(p) {
+            let val = p.base_price;
+            if (p.isSuperHolo) val *= HOLO_MULTIPLIER;
+            return val;
+        }
+
+        async function initMarquee() {
+            const track = document.getElementById('marquee-track');
+            const { data } = await _supabase.from('soccer_stars').select('*').gte('rating', 85);
+            if (data) { 
+                const pool = [...data, ...data, ...data];
+                track.innerHTML = pool.map(p => generateCardHtml(p, false)).join(''); 
+            }
+        }
+
+        function preparePack(tier) {
+            const labels = { std: 'STANDARD', pre: 'PREMIUM', elt: 'ELITE' };
+            const theme = { std: '#888', pre: '#2563eb', elt: '#7c3aed' };
+            activeTier = tier;
+            document.getElementById('packArea').style.display = 'none';
+            document.getElementById('default-message').style.display = 'none';
+            const visual = document.getElementById('pack-visual');
+            const galaxyLayer = (tier === 'elt') ? '<div class="galaxy-nebula"></div>' : '';
+            const borderStyle = (tier === 'elt') ? 'border: 2px solid #bc13fe;' : '';
+
+            visual.innerHTML = `
+                <div class="pack-container" onclick="openPack()" style="filter: drop-shadow(0 0 15px ${theme[tier]}55)">
+                    <div class="foil-pack" style="${borderStyle}">${galaxyLayer}
+                        <div class="foil-shine"></div><div class="pack-label">${labels[tier]}</div>
+                        <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
+                    </div>
+                </div>
+                <div style="font-size: 0.7rem; color: ${theme[tier]}; font-weight: bold; letter-spacing: 2px;">CLICK TO TEAR</div>
+                <button class="btn btn-cancel-pack" style="background:#333; width:auto; padding:5px 15px; font-size:0.7rem; margin-top:10px; opacity:0.6;" onclick="resetUI()">← CANCEL</button>`;
+            visual.style.display = 'block';
+        }
+
+        async function openPack() {
+            const costs = { std: 10, pre: 100, elt: 1000 };
+            if (balance < costs[activeTier]) { alert("Insufficient balance!"); return; }
+            balance -= costs[activeTier]; updateUI(); saveGame();
+            document.getElementById('pack-visual').style.display = 'none';
+            
+            let query = _supabase.from('soccer_stars').select('*');
+            if (activeTier === 'std') query = query.lte('rating', 82);
+            else if (activeTier === 'pre') query = query.gte('rating', 83).lte('rating', 87);
+            else query = query.gte('rating', 88);
+
+            const { data } = await query;
+            if (data) {
+                currentPull = data[Math.floor(Math.random() * data.length)];
+                currentPull.instanceId = "inst_" + Date.now() + "_" + Math.floor(Math.random()*1000);
+                if (currentPull.rating >= 87 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
+                
+                const reveal = document.getElementById('pack-reveal');
+                reveal.innerHTML = generateCardHtml(currentPull, false);
+                reveal.style.display = 'block';
+                document.getElementById('choiceArea').style.display = 'flex';
+                document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(getCardValue(currentPull) * SELL_RATE)})`;
+            }
+        }
+
+        function generateCardHtml(p, clickable = true) {
+            const rarity = p.rarity ? p.rarity.toLowerCase() : 'common';
+            const holoClass = p.isSuperHolo ? 'super-holo' : '';
+            // Ensure ID is passed as a string to avoid click errors
+            const clickAttr = (clickable && p.instanceId) ? `onclick="showCardDetails('${p.instanceId}')"` : '';
+            const val = getCardValue(p);
+            return `<div class="premium-card ${rarity} ${holoClass}" ${clickAttr} style="cursor: ${clickable ? 'pointer' : 'default'}">
+                        <div class="badge card-pos">${p.position}</div><div class="badge card-ovr">${p.rating}</div>
+                        <img src="${p.image_url}" class="player-img">
+                        <div class="nameplate">
+                            <div class="card-name">${p.name}</div>
+                            <div class="card-price" style="${p.isSuperHolo ? 'color:#00f2ff' : ''}">Value: ${val.toLocaleString()}</div>
+                        </div>
+                    </div>`;
+        }
+
+        function showCardDetails(id) {
+            const p = mySquad.find(player => player.instanceId == id);
+            if (!p) {
+                console.error("Card not found in squad with instanceId:", id);
+                return;
+            }
+            const val = getCardValue(p);
+            document.getElementById('modal-card-render').innerHTML = generateCardHtml(p, false);
+            document.getElementById('modal-label').innerText = p.isSuperHolo ? "SUPER HOLO VALUE (3X)" : "MARKET VALUE";
+            document.getElementById('val-orig').innerText = val.toLocaleString() + " 🪙";
+            document.getElementById('val-sell').innerText = Math.floor(val * SELL_RATE).toLocaleString() + " 🪙";
+            document.getElementById('val-date').innerText = p.collectedDate || "Historical";
+            document.getElementById('modal-sell-btn').onclick = () => { if(confirm("Sell " + p.name + "?")) { finalizeSale(id); } };
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function finalizeSale(id) {
+            const index = mySquad.findIndex(p => p.instanceId == id);
+            if (index > -1) {
+                balance += Math.floor(getCardValue(mySquad[index]) * SELL_RATE);
+                mySquad.splice(index, 1);
+                closeModal(); updateUI(); renderSquad(); saveGame();
+            }
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+        
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('view-' + id).classList.add('active');
+            document.getElementById('nav-' + id).classList.add('active');
+            if (id !== 'slots') resetUI();
+        }
+
+        function keepPlayer() { 
+            currentPull.collectedDate = new Date().toLocaleDateString(); 
+            mySquad.push(currentPull); 
+            renderSquad(); resetUI(); saveGame(); 
+        }
+        function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); saveGame(); }
+        
+        function resetUI() { 
+            activeTier = null;
+            document.getElementById('choiceArea').style.display = 'none'; 
+            document.getElementById('pack-reveal').style.display = 'none'; 
+            document.getElementById('pack-visual').style.display = 'none';
+            document.getElementById('packArea').style.display = 'block'; 
+            document.getElementById('default-message').style.display = 'block'; 
+            updateUI(); 
+        }
+
+        function updateUI() { 
+            document.querySelectorAll('.bal-text').forEach(el => el.innerText = Math.floor(balance).toLocaleString()); 
+            const totalValue = mySquad.reduce((sum, p) => sum + getCardValue(p), 0);
+            document.getElementById('nav-club-value').innerText = totalValue.toLocaleString();
+            document.getElementById('team-count').innerText = mySquad.length; 
+        }
+        
+        function renderSquad() {
+            const grid = document.getElementById('teamGrid'); 
+            grid.innerHTML = '';
+            mySquad.forEach((p) => { grid.innerHTML += generateCardHtml(p, true); });
+            updateUI();
+        }
+
+        loadGame();
+        initMarquee();
+    </script>
+</body>
+</html>
