@@ -3,37 +3,44 @@
 <head>
     <title>Soccer Slots: Pro Executive</title>
     <style>
-        /* 1. GLOBAL THEME */
         body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #0b0b0b; color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* 2. AUTH SCREEN */
+        /* AUTH SCREEN */
         #view-login { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #161616 0%, #000 100%); z-index: 9999; }
         #view-login:not(.active) { display: none !important; }
-        .login-box { background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 20px; border: 1px solid #3ecf8e; text-align: center; box-shadow: 0 0 30px rgba(62, 207, 142, 0.2); }
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
-
-        /* 3. NAVIGATION */
+        .login-box { background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 20px; border: 1px solid #3ecf8e; text-align: center; box-shadow: 0 0 30px rgba(62, 207, 142, 0.2); max-width: 380px; width: 90%; }
+        .login-input { width: 100%; padding: 12px; margin: 6px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; font-size: 0.95rem; }
+        .login-input:focus { outline: none; border-color: #3ecf8e; }
+        .auth-toggle { background: none; border: none; color: #3ecf8e; cursor: pointer; font-size: 0.85rem; margin-top: 15px; text-decoration: underline; }
+        .auth-error { color: #ef4444; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
+        .auth-success { color: #3ecf8e; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
+        #auth-subtitle { color: #555; font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 1px; }
+ 
+        /* NAVIGATION */
         nav { background: #161616; padding: 0 20px; display: none; justify-content: space-between; align-items: center; height: 60px; border-bottom: 2px solid #333; z-index: 1000; flex-shrink: 0; }
         .nav-metric { width: 220px; font-weight: 900; font-size: 0.85rem; letter-spacing: 1px; }
         .nav-left { color: #3ecf8e; text-align: left; }
         .nav-right { color: #ffd700; text-align: right; }
-        .nav-center { display: flex; justify-content: center; flex-grow: 1; }
+        .nav-center { display: flex; justify-content: center; flex-grow: 1; align-items: center; }
         nav button { background: none; border: none; color: #555; font-size: 0.9rem; font-weight: bold; margin: 0 15px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         nav button.active { color: #3ecf8e; border-bottom: 2px solid #3ecf8e; padding-bottom: 5px; }
-
-        /* 4. VIEW MANAGEMENT */
+        #logout-btn { color: #ef4444 !important; font-size: 0.75rem !important; margin-left: 5px !important; }
+        #logout-btn:hover { color: #ff6b6b !important; }
+ 
+        /* VIEW MANAGEMENT */
         .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
         .view.active { display: block; }
         #view-home.active, #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-
-        /* 5. HOME SCREEN MARQUEE */
+ 
+        /* HOME SCREEN */
         .marquee-container { position: absolute; top: 0; left: 0; width: 100%; height: 300px; z-index: 1; opacity: 0.15; pointer-events: none; overflow: hidden; white-space: nowrap; padding-top: 20px; }
         .marquee-track { display: flex; animation: scroll 60s linear infinite; gap: 20px; width: max-content; }
         @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .home-content { position: relative; z-index: 100; max-width: 500px; width: 90%; background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .home-logo { font-size: 3rem; font-weight: 900; color: #3ecf8e; margin-bottom: 5px; text-shadow: 0 0 20px rgba(62, 207, 142, 0.3); }
-
-        /* 6. FOIL PACKS */
+        #welcome-msg { color: #888; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; }
+ 
+        /* FOIL PACKS */
         .pack-container { position: relative; width: 220px; height: 320px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 10px; }
         .pack-container:hover { transform: scale(1.05); }
         .foil-pack { position: absolute; inset: 0; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -43,59 +50,87 @@
         .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
         .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
         @keyframes shine { from { transform: translateX(-100%) translateY(-100%); } to { transform: translateX(100%) translateY(100%); } }
-
-        /* 7. CARD DESIGN */
+ 
+        /* CARD DESIGN */
         .premium-card { width: 180px; height: 250px; border-radius: 12px; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: inline-flex; flex-direction: column; justify-content: flex-end; padding: 10px; border: 2px solid rgba(255,255,255,0.1); margin: 10px; background-size: cover; background-position: center; vertical-align: top; text-align: left; cursor: pointer; flex-shrink: 0; z-index: 20; }
         .premium-card.common    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/bronze.jpg'); }
         .premium-card.silver    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/silver.jpg'); }
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
         .premium-card.legendary { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg'); border-color: #bc13fe; }
         .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
-
+ 
         .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
-        .card-pos { left: 10px; background: #3ecf8e; } 
+        .card-pos { left: 10px; background: #3ecf8e; }
         .card-ovr { right: 10px; background: #ffd700; }
         .player-img { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 115%; height: auto; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); pointer-events: none; }
         .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
-
-        /* 8. MODAL */
+ 
+        /* MODAL */
         #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; max-width: 400px; width: 90%; position: relative; }
         .data-point { margin: 15px 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         .data-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
         .data-value { font-size: 1.2rem; font-weight: bold; color: #3ecf8e; }
-
+ 
+        /* LOADING OVERLAY */
+        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
+        #loading-overlay.active { display: flex; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #333; border-top-color: #3ecf8e; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+ 
         /* UI ELEMENTS */
         #slot-container { border: 2px solid #3ecf8e; display: flex; flex-direction: column; padding: 30px; border-radius: 25px; background: #161616; max-width: 450px; width: 100%; margin: 0 auto; position: relative; z-index: 50; }
         #display-area { min-height: 420px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
         .btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; color: white; text-transform: uppercase; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 10px; justify-items: center; }
     </style>
 </head>
 <body>
-
+ 
+    <!-- LOADING OVERLAY -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div style="color: #555; font-size: 0.85rem; letter-spacing: 2px;">LOADING...</div>
+    </div>
+ 
+    <!-- AUTH SCREEN -->
     <div id="view-login" class="active">
         <div class="login-box">
-            <h1 style="color: #3ecf8e;">PRO EXECUTIVE</h1>
-            <p style="color: #555; font-size: 0.8rem; margin-bottom: 25px;">AUTH REQUIRED</p>
-            <input type="text" id="username" class="login-input" placeholder="USERNAME">
+            <h1 style="color: #3ecf8e; margin-bottom: 0;">PRO EXECUTIVE</h1>
+            <p id="auth-subtitle">CREATE ACCOUNT</p>
+            <div id="auth-error" class="auth-error"></div>
+            <div id="auth-success" class="auth-success"></div>
+ 
+            <!-- Register fields (shown by default) -->
+            <div id="field-username">
+                <input type="text" id="username" class="login-input" placeholder="USERNAME">
+            </div>
+ 
+            <input type="email" id="email" class="login-input" placeholder="EMAIL">
             <input type="password" id="password" class="login-input" placeholder="PASSWORD">
-            <button class="btn" style="background: #3ecf8e; color: black; margin-top: 15px;" onclick="handleLogin()">ACCESS</button>
+ 
+            <button class="btn" id="auth-submit-btn" style="background: #3ecf8e; color: black; margin-top: 15px;" onclick="handleAuth()">
+                CREATE ACCOUNT
+            </button>
+            <br>
+            <button class="auth-toggle" onclick="toggleAuthMode()">Already have an account? Sign In</button>
         </div>
     </div>
-
+ 
     <nav id="main-nav">
         <div class="nav-metric nav-left">CLUB VALUE: <span id="nav-club-value">0</span> 🪙</div>
         <div class="nav-center">
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
             <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>)</button>
+            <button id="logout-btn" onclick="handleLogout()">LOGOUT</button>
         </div>
         <div class="nav-metric nav-right">BALANCE: <span class="bal-text">0</span> 🪙</div>
     </nav>
-
+ 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modal-card-render" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
@@ -105,15 +140,16 @@
             <button class="btn" style="background: #ef4444;" id="modal-sell-btn">QUICK SELL</button>
         </div>
     </div>
-
+ 
     <div id="view-home" class="view">
         <div class="marquee-container"><div id="marquee-track" class="marquee-track"></div></div>
         <div class="home-content">
             <div class="home-logo">SOCCER SLOTS</div>
-            <button class="btn" style="background: #3ecf8e; color: black; margin-top: 20px;" onclick="showView('slots')">GO TO STORE</button>
+            <div id="welcome-msg"></div>
+            <button class="btn" style="background: #3ecf8e; color: black; margin-top: 10px;" onclick="showView('slots')">GO TO STORE</button>
         </div>
     </div>
-
+ 
     <div id="view-slots" class="view">
         <div id="slot-container">
             <div id="display-area">
@@ -126,18 +162,24 @@
                 <button id="sellBtn" class="btn" style="background: #ef4444; width: 48%;" onclick="sellPlayer()">SELL</button>
             </div>
             <div id="packArea">
-                <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10)</button>
-                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (100)</button>
-                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1000)</button>
+                <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10 🪙)</button>
+                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (100 🪙)</button>
+                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1000 🪙)</button>
             </div>
         </div>
     </div>
-
+ 
     <div id="view-team" class="view"><div id="teamGrid" class="team-grid"></div></div>
-
+ 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const _supabase = supabase.createClient('https://owffrsfbnpnhdgizamhk.supabase.co', 'sb_publishable_Xzup7yhRVD3INWoIJkk-9g_ZHnZSoq8');
+        // ─── SUPABASE INIT ───────────────────────────────────────────────────────
+        const _supabase = supabase.createClient(
+            'https://owffrsfbnpnhdgizamhk.supabase.co',
+            'sb_publishable_Xzup7yhRVD3INWoIJkk-9g_ZHnZSoq8'
+        );
+ 
+        // ─── CONSTANTS ───────────────────────────────────────────────────────────
         const SELL_RATE = 0.65;
         const HOLO_MULTIPLIER = 3;
         const PACK_IMAGES = {
@@ -145,41 +187,204 @@
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
             elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png'
         };
-
-        let balance = 1000, mySquad = [], currentPull = null, activeTier = null;
-
-        function handleLogin() {
+ 
+        // ─── STATE ───────────────────────────────────────────────────────────────
+        let balance = 1000;
+        let mySquad = [];
+        let currentPull = null;
+        let activeTier = null;
+        let currentUser = null;   // Supabase auth user object
+        let isLoginMode = false;  // false = register, true = login
+ 
+        // ─── LOADING HELPERS ─────────────────────────────────────────────────────
+        function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
+        function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
+ 
+        // ─── AUTH MODE TOGGLE ────────────────────────────────────────────────────
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const subtitle = document.getElementById('auth-subtitle');
+            const btn = document.getElementById('auth-submit-btn');
+            const toggle = document.querySelector('.auth-toggle');
+            const usernameField = document.getElementById('field-username');
+            clearAuthMessages();
+ 
+            if (isLoginMode) {
+                subtitle.innerText = 'SIGN IN';
+                btn.innerText = 'SIGN IN';
+                toggle.innerText = "Don't have an account? Register";
+                usernameField.style.display = 'none';
+            } else {
+                subtitle.innerText = 'CREATE ACCOUNT';
+                btn.innerText = 'CREATE ACCOUNT';
+                toggle.innerText = "Already have an account? Sign In";
+                usernameField.style.display = 'block';
+            }
+        }
+ 
+        function clearAuthMessages() {
+            document.getElementById('auth-error').innerText = '';
+            document.getElementById('auth-success').innerText = '';
+        }
+        function setAuthError(msg) { document.getElementById('auth-error').innerText = msg; }
+        function setAuthSuccess(msg) { document.getElementById('auth-success').innerText = msg; }
+ 
+        // ─── HANDLE AUTH (REGISTER OR LOGIN) ────────────────────────────────────
+        async function handleAuth() {
+            clearAuthMessages();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value.trim();
+ 
+            if (!email || !password) { setAuthError('Email and password required.'); return; }
+ 
+            showLoading();
+ 
+            if (isLoginMode) {
+                // ── SIGN IN ──
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+                if (error) { hideLoading(); setAuthError(error.message); return; }
+                currentUser = data.user;
+                await loadCloudSave();
+                enterGame();
+            } else {
+                // ── REGISTER ──
+                if (!username) { hideLoading(); setAuthError('Username is required.'); return; }
+                if (username.length < 3) { hideLoading(); setAuthError('Username must be at least 3 characters.'); return; }
+                if (password.length < 6) { hideLoading(); setAuthError('Password must be at least 6 characters.'); return; }
+ 
+                const { data, error } = await _supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { username } }   // stored in auth.users.raw_user_meta_data
+                });
+ 
+                if (error) { hideLoading(); setAuthError(error.message); return; }
+ 
+                currentUser = data.user;
+ 
+                // Create the cloud save row for this new user
+                await _supabase.from('user_saves').insert({
+                    user_id: currentUser.id,
+                    username,
+                    balance: 1000,
+                    squad: []
+                });
+ 
+                balance = 1000;
+                mySquad = [];
+                hideLoading();
+                enterGame();
+            }
+        }
+ 
+        // ─── LOGOUT ──────────────────────────────────────────────────────────────
+        async function handleLogout() {
+            if (!confirm('Log out?')) return;
+            await saveGame();
+            await _supabase.auth.signOut();
+            currentUser = null;
+            balance = 1000;
+            mySquad = [];
+            document.getElementById('main-nav').style.display = 'none';
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-login').classList.add('active');
+            // Reset auth form to register mode
+            isLoginMode = true; toggleAuthMode(); // flip back to login view on logout
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('username').value = '';
+        }
+ 
+        // ─── SESSION CHECK ON PAGE LOAD ──────────────────────────────────────────
+        async function checkExistingSession() {
+            showLoading();
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                await loadCloudSave();
+                enterGame();
+            } else {
+                hideLoading();
+            }
+        }
+ 
+        // ─── ENTER GAME ──────────────────────────────────────────────────────────
+        function enterGame() {
+            hideLoading();
             document.getElementById('view-login').classList.remove('active');
             document.getElementById('main-nav').style.display = 'flex';
             showView('home');
-            loadGame();
+            updateWelcomeMsg();
             initMarquee();
         }
-
+ 
+        function updateWelcomeMsg() {
+            const username = currentUser?.user_metadata?.username || currentUser?.email || 'MANAGER';
+            document.getElementById('welcome-msg').innerText = `WELCOME BACK, ${username.toUpperCase()}`;
+        }
+ 
+        // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
+ 
+        // NOTE FOR SETUP: You need to create a table in your Supabase dashboard:
+        //
+        //   Table name: user_saves
+        //   Columns:
+        //     id          uuid  (primary key, default: gen_random_uuid())
+        //     user_id     uuid  (references auth.users.id, unique)
+        //     username    text
+        //     balance     int8  (default: 1000)
+        //     squad       jsonb (default: [])
+        //     updated_at  timestamptz (default: now())
+        //
+        //   Then in Row Level Security (RLS), enable RLS and add these policies:
+        //     SELECT: (auth.uid() = user_id)
+        //     INSERT: (auth.uid() = user_id)
+        //     UPDATE: (auth.uid() = user_id)
+ 
+        async function loadCloudSave() {
+            if (!currentUser) return;
+            const { data, error } = await _supabase
+                .from('user_saves')
+                .select('balance, squad')
+                .eq('user_id', currentUser.id)
+                .single();
+ 
+            if (data) {
+                balance = data.balance ?? 1000;
+                mySquad = data.squad || [];
+                updateUI();
+                renderSquad();
+            }
+            // If no row found (e.g. first login after sign-up race condition), defaults are fine
+        }
+ 
+        async function saveGame() {
+            if (!currentUser) return;
+            await _supabase
+                .from('user_saves')
+                .upsert({
+                    user_id: currentUser.id,
+                    username: currentUser.user_metadata?.username || '',
+                    balance,
+                    squad: mySquad,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'user_id' });
+        }
+ 
+        // ─── GAME LOGIC ──────────────────────────────────────────────────────────
         function getCardValue(p) {
             let val = p.base_price || 0;
             if (p.isSuperHolo) val *= HOLO_MULTIPLIER;
             return val;
         }
-
-        function saveGame() { localStorage.setItem('soccerSlots_saveFile', JSON.stringify({ balance, mySquad })); }
-        
-        function loadGame() {
-            const saved = localStorage.getItem('soccerSlots_saveFile');
-            if (saved) {
-                const data = JSON.parse(saved);
-                balance = data.balance ?? 1000;
-                mySquad = data.mySquad || [];
-                updateUI(); renderSquad();
-            }
-        }
-
+ 
         async function initMarquee() {
             const track = document.getElementById('marquee-track');
             const { data } = await _supabase.from('soccer_stars').select('*').gte('rating', 85);
             if (data) { track.innerHTML = [...data, ...data].map(p => generateCardHtml(p, false)).join(''); }
         }
-
+ 
         function preparePack(tier) {
             activeTier = tier;
             document.getElementById('packArea').style.display = 'none';
@@ -188,31 +393,32 @@
             visual.innerHTML = `
                 <div class="pack-container" onclick="openPack()">
                     <div class="foil-pack">${(tier === 'elt') ? '<div class="galaxy-nebula"></div>' : ''}
-                        <div class="foil-shine"></div><div class="pack-label">${tier.toUpperCase()}</div>
+                        <div class="foil-shine"></div>
+                        <div class="pack-label">${tier.toUpperCase()}</div>
                         <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
                     </div>
                 </div>
                 <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
             visual.style.display = 'block';
         }
-
+ 
         async function openPack() {
             const costs = { std: 10, pre: 100, elt: 1000 };
-            if (balance < costs[activeTier]) { alert("Low balance!"); return; }
+            if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
-            
+ 
             let query = _supabase.from('soccer_stars').select('*');
             if (activeTier === 'std') query = query.lte('rating', 82);
             else if (activeTier === 'pre') query = query.gte('rating', 83).lte('rating', 87);
             else query = query.gte('rating', 88);
-
+ 
             const { data } = await query;
             if (data) {
                 currentPull = data[Math.floor(Math.random() * data.length)];
                 currentPull.instanceId = "inst_" + Date.now();
                 currentPull.collectedDate = new Date().toLocaleDateString();
                 if (currentPull.rating >= 85 && Math.random() < 0.02) currentPull.isSuperHolo = true;
-                
+ 
                 const val = getCardValue(currentPull);
                 const reveal = document.getElementById('pack-reveal');
                 reveal.innerHTML = generateCardHtml(currentPull, false);
@@ -223,14 +429,15 @@
                 updateUI();
             }
         }
-
+ 
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
             const holoClass = p.isSuperHolo ? 'super-holo' : '';
             const val = getCardValue(p);
             const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
             return `<div class="premium-card ${rarity} ${holoClass}" ${clickAttr}>
-                        <div class="badge card-pos">${p.position}</div><div class="badge card-ovr">${p.rating}</div>
+                        <div class="badge card-pos">${p.position}</div>
+                        <div class="badge card-ovr">${p.rating}</div>
                         <img src="${p.image_url}" class="player-img">
                         <div class="nameplate">
                             <div class="card-name">${p.name}</div>
@@ -238,63 +445,69 @@
                         </div>
                     </div>`;
         }
-
+ 
         function showCardDetails(id) {
             const p = mySquad.find(player => player.instanceId == id);
             if (!p) return;
             const val = getCardValue(p);
-            const sellValue = Math.floor(val * SELL_RATE); // THE FIX
-            
+            const sellValue = Math.floor(val * SELL_RATE);
             document.getElementById('modal-card-render').innerHTML = generateCardHtml(p, false);
             document.getElementById('val-orig').innerText = val.toLocaleString() + " 🪙";
-            document.getElementById('val-sell').innerText = sellValue.toLocaleString() + " 🪙"; // THE FIX
+            document.getElementById('val-sell').innerText = sellValue.toLocaleString() + " 🪙";
             document.getElementById('val-date').innerText = p.collectedDate || "Historical";
-            document.getElementById('modal-sell-btn').onclick = () => { if(confirm("Sell " + p.name + "?")) { finalizeSale(id); } };
+            document.getElementById('modal-sell-btn').onclick = () => {
+                if (confirm("Sell " + p.name + "?")) { finalizeSale(id); }
+            };
             document.getElementById('modal-overlay').style.display = 'flex';
         }
-
-        function finalizeSale(id) {
+ 
+        async function finalizeSale(id) {
             const index = mySquad.findIndex(p => p.instanceId == id);
             if (index > -1) {
                 balance += Math.floor(getCardValue(mySquad[index]) * SELL_RATE);
                 mySquad.splice(index, 1);
-                closeModal(); updateUI(); renderSquad(); saveGame();
+                closeModal(); updateUI(); renderSquad();
+                await saveGame();
             }
         }
-
+ 
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-        
+ 
         function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + id).classList.add('active');
-            document.getElementById('nav-' + id).classList.add('active');
+            const navBtn = document.getElementById('nav-' + id);
+            if (navBtn) navBtn.classList.add('active');
             if (id !== 'slots') resetUI();
         }
-
-        function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); saveGame(); }
-        function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); saveGame(); }
-        
-        function resetUI() { 
-            document.getElementById('choiceArea').style.display = 'none'; 
-            document.getElementById('pack-reveal').style.display = 'none'; 
+ 
+        async function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); await saveGame(); }
+        async function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); await saveGame(); }
+ 
+        function resetUI() {
+            document.getElementById('choiceArea').style.display = 'none';
+            document.getElementById('pack-reveal').style.display = 'none';
             document.getElementById('pack-visual').style.display = 'none';
-            document.getElementById('packArea').style.display = 'block'; 
-            document.getElementById('default-message').style.display = 'block'; 
-            updateUI(); 
+            document.getElementById('packArea').style.display = 'block';
+            document.getElementById('default-message').style.display = 'block';
+            updateUI();
         }
-
-        function updateUI() { 
-            document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString()); 
+ 
+        function updateUI() {
+            document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString());
             document.getElementById('nav-club-value').innerText = mySquad.reduce((sum, p) => sum + getCardValue(p), 0).toLocaleString();
-            document.getElementById('team-count').innerText = mySquad.length; 
+            document.getElementById('team-count').innerText = mySquad.length;
         }
-        
+ 
         function renderSquad() {
-            const grid = document.getElementById('teamGrid'); 
+            const grid = document.getElementById('teamGrid');
             grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
             updateUI();
         }
+ 
+        // ─── BOOT ────────────────────────────────────────────────────────────────
+        checkExistingSession();
     </script>
 </body>
 </html>
