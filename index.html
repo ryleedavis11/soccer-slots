@@ -421,33 +421,78 @@
             visual.style.display = 'block';
         }
 
-        async function openPack() {
-            const costs = { std: 10, pre: 800, elt: 2000 };
-            if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
-            balance -= costs[activeTier];
 
-            let query = _supabase.from('soccer_stars').select('*');
-            if (activeTier === 'std') query = query.lte('rating', 82);
-            else if (activeTier === 'pre') query = query.gte('rating', 83).lte('rating', 87);
-            else query = query.gte('rating', 88);
+async function openPack() {
+    const costs = { std: 10, pre: 800, elt: 2000 };
+    if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
+    
+    balance -= costs[activeTier];
+    const roll = Math.random() * 100; // Roll 0 to 100
+    let minR, maxR;
 
-            const { data } = await query;
-            if (data) {
-                currentPull = data[Math.floor(Math.random() * data.length)];
-                currentPull.instanceId = "inst_" + Date.now();
-                currentPull.collectedDate = new Date().toLocaleDateString();
-                if (currentPull.rating >= 85 && Math.random() < 0.02) currentPull.isSuperHolo = true;
+    // --- 1. DETERMINE RATING BRACKET BASED ON YOUR ODDS ---
+    if (activeTier === 'std') {
+        if (roll < 50) { minR = 70; maxR = 79; }           // 50% chance
+        else if (roll < 80) { minR = 80; maxR = 82; }      // 30% chance
+        else if (roll < 90) { minR = 83; maxR = 83; }      // 10% chance
+        else if (roll < 95) { minR = 84; maxR = 85; }      // 5% chance
+        else if (roll < 98) { minR = 86; maxR = 86; }      // 3% chance
+        else if (roll < 99.5) { minR = 87; maxR = 89; }    // 1.5% chance
+        else { minR = 90; maxR = 99; }                     // 0.5% chance
+    } 
+    else if (activeTier === 'pre') {
+        if (roll < 50) { minR = 80; maxR = 82; }           // 50% chance
+        else if (roll < 70) { minR = 83; maxR = 83; }      // 20% chance
+        else if (roll < 80) { minR = 84; maxR = 85; }      // 10% chance
+        else if (roll < 90) { minR = 86; maxR = 86; }      // 10% chance
+        else if (roll < 95) { minR = 87; maxR = 88; }      // 5% chance
+        else if (roll < 99) { minR = 89; maxR = 89; }      // 4% chance
+        else { minR = 90; maxR = 99; }                     // 1% chance
+    } 
+    else if (activeTier === 'elt') {
+        if (roll < 50) { minR = 84; maxR = 86; }           // 50% chance
+        else if (roll < 70) { minR = 87; maxR = 87; }      // 20% chance
+        else if (roll < 87) { minR = 88; maxR = 88; }      // 17% chance
+        else if (roll < 97) { minR = 89; maxR = 89; }      // 10% chance
+        else { minR = 90; maxR = 99; }                     // 3% chance
+    }
 
-                const val = getCardValue(currentPull);
-                const reveal = document.getElementById('pack-reveal');
-                reveal.innerHTML = generateCardHtml(currentPull, false);
-                document.getElementById('pack-visual').style.display = 'none';
-                reveal.style.display = 'block';
-                document.getElementById('choiceArea').style.display = 'flex';
-                document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
-                updateUI();
-            }
+    // --- 2. FETCH RANDOM PLAYER FROM THAT BRACKET ---
+    let { data, error } = await _supabase
+        .from('soccer_stars')
+        .select('*')
+        .gte('rating', minR)
+        .lte('rating', maxR);
+
+    // Fallback: If your database doesn't have a player in that specific range,
+    // grab the closest one so the game doesn't crash.
+    if (!data || data.length === 0) {
+        let fallback = await _supabase.from('soccer_stars').select('*').limit(20);
+        data = fallback.data;
+    }
+
+    if (data) {
+        currentPull = data[Math.floor(Math.random() * data.length)];
+        currentPull.instanceId = "inst_" + Date.now();
+        currentPull.collectedDate = new Date().toLocaleDateString();
+        
+        // --- 3. HOLO CHECK (Locked at 2% for 87+) ---
+        if (currentPull.rating >= 87 && Math.random() < 0.02) {
+            currentPull.isSuperHolo = true;
         }
+        
+        const val = getCardValue(currentPull);
+        const reveal = document.getElementById('pack-reveal');
+        reveal.innerHTML = generateCardHtml(currentPull, false);
+        document.getElementById('pack-visual').style.display = 'none';
+        reveal.style.display = 'block';
+        document.getElementById('choiceArea').style.display = 'flex';
+        document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
+        
+        updateUI();
+        await saveGame(); 
+    }
+}
 
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
