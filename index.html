@@ -211,7 +211,7 @@
                 currentPull = data[Math.floor(Math.random() * data.length)];
                 currentPull.instanceId = "inst_" + Date.now();
                 currentPull.collectedDate = new Date().toLocaleDateString();
-                if (currentPull.rating >= 87 && Math.random() < 0.02) currentPull.isSuperHolo = true;
+                if (currentPull.rating >= 85 && Math.random() < 0.02) currentPull.isSuperHolo = true;
                 
                 const val = getCardValue(currentPull);
                 const reveal = document.getElementById('pack-reveal');
