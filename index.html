@@ -644,11 +644,11 @@
                 <button id="sellBtn" class="btn" style="background: #ef4444; width: 48%;" onclick="sellPlayer()">SELL</button>
             </div>
             <div id="packArea">
-                <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10 🪙)</button>
-                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (500 🪙)</button>
-                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1400 🪙)</button>
+                <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (500 🪙)</button>
+                <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (2500 🪙)</button>
+                <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (10000 🪙)</button>
 
-                <button class="btn" style="background: #00f2ff; color: #000; margin-top: 15px; box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);" onclick="preparePack('promo')">1st Edition(2500 🪙)</button>
+                <button class="btn" style="background: #00f2ff; color: #000; margin-top: 15px; box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);" onclick="preparePack('promo')">1st Edition(25000 🪙)</button>
             </div>
         </div>
         <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
@@ -1274,7 +1274,7 @@
         }
  
         async function openPack() {
-            const costs = { std: 10, pre: 500, elt: 1400, promo: 2500 };
+            const costs = { std: 500, pre: 2500, elt: 10000, promo: 25000 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
             const roll = Math.random() * 100;
