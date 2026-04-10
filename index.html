@@ -1,10 +1,7 @@
-Soccer slots · HTML
-Copy
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Soccer Slots: Pro Executive</title>
+    <title>Pro Executive</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #0b0b0b; color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
@@ -298,6 +295,31 @@ Copy
             100% { background: transparent; }
         }
         .collect-flash { animation: collectFlash 0.6s ease-out; }
+        /* Offline earnings toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, #1a1f0a, #0d1a0d);
+            border: 1px solid #3ecf8e;
+            color: #3ecf8e;
+            font-weight: 900;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            padding: 14px 28px;
+            border-radius: 50px;
+            box-shadow: 0 0 25px rgba(62,207,142,0.25);
+            z-index: 9000;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -476,6 +498,21 @@ Copy
         let lastCollected = null;        // ISO timestamp of last office collection
         let officeTickInterval = null;   // setInterval handle for the office ticker
  
+        // ─── TOAST ───────────────────────────────────────────────────────────────
+        function showToast(msg, duration = 4000) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerText = msg;
+            document.body.appendChild(t);
+            requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => t.remove(), 400);
+            }, duration);
+        }
+ 
         // ─── LOADING HELPERS ─────────────────────────────────────────────────────
         function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
         function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
@@ -585,6 +622,12 @@ Copy
             updateWelcomeMsg();
             initMarquee();
             startOfficeTicker();
+ 
+            // Show offline earnings toast if any were credited on load
+            if (window._offlineEarnedNotif) {
+                showToast(`💰 While you were away, your Office earned +${window._offlineEarnedNotif.toLocaleString()} 🪙`);
+                window._offlineEarnedNotif = null;
+            }
         }
  
         function updateWelcomeMsg() {
@@ -603,8 +646,20 @@ Copy
             if (data) {
                 balance = data.balance ?? 1000;
                 mySquad = data.squad || [];
-                // If no last_collected yet, set to now (new column for existing users)
                 lastCollected = data.last_collected || new Date().toISOString();
+ 
+                // ── OFFLINE EARNINGS: credit coins for real time spent away ──
+                const offlineRoster = [...mySquad]
+                    .sort((a, b) => getCardValue(b) - getCardValue(a))
+                    .slice(0, OFFICE_TOP_N);
+                const offlineHourlyRate = offlineRoster.reduce((sum, p) => sum + getCardValue(p) * OFFICE_HOURLY_RATE, 0);
+                const offlineEarned = Math.floor(offlineHourlyRate * getElapsedHours());
+                if (offlineEarned > 0) {
+                    balance += offlineEarned;
+                    lastCollected = new Date().toISOString();
+                    window._offlineEarnedNotif = offlineEarned;
+                }
+ 
                 updateUI();
                 renderSquad();
                 saveGame();
