@@ -1064,7 +1064,7 @@
                 .eq('user_id', currentUser.id)
                 .single();
             if (data) {
-                balance = data.balance ?? 1000;
+                balance = data.balance ?? 5000;
                 mySquad = data.squad || [];
                 lastCollected = data.last_collected || new Date().toISOString();
  
