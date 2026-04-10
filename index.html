@@ -672,12 +672,24 @@
         </div>
     </div>
  
-    <div id="view-rank" class="view">
-        <h1 style="color: #3ecf8e; text-align: center; margin-bottom: 5px;">GLOBAL RANKINGS</h1>
-        <p style="color: #555; text-align: center; margin-bottom: 60px; letter-spacing: 2px; font-size: 0.7rem;">THE TOP 25 EXECUTIVE CLUBS</p>
-        <div id="podium-area" class="podium-container"></div>
-        <div id="leaderboard-container"></div>
-    </div>
+                    <div id="view-rank" class="view" style="position: relative;">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <h1 style="color: #3ecf8e; text-align: center; margin-top: 20px; margin-bottom: 5px;">GLOBAL RANKINGS</h1>
+                        <p style="color: #555; text-align: center; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.7rem;">THE TOP 25 EXECUTIVE CLUBS</p>
+                        
+                        <div id="podium-area" class="podium-container"></div>
+                        <div id="leaderboard-container"></div>
+                    </div>
+
+                    <div id="active-sidebar" style="position: absolute; right: 40px; top: 120px; width: 220px; background: rgba(22, 22, 22, 0.8); border: 1px solid #333; padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); z-index: 100;">
+                        <div style="font-size: 0.7rem; color: #3ecf8e; letter-spacing: 2px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase;">
+                            Online Now (<span id="online-count">0</span>)
+                        </div>
+                        <div id="active-players-list">
+                            </div>
+                    </div>
+</div>
+</div>
  
     <div id="view-team" class="view">
         <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
@@ -988,6 +1000,9 @@
             hideLoading();
             document.getElementById('view-login').classList.remove('active');
             document.getElementById('main-nav').style.display = 'flex';
+
+            setupPresence();
+
             showView('home');
             updateWelcomeMsg();
             initMarquee();
@@ -2014,6 +2029,55 @@
  
         // ─── BOOT ────────────────────────────────────────────────────────────────
         checkExistingSession();
+
+        let onlineUsers = {}; // Stores { presenceId: { username } }
+
+function setupPresence() {
+    if (!currentUser) return;
+
+    // 1. Create the channel
+    const roomOne = _supabase.channel('ranking_room', {
+        config: { presence: { key: currentUser.id } }
+    });
+
+    // 2. Listen for people joining/leaving
+    roomOne
+        .on('presence', { event: 'sync' }, () => {
+            const newState = roomOne.presenceState();
+            console.log('Syncing presence:', newState);
+            renderOnlineList(newState);
+        })
+        .subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+                // 3. "Track" our own username so others see us
+                const myUsername = currentUser.user_metadata?.username || "Manager";
+                await roomOne.track({
+                    username: myUsername,
+                    onlineAt: new Date().toISOString(),
+                });
+            }
+        });
+}
+
+function renderOnlineList(presenceState) {
+    const listEl = document.getElementById('active-players-list');
+    if (!listEl) return;
+
+    // Extract usernames from the presence state object
+    const users = Object.values(presenceState).map(p => p[0].username);
+    
+    // Remove duplicates and render
+    const uniqueUsers = [...new Set(users)];
+    listEl.innerHTML = uniqueUsers.map(name => `
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:0.85rem;">
+            <span style="width:8px; height:8px; background:#3ecf8e; border-radius:50%; box-shadow:0 0 5px #3ecf8e;"></span>
+            <span style="color:#eee; font-weight:bold;">${name.toUpperCase()}</span>
+        </div>
+    `).join('');
+    
+    // Update the count badge
+    document.getElementById('online-count').innerText = uniqueUsers.length;
+}
     </script>
 </body>
 </html>
