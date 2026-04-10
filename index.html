@@ -822,7 +822,7 @@
                 <div class="arena-mode-title">BOT BATTLE</div>
                 <div class="arena-rules">
                     <div class="arena-rule entry">ENTRY: 500 🪙</div>
-                    <div class="arena-rule win">WIN: +250 🪙 + KEEP YOUR CARD</div>
+                    <div class="arena-rule win">WIN: +500 BACK 🪙 + KEEP YOUR CARD</div>
                     <div class="arena-rule tie">TIE: ENTRY FEE REFUNDED</div>
                     <div class="arena-rule loss">LOSS: CARD BURNED · 500 🪙 LOST</div>
                 </div>
@@ -2400,7 +2400,7 @@ function showPackWeights(tier) {
 
         async function startArenaBattle() {
             const ENTRY = 500;
-            const WIN_BONUS = 250;
+            const WIN_BONUS = 500;
 
             if (balance < ENTRY) {
                 showToast(`⚠ You need ${ENTRY.toLocaleString()} 🪙 to enter.`, 4000);
