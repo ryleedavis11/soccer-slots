@@ -1,3 +1,6 @@
+Soccer slots · HTML
+Copy
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +18,7 @@
         .auth-error { color: #ef4444; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
         .auth-success { color: #3ecf8e; font-size: 0.8rem; min-height: 20px; margin: 6px 0; }
         #auth-subtitle { color: #555; font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 1px; }
-
+ 
         /* NAVIGATION */
         nav { background: #161616; padding: 0 20px; display: none; justify-content: space-between; align-items: center; height: 60px; border-bottom: 2px solid #333; z-index: 1000; flex-shrink: 0; }
         .nav-metric { width: 220px; font-weight: 900; font-size: 0.85rem; letter-spacing: 1px; }
@@ -26,14 +29,32 @@
         nav button.active { color: #3ecf8e; border-bottom: 2px solid #3ecf8e; padding-bottom: 5px; }
         #logout-btn { color: #ef4444 !important; font-size: 0.75rem !important; margin-left: 5px !important; }
         #logout-btn:hover { color: #ff6b6b !important; }
-
+        #nav-office { position: relative; }
+        .office-badge {
+            position: absolute;
+            top: -6px;
+            right: -14px;
+            background: #ffd700;
+            color: black;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.55rem;
+            font-weight: 900;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: pulseBadge 1.5s infinite;
+        }
+        @keyframes pulseBadge { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+ 
         /* VIEW MANAGEMENT */
         .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
         .view.active { display: block; }
         
         #view-home.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         #view-slots.active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; padding-top: 30px; }
-
+ 
         /* HOME SCREEN */
         .marquee-container { position: absolute; top: 0; left: 0; width: 100%; height: 300px; z-index: 1; opacity: 0.15; pointer-events: none; overflow: hidden; white-space: nowrap; padding-top: 20px; }
         .marquee-track { display: flex; animation: scroll 60s linear infinite; gap: 20px; width: max-content; }
@@ -41,12 +62,9 @@
         .home-content { position: relative; z-index: 100; max-width: 500px; width: 90%; background: rgba(20, 20, 20, 0.9); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         .home-logo { font-size: 3rem; font-weight: 900; color: #3ecf8e; margin-bottom: 5px; text-shadow: 0 0 20px rgba(62, 207, 142, 0.3); }
         #welcome-msg { color: #888; font-size: 0.85rem; margin-bottom: 15px; letter-spacing: 1px; }
-
-        /* Dramatic Shake for the pack */
-        .suspense-shake {
-            animation: packShake 0.1s infinite;
-        }
-
+ 
+        /* Dramatic Shake */
+        .suspense-shake { animation: packShake 0.1s infinite; }
         @keyframes packShake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
             25% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -54,44 +72,23 @@
             75% { transform: translate(3px, 2px) rotate(0deg); }
             100% { transform: translate(1px, -1px) rotate(1deg); }
         }
-
-        /* Flash effect for the background */
-        .walkout-flash {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 10000;
-            opacity: 0;
-            pointer-events: none;
-            animation: flashTrigger 1.5s ease-out;
-        }
-
-        @keyframes flashTrigger {
-            0% { opacity: 0; }
-            10% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
+ 
+        .walkout-flash { position: fixed; inset: 0; background: white; z-index: 10000; opacity: 0; pointer-events: none; animation: flashTrigger 1.5s ease-out; }
+        @keyframes flashTrigger { 0% { opacity: 0; } 10% { opacity: 1; } 100% { opacity: 0; } }
+ 
         /* FOIL PACKS */
         .pack-container { position: relative; width: 220px; height: 320px; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 10px; }
         .pack-container:hover { transform: scale(1.05); }
         .foil-pack { position: absolute; inset: 0; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .galaxy-nebula { position: absolute; inset: -50%; background: radial-gradient(circle at 30% 30%, rgba(188, 19, 254, 0.6) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(75, 0, 130, 0.6) 0%, transparent 50%); filter: blur(40px); animation: nebulaShift 8s infinite alternate ease-in-out; z-index: 1; }
         @keyframes nebulaShift { from { transform: rotate(0deg) scale(1); } to { transform: rotate(20deg) scale(1.3); } }
-        .premium-glow { position: absolute; inset: -20%; background: radial-gradient(circle at center, rgba(255, 217, 0, 0.658) 0%, transparent 70%);  filter: blur(30px); 
-            animation: goldPulse 4s infinite alternate ease-in-out; 
-            z-index: 1; 
-        }
-
-        @keyframes goldPulse { 
-            from { opacity: 0.5; transform: scale(1); } 
-            to { opacity: 0.8; transform: scale(1.2); } 
-        }
+        .premium-glow { position: absolute; inset: -20%; background: radial-gradient(circle at center, rgba(255, 217, 0, 0.658) 0%, transparent 70%); filter: blur(30px); animation: goldPulse 4s infinite alternate ease-in-out; z-index: 1; }
+        @keyframes goldPulse { from { opacity: 0.5; transform: scale(1); } to { opacity: 0.8; transform: scale(1.2); } }
         .sealed-player-render { width: 90%; height: 80%; object-fit: contain; z-index: 4; filter: drop-shadow(0 0 15px rgba(0,0,0,0.8)); pointer-events: none; }
         .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
         .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
         @keyframes shine { from { transform: translateX(-100%) translateY(-100%); } to { transform: translateX(100%) translateY(100%); } }
-
+ 
         /* CARD DESIGN */
         .premium-card { width: 180px; height: 250px; border-radius: 12px; position: relative; overflow: hidden; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: inline-flex; flex-direction: column; justify-content: flex-end; padding: 10px; border: 2px solid rgba(255,255,255,0.1); margin: 10px; background-size: cover; background-position: center; vertical-align: top; text-align: left; cursor: pointer; flex-shrink: 0; z-index: 20; }
         .premium-card.common    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/bronze.jpg'); }
@@ -99,24 +96,17 @@
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
         .premium-card.limited   { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/LimitedBackground.jpg'); border: 2px solid #bebebe; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
         .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
-
+ 
         .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
         .card-pos { left: 10px; background: #3ecf8e; }
         .card-ovr { right: 10px; background: #ffd700; }
         .card-serial { bottom: 65px; right: 10px; background: #00f2ff; color: black; font-size: 0.6rem; padding: 2px 6px; border-radius: 3px; position: absolute; z-index: 30; font-weight: 900; }
-        
         .player-img { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 115%; height: auto; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); pointer-events: none; }
-        
-        /* FULL ART STYLE (ZOOMED OUT) */
-        .full-art .player-img {
-            width: 90% !important; /* Shrink from 115% to show more body */
-            top: 22% !important;   /* Push down slightly to frame the full body */
-        }
-
+        .full-art .player-img { width: 90% !important; top: 22% !important; }
         .nameplate { background: rgba(0, 0, 0, 0.85); padding: 8px; border-radius: 8px; z-index: 20; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
         .card-name { font-weight: 900; font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-price { font-size: 0.75rem; color: #ffd700; font-weight: bold; margin-top: 2px; display: block; }
-
+ 
         /* PODIUM STYLING */
         .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 30px; margin: 100px auto 40px; max-width: 1000px; padding-bottom: 40px; border-bottom: 1px solid #333; }
         .podium-slot { display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -124,32 +114,30 @@
         .podium-val { font-size: 0.85rem; color: #ffd700; font-weight: bold; margin-bottom: 15px; }
         .podium-star-label { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; font-weight: bold; }
         .podium-card-mini { transform: scale(0.65); margin: -40px 0; pointer-events: none; }
-        
-        /* OLYMPIC ORDERING & SCALING */
-        .slot-1 { order: 2; transform: translateY(-40px) scale(1.15); } /* First place larger and higher */
-        .slot-1 .podium-user { font-size: 1.4rem; color: #ffd700; } /* Gold color for #1 */
-        .slot-2 { order: 1; transform: scale(1); } /* Second place on left */
-        .slot-3 { order: 3; transform: scale(1); } /* Third place on right */
-
+        .slot-1 { order: 2; transform: translateY(-40px) scale(1.15); }
+        .slot-1 .podium-user { font-size: 1.4rem; color: #ffd700; }
+        .slot-2 { order: 1; transform: scale(1); }
+        .slot-3 { order: 3; transform: scale(1); }
+ 
         /* RANK TABLE */
         .rank-table { width: 100%; max-width: 800px; margin: 20px auto; border-collapse: collapse; background: #161616; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
         .rank-table th { background: #222; color: #3ecf8e; padding: 15px; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
         .rank-table td { padding: 15px; border-bottom: 1px solid #222; font-size: 0.95rem; }
         .rank-table tr:hover { background: #1a1a1a; }
-
+ 
         /* MODAL */
         #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .modal-content { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; max-width: 400px; width: 90%; position: relative; }
         .data-point { margin: 15px 0; border-bottom: 1px solid #333; padding-bottom: 10px; }
         .data-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
         .data-value { font-size: 1.2rem; font-weight: bold; color: #3ecf8e; }
-
+ 
         /* LOADING OVERLAY */
         #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
         #loading-overlay.active { display: flex; }
         .spinner { width: 40px; height: 40px; border: 3px solid #333; border-top-color: #3ecf8e; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
         /* UI ELEMENTS */
         #slot-container { border: 2px solid #3ecf8e; display: flex; flex-direction: column; padding: 30px; border-radius: 25px; background: #161616; max-width: 450px; width: 100%; margin: 0 auto; position: relative; z-index: 50; }
         #display-area { min-height: 420px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
@@ -158,61 +146,200 @@
         
         .team-grid { 
             display: grid; 
-            /* Fixed 180px width so cards don't stretch */
             grid-template-columns: repeat(auto-fill, 180px); 
-            /* Increased spacing between rows and columns */
             gap: 10px 45px; 
-            /* More breathing room around the edges of the screen */
             padding: 40px; 
-            /* Centers the grid within the container */
             justify-content: center; 
             margin: 0 auto;
-            /* This width ensures exactly 5 columns + the gaps */
             max-width: 1150px; 
         }
+ 
+        /* ─── OFFICE VIEW ─────────────────────────────────────────────────── */
+        #view-office.active { display: flex; flex-direction: column; align-items: center; }
+ 
+        .office-header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 900px;
+        }
+        .office-header h1 { color: #ffd700; font-size: 2rem; margin-bottom: 5px; letter-spacing: 3px; }
+        .office-header p { color: #555; font-size: 0.75rem; letter-spacing: 2px; margin: 0; }
+ 
+        /* Big collect panel */
+        .office-collect-panel {
+            background: linear-gradient(135deg, #1a1a0a 0%, #161600 100%);
+            border: 1px solid #ffd700;
+            border-radius: 20px;
+            padding: 28px 40px;
+            text-align: center;
+            margin-bottom: 35px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+        }
+        .office-collect-label { font-size: 0.7rem; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .office-pending-amount { font-size: 2.8rem; font-weight: 900; color: #ffd700; margin: 6px 0 4px; line-height: 1; text-shadow: 0 0 20px rgba(255,215,0,0.4); }
+        .office-pending-sub { font-size: 0.75rem; color: #888; margin-bottom: 18px; }
+        .office-timer-bar-wrap { background: #111; border-radius: 6px; height: 8px; margin-bottom: 8px; overflow: hidden; width: 100%; }
+        .office-timer-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #3ecf8e, #ffd700); transition: width 1s linear, background 1s linear; }
+        .office-timer-label { font-size: 0.7rem; color: #555; margin-bottom: 18px; }
+        .office-collect-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.2s;
+        }
+        .office-collect-btn.ready {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: black;
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
+            animation: collectPulse 2s infinite;
+        }
+        @keyframes collectPulse { 0%,100%{ box-shadow: 0 0 20px rgba(255,215,0,0.4); } 50% { box-shadow: 0 0 40px rgba(255,215,0,0.7); } }
+        .office-collect-btn.empty { background: #222; color: #444; cursor: not-allowed; }
+        .office-collect-btn.capped { background: #3a1a1a; color: #ef4444; border: 1px solid #ef4444; cursor: default; }
+ 
+        /* Office roster grid */
+        .office-roster {
+            width: 100%;
+            max-width: 1150px;
+        }
+        .office-roster-title {
+            font-size: 0.7rem;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+        .office-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 180px);
+            gap: 10px 45px;
+            padding: 10px 40px 40px;
+            justify-content: center;
+        }
+        /* Wrapper that holds the real card + earnings tag below it */
+        .office-card-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        /* Rank badge overlaid top-left of the card */
+        .office-rank-badge {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            z-index: 40;
+            background: rgba(0,0,0,0.75);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 2px 7px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: #888;
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+        .office-rank-badge.top3 { color: #ffd700; border-color: #ffd70055; }
+        /* Earnings tag sitting just below the card */
+        .office-earn-tag {
+            margin-top: -4px;
+            background: #0d1f0d;
+            border: 1px solid #3ecf8e44;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 6px 12px;
+            text-align: center;
+            width: 156px;
+            box-sizing: border-box;
+        }
+        .office-earn-tag.capped {
+            background: #1f0d0d;
+            border-color: #ef444444;
+        }
+        .office-earn-amount {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #3ecf8e;
+        }
+        .office-earn-tag.capped .office-earn-amount { color: #ef4444; }
+        .office-earn-label {
+            font-size: 0.55rem;
+            color: #555;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+        /* Dim the card slightly when capped */
+        .office-card-wrap.capped .premium-card {
+            filter: brightness(0.6) saturate(0.5);
+        }
+ 
+        .office-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #333;
+        }
+        .office-empty-state .big-icon { font-size: 3rem; margin-bottom: 10px; }
+        .office-empty-state p { font-size: 0.85rem; letter-spacing: 1px; }
+ 
+        /* Collect flash animation */
+        @keyframes collectFlash {
+            0% { background: rgba(255,215,0,0.3); }
+            100% { background: transparent; }
+        }
+        .collect-flash { animation: collectFlash 0.6s ease-out; }
     </style>
 </head>
 <body>
-
+ 
     <div id="loading-overlay">
         <div class="spinner"></div>
         <div style="color: #555; font-size: 0.85rem; letter-spacing: 2px;">LOADING...</div>
     </div>
-
+ 
     <div id="view-login" class="active">
         <div class="login-box">
             <h1 style="color: #3ecf8e; margin-bottom: 0;">PRO EXECUTIVE</h1>
             <p id="auth-subtitle">CREATE ACCOUNT</p>
             <div id="auth-error" class="auth-error"></div>
             <div id="auth-success" class="auth-success"></div>
-
             <div id="field-username">
                 <input type="text" id="username" class="login-input" placeholder="USERNAME">
             </div>
-
             <input type="email" id="email" class="login-input" placeholder="EMAIL">
             <input type="password" id="password" class="login-input" placeholder="PASSWORD">
-
-            <button class="btn" id="auth-submit-btn" style="background: #3ecf8e; color: black; margin-top: 15px;" onclick="handleAuth()">
-                CREATE ACCOUNT
-            </button>
+            <button class="btn" id="auth-submit-btn" style="background: #3ecf8e; color: black; margin-top: 15px;" onclick="handleAuth()">CREATE ACCOUNT</button>
             <br>
             <button class="auth-toggle" onclick="toggleAuthMode()">Already have an account? Sign In</button>
         </div>
     </div>
-
+ 
     <nav id="main-nav">
         <div class="nav-metric nav-left">CLUB VALUE: <span id="nav-club-value">0</span> 🪙</div>
         <div class="nav-center">
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
             <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>)</button>
+            <button id="nav-office" onclick="showView('office')">
+                OFFICE
+                <span class="office-badge" id="office-badge">$</span>
+            </button>
             <button id="nav-rank" onclick="showView('rank')">RANKINGS</button>
             <button id="logout-btn" onclick="handleLogout()">LOGOUT</button>
         </div>
         <div class="nav-metric nav-right">BALANCE: <span class="bal-text">0</span> 🪙</div>
     </nav>
-
+ 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div id="modal-card-render" style="display: flex; justify-content: center; margin-bottom: 20px;"></div>
@@ -222,7 +349,7 @@
             <button class="btn" style="background: #ef4444;" id="modal-sell-btn">QUICK SELL</button>
         </div>
     </div>
-
+ 
     <div id="view-home" class="view">
         <div class="marquee-container"><div id="marquee-track" class="marquee-track"></div></div>
         <div class="home-content">
@@ -231,12 +358,11 @@
             <button class="btn" style="background: #3ecf8e; color: black; margin-top: 10px;" onclick="showView('slots')">GO TO STORE</button>
         </div>
     </div>
-
+ 
     <div id="view-slots" class="view">
         <button id="catalog-toggle-btn" class="btn" style="background: #2a2a2a; color: #3ecf8e; border: 1px solid #3ecf8e; max-width: 450px; margin: 0 auto 15px; display: block;" onclick="openCatalog()">
             📖 VIEW CARD DATABASE
         </button>
-
         <div id="slot-container">
             <div id="display-area">
                 <div id="default-message" style="font-size: 1.8rem; color: #3ecf8e; font-weight: bold;">SELECT A PACK</div>
@@ -253,15 +379,12 @@
                 <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1400 🪙)</button>
             </div>
         </div>
-
         <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
-            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div style="width: 160px;"></div> 
+                <div style="width: 160px;"></div>
                 <h2 style="color: #3ecf8e; margin: 0; text-align: center;">CARD DATABASE</h2>
                 <button class="btn" style="background: #ef4444; width: 160px; padding: 8px 15px; margin: 0;" onclick="closeCatalog()">BACK TO PACKS</button>
             </div>
-            
             <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;">
                 <button class="btn" style="background: #cd7f32; width: auto; padding: 10px 20px;" onclick="loadCatalog('common')">BRONZE</button>
                 <button class="btn" style="background: #c0c0c0; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('silver')">SILVER</button>
@@ -269,22 +392,20 @@
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('limited')">LIMITED</button>
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
             </div>
-
             <div id="holo-note" style="display: none; color: #00f2ff; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;">
                 * Holos are rare every 85+ rated card you pull has a 2% chance to become a Holo.
             </div>
-
             <div id="catalog-grid" class="team-grid"></div>
         </div>
     </div>
-
+ 
     <div id="view-rank" class="view">
         <h1 style="color: #3ecf8e; text-align: center; margin-bottom: 5px;">GLOBAL RANKINGS</h1>
         <p style="color: #555; text-align: center; margin-bottom: 60px; letter-spacing: 2px; font-size: 0.7rem;">THE TOP 25 EXECUTIVE CLUBS</p>
         <div id="podium-area" class="podium-container"></div>
         <div id="leaderboard-container"></div>
     </div>
-
+ 
     <div id="view-team" class="view">
         <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
             <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
@@ -296,10 +417,35 @@
                 <option value="rating-desc">Rating (Highest)</option>
             </select>
         </div>
-
         <div id="teamGrid" class="team-grid"></div>
     </div>
-
+ 
+    <!-- ─── OFFICE VIEW ──────────────────────────────────────────────────── -->
+    <div id="view-office" class="view">
+        <div class="office-header">
+            <h1>🏢 THE OFFICE</h1>
+            <p>YOUR TOP 10 ASSETS GENERATE PASSIVE INCOME · COLLECT EVERY 6 HOURS</p>
+        </div>
+ 
+        <div class="office-collect-panel" id="office-collect-panel">
+            <div class="office-collect-label">PENDING EARNINGS</div>
+            <div class="office-pending-amount" id="office-pending-display">0</div>
+            <div class="office-pending-sub" id="office-pending-sub">🪙 based on time since last collection</div>
+            <div class="office-timer-bar-wrap">
+                <div class="office-timer-bar" id="office-timer-bar" style="width: 100%;"></div>
+            </div>
+            <div class="office-timer-label" id="office-timer-label">Loading...</div>
+            <button class="office-collect-btn empty" id="office-collect-btn" onclick="collectOfficeEarnings()">COLLECT</button>
+        </div>
+ 
+        <div class="office-roster" id="office-roster">
+            <div class="office-empty-state">
+                <div class="big-icon">📋</div>
+                <p>Loading your squad...</p>
+            </div>
+        </div>
+    </div>
+ 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ─── SUPABASE INIT ───────────────────────────────────────────────────────
@@ -307,16 +453,19 @@
             'https://owffrsfbnpnhdgizamhk.supabase.co',
             'sb_publishable_Xzup7yhRVD3INWoIJkk-9g_ZHnZSoq8'
         );
-
+ 
         // ─── CONSTANTS ───────────────────────────────────────────────────────────
         const SELL_RATE = 0.65;
         const HOLO_MULTIPLIER = 3;
+        const OFFICE_HOURLY_RATE = 0.01;   // 1% of card value per hour
+        const OFFICE_CAP_HOURS = 6;         // earnings freeze after 6h uncollected
+        const OFFICE_TOP_N = 10;            // top N cards earn
         const PACK_IMAGES = {
             std: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Barcelona%20team%20-%20FootyRenders.png',
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
             elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png'
         };
-
+ 
         // ─── STATE ───────────────────────────────────────────────────────────────
         let balance = 1000;
         let mySquad = [];
@@ -324,11 +473,13 @@
         let activeTier = null;
         let currentUser = null;
         let isLoginMode = false;
-
+        let lastCollected = null;        // ISO timestamp of last office collection
+        let officeTickInterval = null;   // setInterval handle for the office ticker
+ 
         // ─── LOADING HELPERS ─────────────────────────────────────────────────────
         function showLoading() { document.getElementById('loading-overlay').classList.add('active'); }
         function hideLoading() { document.getElementById('loading-overlay').classList.remove('active'); }
-
+ 
         // ─── AUTH MODE TOGGLE ────────────────────────────────────────────────────
         function toggleAuthMode() {
             isLoginMode = !isLoginMode;
@@ -337,7 +488,6 @@
             const toggle = document.querySelector('.auth-toggle');
             const usernameField = document.getElementById('field-username');
             clearAuthMessages();
-
             if (isLoginMode) {
                 subtitle.innerText = 'SIGN IN';
                 btn.innerText = 'SIGN IN';
@@ -350,25 +500,22 @@
                 usernameField.style.display = 'block';
             }
         }
-
+ 
         function clearAuthMessages() {
             document.getElementById('auth-error').innerText = '';
             document.getElementById('auth-success').innerText = '';
         }
         function setAuthError(msg) { document.getElementById('auth-error').innerText = msg; }
         function setAuthSuccess(msg) { document.getElementById('auth-success').innerText = msg; }
-
-        // ─── HANDLE AUTH (REGISTER OR LOGIN) ────────────────────────────────────
+ 
+        // ─── HANDLE AUTH ─────────────────────────────────────────────────────────
         async function handleAuth() {
             clearAuthMessages();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const username = document.getElementById('username').value.trim();
-
             if (!email || !password) { setAuthError('Email and password required.'); return; }
-
             showLoading();
-
             if (isLoginMode) {
                 const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) { hideLoading(); setAuthError(error.message); return; }
@@ -379,53 +526,39 @@
                 if (!username) { hideLoading(); setAuthError('Username is required.'); return; }
                 if (username.length < 3) { hideLoading(); setAuthError('Username must be at least 3 characters.'); return; }
                 if (password.length < 6) { hideLoading(); setAuthError('Password must be at least 6 characters.'); return; }
-
-                const { data, error } = await _supabase.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { username } }
-                });
-
+                const { data, error } = await _supabase.auth.signUp({ email, password, options: { data: { username } } });
                 if (error) { hideLoading(); setAuthError(error.message); return; }
-
                 const { data: sessionData } = await _supabase.auth.getSession();
                 currentUser = sessionData.session?.user || data.user;
-
                 const { data: saveData, error: dbError } = await _supabase
-                .from('user_saves')
-                .upsert({
-                    user_id: currentUser.id,
-                    email: currentUser.email,
-                    username: username,
-                    balance: 1000,
-                    squad: [],
-                    club_value: 0,
-                    updated_at: new Date().toISOString()
-                }, { onConflict: 'user_id' })
-                .select();
-
-                if (dbError) {
-                    console.error("Supabase Insert Error:", dbError);
-                    hideLoading();
-                    setAuthError("Database error: " + dbError.message);
-                    return;
-                }
-
+                    .from('user_saves')
+                    .upsert({
+                        user_id: currentUser.id,
+                        email: currentUser.email,
+                        username: username,
+                        balance: 1000,
+                        squad: [],
+                        club_value: 0,
+                        last_collected: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'user_id' })
+                    .select();
+                if (dbError) { hideLoading(); setAuthError("Database error: " + dbError.message); return; }
                 balance = 1000;
                 mySquad = [];
+                lastCollected = new Date().toISOString();
                 hideLoading();
                 enterGame();
             }
         }
-
+ 
         // ─── LOGOUT ──────────────────────────────────────────────────────────────
         async function handleLogout() {
             if (!confirm('Log out?')) return;
             await saveGame();
+            stopOfficeTicker();
             await _supabase.auth.signOut();
-            currentUser = null;
-            balance = 1000;
-            mySquad = [];
+            currentUser = null; balance = 1000; mySquad = []; lastCollected = null;
             document.getElementById('main-nav').style.display = 'none';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-login').classList.add('active');
@@ -434,20 +567,15 @@
             document.getElementById('password').value = '';
             document.getElementById('username').value = '';
         }
-
-        // ─── SESSION CHECK ON PAGE LOAD ──────────────────────────────────────────
+ 
+        // ─── SESSION CHECK ───────────────────────────────────────────────────────
         async function checkExistingSession() {
             showLoading();
             const { data: { session } } = await _supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                await loadCloudSave();
-                enterGame();
-            } else {
-                hideLoading();
-            }
+            if (session) { currentUser = session.user; await loadCloudSave(); enterGame(); }
+            else { hideLoading(); }
         }
-
+ 
         // ─── ENTER GAME ──────────────────────────────────────────────────────────
         function enterGame() {
             hideLoading();
@@ -456,31 +584,33 @@
             showView('home');
             updateWelcomeMsg();
             initMarquee();
+            startOfficeTicker();
         }
-
+ 
         function updateWelcomeMsg() {
             const username = currentUser?.user_metadata?.username || currentUser?.email || 'MANAGER';
             document.getElementById('welcome-msg').innerText = `WELCOME BACK, ${username.toUpperCase()}`;
         }
-
+ 
         // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
         async function loadCloudSave() {
             if (!currentUser) return;
             const { data, error } = await _supabase
                 .from('user_saves')
-                .select('balance, squad')
+                .select('balance, squad, last_collected')
                 .eq('user_id', currentUser.id)
                 .single();
-
             if (data) {
                 balance = data.balance ?? 1000;
                 mySquad = data.squad || [];
+                // If no last_collected yet, set to now (new column for existing users)
+                lastCollected = data.last_collected || new Date().toISOString();
                 updateUI();
                 renderSquad();
-                saveGame(); // Update value on load
+                saveGame();
             }
         }
-
+ 
         async function saveGame() {
             if (!currentUser) return;
             const cv = mySquad.reduce((sum, p) => sum + getCardValue(p), 0);
@@ -493,117 +623,280 @@
                     balance,
                     squad: mySquad,
                     club_value: cv,
+                    last_collected: lastCollected,
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' });
         }
-
+ 
         // ─── GAME LOGIC ──────────────────────────────────────────────────────────
         function getCardValue(p) {
             let val = p.base_price || 0;
             if (p.isSuperHolo) val *= HOLO_MULTIPLIER;
             return val;
         }
-
+ 
+        // ─── OFFICE PASSIVE INCOME ────────────────────────────────────────────────
+ 
+        /** Returns the top OFFICE_TOP_N cards sorted by value descending */
+        function getOfficeRoster() {
+            return [...mySquad]
+                .sort((a, b) => getCardValue(b) - getCardValue(a))
+                .slice(0, OFFICE_TOP_N);
+        }
+ 
+        /** Total hourly earn rate across office roster */
+        function getOfficeHourlyTotal() {
+            return getOfficeRoster().reduce((sum, p) => sum + getCardValue(p) * OFFICE_HOURLY_RATE, 0);
+        }
+ 
+        /**
+         * How many hours of earnings are currently pending,
+         * capped at OFFICE_CAP_HOURS.
+         */
+        function getElapsedHours() {
+            if (!lastCollected) return 0;
+            const diffMs = Date.now() - new Date(lastCollected).getTime();
+            const diffHours = diffMs / (1000 * 60 * 60);
+            return Math.min(diffHours, OFFICE_CAP_HOURS);
+        }
+ 
+        /** Pending coin amount right now */
+        function getPendingEarnings() {
+            return Math.floor(getOfficeHourlyTotal() * getElapsedHours());
+        }
+ 
+        /** Is income currently frozen (hit the 6h cap)? */
+        function isOfficeCapped() {
+            if (!lastCollected) return false;
+            const diffMs = Date.now() - new Date(lastCollected).getTime();
+            return diffMs >= OFFICE_CAP_HOURS * 60 * 60 * 1000;
+        }
+ 
+        /** Collect pending earnings */
+        async function collectOfficeEarnings() {
+            const earned = getPendingEarnings();
+            if (earned <= 0) return;
+            balance += earned;
+            lastCollected = new Date().toISOString();
+            updateUI();
+            updateOfficePanelUI();
+            await saveGame();
+ 
+            // Flash the panel green briefly
+            const panel = document.getElementById('office-collect-panel');
+            panel.classList.add('collect-flash');
+            setTimeout(() => panel.classList.remove('collect-flash'), 600);
+        }
+ 
+        /** Update the collect panel text, bar, button state */
+        function updateOfficePanelUI() {
+            const roster = getOfficeRoster();
+            if (roster.length === 0) {
+                document.getElementById('office-pending-display').innerText = '0';
+                document.getElementById('office-pending-sub').innerText = '🪙 collect cards to start earning';
+                document.getElementById('office-timer-bar').style.width = '0%';
+                document.getElementById('office-timer-label').innerText = 'No cards in your squad yet';
+                const btn = document.getElementById('office-collect-btn');
+                btn.className = 'office-collect-btn empty';
+                btn.innerText = 'COLLECT';
+                document.getElementById('office-badge').style.display = 'none';
+                return;
+            }
+ 
+            const pending = getPendingEarnings();
+            const elapsed = getElapsedHours();
+            const capped = isOfficeCapped();
+            const hourlyTotal = getOfficeHourlyTotal();
+ 
+            // Timer bar: 100% = cap reached
+            const pct = (elapsed / OFFICE_CAP_HOURS) * 100;
+            const bar = document.getElementById('office-timer-bar');
+            bar.style.width = pct + '%';
+            bar.style.background = capped
+                ? 'linear-gradient(90deg, #ef4444, #ff6b6b)'
+                : 'linear-gradient(90deg, #3ecf8e, #ffd700)';
+ 
+            // Timer label
+            let timerText = '';
+            if (capped) {
+                timerText = '⚠ INCOME PAUSED — 6 HOUR CAP REACHED';
+            } else {
+                const remaining = OFFICE_CAP_HOURS - elapsed;
+                const rh = Math.floor(remaining);
+                const rm = Math.floor((remaining - rh) * 60);
+                timerText = `Income freezes in ${rh}h ${rm}m · ${hourlyTotal.toLocaleString(undefined, {maximumFractionDigits: 0})} 🪙/hr`;
+            }
+            document.getElementById('office-timer-label').innerText = timerText;
+ 
+            // Pending amount
+            document.getElementById('office-pending-display').innerText = pending.toLocaleString();
+            document.getElementById('office-pending-sub').innerText = capped
+                ? '🪙 MAX REACHED — collect to resume earning'
+                : `🪙 earning ${(hourlyTotal).toLocaleString(undefined, {maximumFractionDigits: 0})} per hour`;
+ 
+            // Collect button
+            const btn = document.getElementById('office-collect-btn');
+            if (pending > 0) {
+                btn.className = capped ? 'office-collect-btn capped' : 'office-collect-btn ready';
+                btn.innerText = `COLLECT +${pending.toLocaleString()} 🪙`;
+            } else {
+                btn.className = 'office-collect-btn empty';
+                btn.innerText = 'COLLECT';
+            }
+ 
+            // Nav badge: show if any pending OR capped
+            const badge = document.getElementById('office-badge');
+            badge.style.display = pending > 0 ? 'flex' : 'none';
+        }
+ 
+        /** Render the 10-player earning roster using real card HTML */
+        function renderOfficeRoster() {
+            const roster = getOfficeRoster();
+            const container = document.getElementById('office-roster');
+            const capped = isOfficeCapped();
+ 
+            if (roster.length === 0) {
+                container.innerHTML = `
+                    <div class="office-empty-state">
+                        <div class="big-icon">📋</div>
+                        <p>KEEP CARDS FROM THE STORE TO START EARNING</p>
+                    </div>`;
+                return;
+            }
+ 
+            const hourlyTotal = getOfficeHourlyTotal();
+            let html = `
+                <div class="office-roster-title">
+                    TOP ${roster.length} EARNERS &nbsp;·&nbsp; ${hourlyTotal.toLocaleString(undefined, {maximumFractionDigits: 0})} 🪙 / HOUR TOTAL
+                    ${capped ? '&nbsp;&nbsp;<span style="color:#ef4444">⚠ INCOME PAUSED — COLLECT NOW</span>' : ''}
+                </div>
+                <div class="office-card-grid">`;
+ 
+            roster.forEach((p, i) => {
+                const hourly = getCardValue(p) * OFFICE_HOURLY_RATE;
+                html += `
+                    <div class="office-card-wrap ${capped ? 'capped' : ''}">
+                        <div class="office-rank-badge ${i < 3 ? 'top3' : ''}">#${i + 1}</div>
+                        ${generateCardHtml(p, false)}
+                        <div class="office-earn-tag ${capped ? 'capped' : ''}">
+                            <div class="office-earn-amount">${capped ? '⏸' : '+'} ${hourly.toLocaleString(undefined, {maximumFractionDigits: 1})} 🪙</div>
+                            <div class="office-earn-label">${capped ? 'PAUSED' : 'PER HOUR'}</div>
+                        </div>
+                    </div>`;
+            });
+ 
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+ 
+        /** Render the full office view (called when tab opened + on tick) */
+        function renderOfficeView() {
+            updateOfficePanelUI();
+            renderOfficeRoster();
+        }
+ 
+        /** Start the 1-second tick to update pending earnings live */
+        function startOfficeTicker() {
+            stopOfficeTicker();
+            officeTickInterval = setInterval(() => {
+                // Always update the nav badge
+                const pending = getPendingEarnings();
+                const badge = document.getElementById('office-badge');
+                badge.style.display = (pending > 0 && mySquad.length > 0) ? 'flex' : 'none';
+ 
+                // Update panel if office view is open
+                const officeView = document.getElementById('view-office');
+                if (officeView.classList.contains('active')) {
+                    updateOfficePanelUI();
+                }
+            }, 5000); // tick every 5s (no need for 1s since earnings accumulate slowly)
+        }
+ 
+        function stopOfficeTicker() {
+            if (officeTickInterval) { clearInterval(officeTickInterval); officeTickInterval = null; }
+        }
+ 
+        // ─── MARQUEE ─────────────────────────────────────────────────────────────
         async function initMarquee() {
             const track = document.getElementById('marquee-track');
             const { data } = await _supabase.from('soccer_stars').select('*').gte('rating', 85);
             if (data) { track.innerHTML = [...data, ...data].map(p => generateCardHtml(p, false)).join(''); }
         }
-
+ 
+        // ─── PACK LOGIC ───────────────────────────────────────────────────────────
         function preparePack(tier) {
             activeTier = tier;
             document.getElementById('packArea').style.display = 'none';
             document.getElementById('default-message').style.display = 'none';
-            
-            // DECIDE WHICH BACKGROUND TO SHOW
             let specialLayer = '';
-            if (tier === 'elt') {
-                specialLayer = '<div class="galaxy-nebula"></div>';
-            } else if (tier === 'pre') {
-                specialLayer = '<div class="premium-glow"></div>';
-            }
-
+            if (tier === 'elt') { specialLayer = '<div class="galaxy-nebula"></div>'; }
+            else if (tier === 'pre') { specialLayer = '<div class="premium-glow"></div>'; }
             const visual = document.getElementById('pack-visual');
             visual.innerHTML = `
                 <div class="pack-container" onclick="openPack()">
                     <div class="foil-pack">
-                        ${specialLayer}  <div class="foil-shine"></div>
+                        ${specialLayer}
+                        <div class="foil-shine"></div>
                         <div class="pack-label">${tier.toUpperCase()}</div>
                         <img src="${PACK_IMAGES[tier]}" class="sealed-player-render">
                     </div>
                 </div>
                 <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
-            
             visual.style.display = 'block';
         }
-
-
+ 
         async function openPack() {
             const costs = { std: 10, pre: 500, elt: 1400 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
-            
             balance -= costs[activeTier];
             const roll = Math.random() * 100;
-            
-            // --- EXECUTIVE PACK ODDS (RE-BALANCED) ---
             const limitedOdds = { std: 0, pre: 0.01, elt: 0.1 };
             let pulledPlayer = null;
-
-            // 1. MASTER ROLL: Roll for Limited cards specifically
+ 
             if (Math.random() * 100 < limitedOdds[activeTier]) {
                 const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
                 if (limitedPool && limitedPool.length > 0) {
                     let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
                     const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
-                    if ((countData || 0) < 10) {
-                        pulledPlayer = potential;
-                        pulledPlayer.serial = (countData || 0) + 1;
-                    }
+                    if ((countData || 0) < 10) { pulledPlayer = potential; pulledPlayer.serial = (countData || 0) + 1; }
                 }
             }
-
-            // 2. FALLBACK ROLL: Rating Brackets logic if no Limited card pull occurred
+ 
             if (!pulledPlayer) {
                 let minR, maxR;
                 if (activeTier === 'std') {
-                    if (roll < 50) { minR = 70; maxR = 79; }
-                    else if (roll < 80) { minR = 80; maxR = 82; }
-                    else if (roll < 90) { minR = 83; maxR = 83; }
-                    else if (roll < 95) { minR = 84; maxR = 85; }
-                    else if (roll < 98) { minR = 86; maxR = 86; }
-                    else if (roll < 99.5) { minR = 87; maxR = 89; }
-                    else { minR = 90; maxR = 99; }
+                    if (roll < 50)       { minR = 70; maxR = 79; }
+                    else if (roll < 80)  { minR = 80; maxR = 82; }
+                    else if (roll < 90)  { minR = 83; maxR = 83; }
+                    else if (roll < 95)  { minR = 84; maxR = 85; }
+                    else if (roll < 98)  { minR = 86; maxR = 86; }
+                    else if (roll < 99.5){ minR = 87; maxR = 89; }
+                    else                 { minR = 90; maxR = 99; }
                 } else if (activeTier === 'pre') {
-                    if (roll < 50) { minR = 80; maxR = 82; }
-                    else if (roll < 70) { minR = 83; maxR = 83; }
-                    else if (roll < 80) { minR = 84; maxR = 85; }
-                    else if (roll < 90) { minR = 86; maxR = 86; }
-                    else if (roll < 95) { minR = 87; maxR = 88; }
-                    else if (roll < 99) { minR = 89; maxR = 89; }
-                    else { minR = 90; maxR = 99; }
+                    if (roll < 50)       { minR = 80; maxR = 82; }
+                    else if (roll < 70)  { minR = 83; maxR = 83; }
+                    else if (roll < 80)  { minR = 84; maxR = 85; }
+                    else if (roll < 90)  { minR = 86; maxR = 86; }
+                    else if (roll < 95)  { minR = 87; maxR = 88; }
+                    else if (roll < 99)  { minR = 89; maxR = 89; }
+                    else                 { minR = 90; maxR = 99; }
                 } else {
-                    if (roll < 50) { minR = 84; maxR = 86; }
-                    else if (roll < 70) { minR = 87; maxR = 87; }
-                    else if (roll < 87) { minR = 88; maxR = 88; }
-                    else if (roll < 97) { minR = 89; maxR = 89; }
-                    else { minR = 90; maxR = 99; }
+                    if (roll < 50)       { minR = 84; maxR = 86; }
+                    else if (roll < 70)  { minR = 87; maxR = 87; }
+                    else if (roll < 87)  { minR = 88; maxR = 88; }
+                    else if (roll < 97)  { minR = 89; maxR = 89; }
+                    else                 { minR = 90; maxR = 99; }
                 }
-
-                // Filter out Limited cards from the regular pool so odds are exact
                 let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited');
                 if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
                 pulledPlayer = data[Math.floor(Math.random() * data.length)];
             }
-
+ 
             currentPull = pulledPlayer;
             currentPull.instanceId = "inst_" + Date.now();
             currentPull.collectedDate = new Date().toLocaleDateString();
-            
-            if (currentPull.rating >= 87 && Math.random() < 0.02) {
-                currentPull.isSuperHolo = true;
-            }
-
-            // --- 3. SUSPENSE LOGIC ---
+            if (currentPull.rating >= 87 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
+ 
             const packVisual = document.getElementById('pack-visual');
             if (currentPull.rating > 87) {
                 packVisual.classList.add('suspense-shake');
@@ -614,50 +907,40 @@
                 setTimeout(() => flash.remove(), 1500);
                 packVisual.classList.remove('suspense-shake');
             }
-
-            // --- 4. REVEAL ---
+ 
             const val = getCardValue(currentPull);
             const reveal = document.getElementById('pack-reveal');
             reveal.innerHTML = generateCardHtml(currentPull, false);
-            
             packVisual.style.display = 'none';
             reveal.style.display = 'block';
             document.getElementById('choiceArea').style.display = 'flex';
             document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
-            
             updateUI();
-            await saveGame(); 
+            await saveGame();
         }
-
-        // ─── LEADERBOARD LOGIC (OLYMPIC STYLE) ───────────────────────────────────────
+ 
+        // ─── LEADERBOARD ─────────────────────────────────────────────────────────
         async function loadLeaderboard() {
             const podium = document.getElementById('podium-area');
             const list = document.getElementById('leaderboard-container');
-            
             podium.innerHTML = '<p style="color:#555">FETCHING DATA...</p>';
             list.innerHTML = '';
-
             const { data, error } = await _supabase
                 .from('user_saves')
                 .select('username, club_value, squad')
                 .order('club_value', { ascending: false })
                 .limit(25);
-
             if (error) return;
-
-            // 1. Build Podium (Top 3)
             let podiumHtml = '';
-            for(let i=0; i < Math.min(3, data.length); i++) {
+            for (let i = 0; i < Math.min(3, data.length); i++) {
                 const user = data[i];
                 let starCard = { name: "No Cards", position: "-", rating: 0, rarity: "common" };
-                
-                if(user.squad && user.squad.length > 0) {
+                if (user.squad && user.squad.length > 0) {
                     starCard = user.squad.reduce((prev, curr) => (getCardValue(curr) > getCardValue(prev)) ? curr : prev);
                 }
-
                 podiumHtml += `
-                    <div class="podium-slot slot-${i+1}">
-                        <div class="podium-user">#${i+1} ${user.username || 'ANONYMOUS'}</div>
+                    <div class="podium-slot slot-${i + 1}">
+                        <div class="podium-user">#${i + 1} ${user.username || 'ANONYMOUS'}</div>
                         <div class="podium-val">${user.club_value.toLocaleString()} 🪙</div>
                         <div class="podium-star-label">MVP Card</div>
                         <div class="podium-card-mini">
@@ -666,25 +949,18 @@
                     </div>`;
             }
             podium.innerHTML = podiumHtml;
-
-            // 2. Build Feed (4-25)
             let tableHtml = `<table class="rank-table"><tr><th>Rank</th><th>Manager</th><th>Club Value</th></tr>`;
-            for(let i=3; i < data.length; i++) {
-                tableHtml += `
-                    <tr>
-                        <td>#${i+1}</td>
-                        <td>${data[i].username || 'ANONYMOUS'}</td>
-                        <td style="color:#ffd700; font-weight:bold;">${data[i].club_value.toLocaleString()} 🪙</td>
-                    </tr>`;
+            for (let i = 3; i < data.length; i++) {
+                tableHtml += `<tr><td>#${i + 1}</td><td>${data[i].username || 'ANONYMOUS'}</td><td style="color:#ffd700; font-weight:bold;">${data[i].club_value.toLocaleString()} 🪙</td></tr>`;
             }
             list.innerHTML = tableHtml + `</table>`;
         }
-
+ 
+        // ─── CARD HTML ───────────────────────────────────────────────────────────
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
             const holoClass = p.isSuperHolo ? 'super-holo' : '';
             const artClass = p.id === 64 ? 'full-art' : '';
-
             const val = getCardValue(p);
             const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
             return `<div class="premium-card ${rarity} ${holoClass} ${artClass}" ${clickAttr}>
@@ -698,7 +974,8 @@
                         </div>
                     </div>`;
         }
-
+ 
+        // ─── CARD DETAILS MODAL ──────────────────────────────────────────────────
         function showCardDetails(id) {
             const p = mySquad.find(player => player.instanceId == id);
             if (!p) return;
@@ -713,7 +990,7 @@
             };
             document.getElementById('modal-overlay').style.display = 'flex';
         }
-
+ 
         async function finalizeSale(id) {
             const index = mySquad.findIndex(p => p.instanceId == id);
             if (index > -1) {
@@ -723,22 +1000,24 @@
                 await saveGame();
             }
         }
-
+ 
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-
+ 
+        // ─── VIEW MANAGEMENT ─────────────────────────────────────────────────────
         function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + id).classList.add('active');
             const navBtn = document.getElementById('nav-' + id);
             if (navBtn) navBtn.classList.add('active');
-            if (id === 'rank') loadLeaderboard(); 
+            if (id === 'rank') loadLeaderboard();
+            if (id === 'office') renderOfficeView();
             if (id !== 'slots') resetUI();
         }
-
+ 
         async function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); await saveGame(); }
         async function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); await saveGame(); }
-
+ 
         function resetUI() {
             document.getElementById('choiceArea').style.display = 'none';
             document.getElementById('pack-reveal').style.display = 'none';
@@ -747,17 +1026,16 @@
             document.getElementById('default-message').style.display = 'block';
             updateUI();
         }
-
+ 
         function updateUI() {
             document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString());
             document.getElementById('nav-club-value').innerText = mySquad.reduce((sum, p) => sum + getCardValue(p), 0).toLocaleString();
             document.getElementById('team-count').innerText = mySquad.length;
         }
-
+ 
         function renderSquad() {
             const grid = document.getElementById('teamGrid');
             const sortVal = document.getElementById('squad-sort').value;
-
             mySquad.sort((a, b) => {
                 if (sortVal === 'date-desc') return b.instanceId.split('_')[1] - a.instanceId.split('_')[1];
                 else if (sortVal === 'date-asc') return a.instanceId.split('_')[1] - b.instanceId.split('_')[1];
@@ -765,30 +1043,30 @@
                 else if (sortVal === 'value-asc') return getCardValue(a) - getCardValue(b);
                 else if (sortVal === 'rating-desc') return b.rating - a.rating;
             });
-
             grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
             updateUI();
         }
-
+ 
+        // ─── CATALOG ─────────────────────────────────────────────────────────────
         function openCatalog() {
             document.getElementById('slot-container').style.display = 'none';
             document.getElementById('catalog-toggle-btn').style.display = 'none';
             document.getElementById('catalog-container').style.display = 'block';
             loadCatalog('gold');
         }
-
+ 
         function closeCatalog() {
             document.getElementById('catalog-container').style.display = 'none';
             document.getElementById('slot-container').style.display = 'flex';
             document.getElementById('catalog-toggle-btn').style.display = 'block';
         }
-
+ 
         async function loadCatalog(tier) {
             showLoading();
             let query = _supabase.from('soccer_stars').select('*');
             if (tier === 'holo') query = query.gte('rating', 85);
             else query = query.ilike('rarity', tier);
-            const { data, error } = await query; 
+            const { data, error } = await query;
             hideLoading();
             const grid = document.getElementById('catalog-grid');
             if (error) { grid.innerHTML = `<p style="color:red">Error: ${error.message}</p>`; return; }
@@ -796,7 +1074,8 @@
             data.sort((a, b) => getCardValue(b) - getCardValue(a));
             grid.innerHTML = data.map(p => generateCardHtml(p, false)).join('');
         }
-
+ 
+        // ─── BOOT ────────────────────────────────────────────────────────────────
         checkExistingSession();
     </script>
 </body>
