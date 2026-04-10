@@ -604,6 +604,79 @@
     transition: 0.2s;
 }
 
+
+        /* ─── ARENA ──────────────────────────────────────────────────────── */
+        #view-arena.active { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 40px; }
+        .arena-phase { display: none; width: 100%; max-width: 760px; animation: arenaFadeIn 0.35s ease; }
+        .arena-phase.active-phase { display: flex; justify-content: center; }
+        @keyframes arenaFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* lobby */
+        .arena-lobby-inner { width: 100%; display: flex; flex-direction: column; align-items: center; }
+        .arena-title-wrap  { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+        .arena-main-title  { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 5px; margin: 0; }
+        .arena-subtitle    { color: #555; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 36px; }
+        .arena-info-box {
+            background: #141414; border: 1px solid #222; border-radius: 18px;
+            padding: 32px 40px; width: 100%; max-width: 420px; text-align: center; margin-bottom: 28px;
+        }
+        .arena-robot { font-size: 3.5rem; margin-bottom: 12px; }
+        .arena-mode-title { font-size: 1.1rem; font-weight: 900; color: #fff; letter-spacing: 2px; margin-bottom: 18px; }
+        .arena-rules { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .arena-rule { font-size: 0.78rem; font-weight: 900; letter-spacing: 1px; padding: 6px 14px; border-radius: 8px; }
+        .arena-rule.entry { background: rgba(62,207,142,0.08); color: #3ecf8e; }
+        .arena-rule.win   { background: rgba(62,207,142,0.12); color: #3ecf8e; }
+        .arena-rule.tie   { background: rgba(255,215,0,0.10);  color: #ffd700; }
+        .arena-rule.loss  { background: rgba(239,68,68,0.10);  color: #ef4444; }
+        .arena-floor-note { font-size: 0.62rem; color: #444; letter-spacing: 1px; margin-bottom: 0; }
+        .arena-start-btn  {
+            width: 100%; max-width: 420px; padding: 16px; border: none; border-radius: 14px;
+            background: #3ecf8e; color: black; font-weight: 900; font-size: 1rem;
+            letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: 0.2s;
+        }
+        .arena-start-btn:hover { background: #2ab87a; box-shadow: 0 0 20px rgba(62,207,142,0.3); }
+
+        /* rolling */
+        .arena-rolling-inner { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
+        .arena-vs-header   { display: flex; align-items: center; gap: 32px; margin-bottom: 36px; }
+        .arena-side-lbl    { font-size: 0.75rem; font-weight: 900; color: #555; letter-spacing: 3px; }
+        .arena-vs-mid      { font-size: 2rem; font-weight: 900; color: #2a2a2a; }
+        .arena-cards-row   { display: flex; gap: 60px; align-items: center; justify-content: center; margin-bottom: 30px; }
+        .arena-card-back   {
+            width: 180px; height: 250px; border-radius: 14px;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border: 2px solid #2a2a2a; display: flex; align-items: center; justify-content: center;
+            animation: cardRock 0.7s ease-in-out infinite alternate;
+        }
+        @keyframes cardRock {
+            from { transform: rotateY(-8deg) scale(0.97); box-shadow: -6px 0 18px rgba(0,0,0,0.5); }
+            to   { transform: rotateY( 8deg) scale(1.02); box-shadow:  6px 0 18px rgba(62,207,142,0.12); }
+        }
+        .arena-back-q { font-size: 3.5rem; color: #1e1e1e; font-weight: 900; }
+        .arena-rolling-lbl { font-size: 0.72rem; color: #555; letter-spacing: 3px; font-weight: 900; text-transform: uppercase; animation: lblPulse 0.9s infinite; }
+        @keyframes lblPulse { 0%,100%{ opacity: 0.3; } 50%{ opacity: 1; } }
+
+        /* reveal */
+        .arena-reveal-inner { width: 100%; display: flex; flex-direction: column; align-items: center; padding: 16px 0 40px; }
+        .arena-banner { font-size: 2.8rem; font-weight: 900; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 6px; animation: bannerPop 0.45s cubic-bezier(0.175,0.885,0.32,1.275); }
+        @keyframes bannerPop { from{ transform: scale(0.4); opacity:0; } to{ transform: scale(1); opacity:1; } }
+        .arena-banner.win  { color: #3ecf8e; text-shadow: 0 0 28px rgba(62,207,142,0.55); }
+        .arena-banner.tie  { color: #ffd700; text-shadow: 0 0 28px rgba(255,215,0,0.55); }
+        .arena-banner.loss { color: #ef4444; text-shadow: 0 0 28px rgba(239,68,68,0.55); }
+        .arena-reveal-row  { display: flex; gap: 50px; align-items: flex-start; justify-content: center; margin-bottom: 20px; }
+        .arena-reveal-col  { display: flex; flex-direction: column; align-items: center; }
+        .arena-reveal-tag  { font-size: 0.6rem; color: #555; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+        .arena-reveal-val  { font-size: 1.05rem; font-weight: 900; margin-top: 8px; }
+        .arena-vs-divider  { font-size: 1.8rem; font-weight: 900; color: #252525; padding-top: 90px; }
+        .arena-result-msg  { font-size: 0.83rem; color: #777; margin: 6px 0 24px; text-align: center; max-width: 400px; line-height: 1.5; }
+        .arena-result-btns { display: flex; gap: 14px; }
+        .arena-btn-go   { padding: 14px 40px; border: none; border-radius: 12px; background: #3ecf8e; color: black; font-weight: 900; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .arena-btn-go:hover { background: #2ab87a; }
+        .arena-btn-back { padding: 14px 28px; border: 1px solid #2a2a2a; border-radius: 12px; background: #111; color: #555; font-weight: 900; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .arena-btn-back:hover { border-color: #444; color: #888; }
+        .arena-flipin { animation: flipIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+        @keyframes flipIn { from{ transform: rotateY(-90deg) scale(0.8); opacity:0; } to{ transform: rotateY(0deg) scale(1); opacity:1; } }
+
     </style>
 </head>
 <body>
@@ -731,26 +804,78 @@
                             </div>
                     </div>
 </div>
+<!-- ─── ARENA VIEW ──────────────────────────────────────────────── -->
 <div id="view-arena" class="view">
-        <div style="text-align: center; margin-top: 50px;">
-            <h1 style="color: #3ecf8e; letter-spacing: 5px; text-transform: uppercase;">Battle Arena</h1>
-            <p style="color: #666; margin-bottom: 40px;">Standard Pack Duel: Market Value Wins</p>
-            
-            <div style="background: #111; border: 1px solid #333; padding: 40px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                <div style="font-size: 3.5rem; margin-bottom: 10px;">🤖</div>
-                <h3 style="margin-bottom: 10px; color: #fff; letter-spacing: 2px;">BOT BATTLE</h3>
-                <p style="font-size: 0.85rem; color: #555; margin-bottom: 30px; line-height: 1.5;">
-                    Entry: <span style="color: #3ecf8e;">500 🪙</span><br>
-                    Win: <span style="color: #3ecf8e;">250 🪙</span> + Keep Card<br>
-                    <span style="font-style: italic; font-size: 0.75rem;">Tie: Refund | Loss: Card Burned</span>
-                </p>
-                <button class="btn" style="background: #3ecf8e; color: #000; font-weight: bold; width: 220px;" onclick="startBotBattle()">
-                    START DUEL
-                </button>
-                <div id="arena-battle-result" style="margin-top:30px;"></div>
+
+    <!-- PHASE: LOBBY -->
+    <div id="arena-lobby" class="arena-phase active-phase">
+        <div class="arena-lobby-inner">
+            <div class="arena-title-wrap">
+                <span style="font-size:1.8rem">⚔️</span>
+                <h1 class="arena-main-title">BATTLE ARENA</h1>
+                <span style="font-size:1.8rem">⚔️</span>
+            </div>
+            <p class="arena-subtitle">STANDARD PACK DUEL · HIGHEST MARKET VALUE WINS</p>
+
+            <div class="arena-info-box">
+                <div class="arena-robot">🤖</div>
+                <div class="arena-mode-title">BOT BATTLE</div>
+                <div class="arena-rules">
+                    <div class="arena-rule entry">ENTRY: 500 🪙</div>
+                    <div class="arena-rule win">WIN: +250 🪙 + KEEP YOUR CARD</div>
+                    <div class="arena-rule tie">TIE: ENTRY FEE REFUNDED</div>
+                    <div class="arena-rule loss">LOSS: CARD BURNED · 500 🪙 LOST</div>
+                </div>
+                <p class="arena-floor-note">Both sides pull from Standard Pack odds (70–86 rated floor)</p>
+            </div>
+
+            <button class="arena-start-btn" onclick="startArenaBattle()">
+                START DUEL · 500 🪙
+            </button>
+        </div>
+    </div>
+
+    <!-- PHASE: ROLLING -->
+    <div id="arena-rolling" class="arena-phase">
+        <div class="arena-rolling-inner">
+            <div class="arena-vs-header">
+                <span class="arena-side-lbl">YOU</span>
+                <div class="arena-vs-mid">VS</div>
+                <span class="arena-side-lbl">BOT</span>
+            </div>
+            <div class="arena-cards-row">
+                <div class="arena-card-back"><div class="arena-back-q">?</div></div>
+                <div class="arena-card-back"><div class="arena-back-q">?</div></div>
+            </div>
+            <div class="arena-rolling-lbl" id="arena-rolling-lbl">PULLING CARDS...</div>
+        </div>
+    </div>
+
+    <!-- PHASE: REVEAL -->
+    <div id="arena-reveal" class="arena-phase">
+        <div class="arena-reveal-inner">
+            <div class="arena-banner" id="arena-banner"></div>
+            <div class="arena-reveal-row">
+                <div class="arena-reveal-col">
+                    <div class="arena-reveal-tag">YOUR PULL</div>
+                    <div id="arena-card-player"></div>
+                    <div class="arena-reveal-val" id="arena-val-player"></div>
+                </div>
+                <div class="arena-vs-divider">VS</div>
+                <div class="arena-reveal-col">
+                    <div class="arena-reveal-tag">BOT PULL</div>
+                    <div id="arena-card-bot"></div>
+                    <div class="arena-reveal-val" id="arena-val-bot"></div>
+                </div>
+            </div>
+            <div class="arena-result-msg" id="arena-result-msg"></div>
+            <div class="arena-result-btns">
+                <button class="arena-btn-back" onclick="arenaToLobby()">LEAVE</button>
+                <button class="arena-btn-go"   onclick="startArenaBattle()">PLAY AGAIN · 500 🪙</button>
             </div>
         </div>
     </div>
+
 </div>
  
     <div id="view-team" class="view">
@@ -1589,6 +1714,7 @@
             if (id === 'rank') loadLeaderboard();
             if (id === 'office') renderOfficeView();
             if (id === 'trade') { switchTradeTab('board'); }
+            if (id === 'arena') { arenaToLobby(); }
             if (id !== 'slots') resetUI();
         }
  
@@ -1827,16 +1953,19 @@
         }
  
         async function loadIncomingTrades() {
+            // Player1 posted the trade (sender_id = me).
+            // Player2 picked a card and set status = 'pending'.
+            // Player1 needs to see these here to do the final accept/decline.
             const list = document.getElementById('trade-incoming-list');
             list.innerHTML = '<div class="no-trades"><div class="nt-icon">⏳</div><p>LOADING...</p></div>';
             const { data, error } = await _supabase
                 .from('trades')
                 .select('*')
-                .eq('receiver_id', currentUser.id)
+                .eq('sender_id', currentUser.id)
                 .eq('status', 'pending')
                 .order('created_at', { ascending: false });
             if (error || !data?.length) {
-                list.innerHTML = '<div class="no-trades"><div class="nt-icon">📬</div><p>NO INCOMING REQUESTS RIGHT NOW</p></div>';
+                list.innerHTML = '<div class="no-trades"><div class="nt-icon">📬</div><p>NO INCOMING OFFERS ON YOUR TRADES YET</p></div>';
                 updateTradeBadge(0); return;
             }
             list.innerHTML = data.map(t => buildTradeRow(t, 'incoming')).join('');
@@ -1862,21 +1991,22 @@
                     <button class="trade-btn cancel" onclick="cancelTrade('${t.id}')">CANCEL</button>
                 </div>`;
             } else if (mode === 'incoming') {
-                const myCard = t.receiver_card;
-                const myMini = myCard ? `<div class="trade-mini-card">${generateCardHtml(myCard, false)}</div>` : '';
+                // I am Player1 (sender). offered_card = my card. receiver_card = what Player2 offers me.
+                const theirCard = t.receiver_card;
+                const theirMini = theirCard ? `<div class="trade-mini-card">${generateCardHtml(theirCard, false)}</div>` : '';
                 actions = `<div class="trade-actions">
                     <button class="trade-btn accept" onclick="confirmIncomingAccept('${t.id}')">ACCEPT</button>
                     <button class="trade-btn decline" onclick="declineTrade('${t.id}')">DECLINE</button>
                 </div>`;
                 return `
                     <div class="trade-card incoming">
+                        ${theirMini}
+                        <div class="trade-arrow">⇄</div>
                         ${miniCard}
-                        <div class="trade-arrow">→</div>
-                        ${myMini}
                         <div class="trade-want-info">
-                            <div class="trade-want-title">THEY WANT YOUR</div>
-                            <div class="trade-want-val">${myCard ? myCard.name : '—'}</div>
-                            <div class="trade-want-sub">From: ${t.sender_username} · ${ago}</div>
+                            <div class="trade-want-title">OFFER FROM ${(t.receiver_username || 'MANAGER').toUpperCase()}</div>
+                            <div class="trade-want-val">${theirCard ? theirCard.name : '—'} → your ${card.name}</div>
+                            <div class="trade-want-sub">Their card value: ${theirCard ? getCardValue(theirCard).toLocaleString() : '—'} 🪙 · ${ago}</div>
                         </div>
                         ${actions}
                     </div>`;
@@ -1979,22 +2109,22 @@
             checkTradeBadge();
         }
  
-        // ── INCOMING: the original poster confirms or declines ────────────────────
+        // ── INCOMING: Player1 (original poster / sender) doing final confirm ────────
         async function confirmIncomingAccept(tradeId) {
             const { data: trade } = await _supabase.from('trades').select('*').eq('id', tradeId).single();
             if (!trade || trade.status !== 'pending') { showToast('⚠ Trade no longer available.'); loadIncomingTrades(); return; }
- 
-            // Verify I still own the offered card
+
+            // Verify I (Player1/sender) still own the card I originally listed
             const myOffered = mySquad.find(c => c.instanceId === trade.offered_card.instanceId);
-            if (!myOffered) { showToast('⚠ You no longer have that card in your squad.'); return; }
- 
+            if (!myOffered) { showToast('⚠ You no longer own the card you listed. Trade cannot proceed.'); return; }
+
             tradeState.pendingAcceptTrade = trade;
-            tradeState.pendingAcceptMyCard = trade.receiver_card; // show what I'm sending (my original card)
+            // Player1 perspective: YOU RECEIVE = receiver_card (Player2's), YOU SEND = offered_card (mine)
             document.getElementById('tam-receive-card').innerHTML = generateCardHtml(trade.receiver_card, false);
             document.getElementById('tam-send-card').innerHTML    = generateCardHtml(trade.offered_card, false);
             document.getElementById('trade-accept-modal').style.display = 'flex';
- 
-            // Override confirm button to run the actual swap
+
+            // Wire confirm button to run the actual swap
             document.getElementById('trade-confirm-yes').onclick = () => executeSwap(trade);
         }
  
@@ -2073,9 +2203,10 @@
         // ── BADGE POLLING ─────────────────────────────────────────────────────────
         async function checkTradeBadge() {
             if (!currentUser) return;
+            // Badge fires when I'm the POSTER (sender_id = me) and someone has proposed a card (status = pending)
             const { count } = await _supabase.from('trades')
                 .select('id', { count: 'exact', head: true })
-                .eq('receiver_id', currentUser.id)
+                .eq('sender_id', currentUser.id)
                 .eq('status', 'pending');
             updateTradeBadge(count || 0);
         }
@@ -2230,161 +2361,129 @@ function showPackWeights(tier) {
 
 }
 
-// Helper to get a card based on Standard Pack odds
-async function getStandardCardForBattle(roll) {
-    let minR, maxR;
-    if (roll < 50)       { minR = 70; maxR = 79; }
-    else if (roll < 80)  { minR = 80; maxR = 82; }
-    else if (roll < 90)  { minR = 83; maxR = 83; }
-    else if (roll < 95)  { minR = 84; maxR = 85; }
-    else if (roll < 98)  { minR = 86; maxR = 86; }
-    else if (roll < 99.5){ minR = 87; maxR = 89; }
-    else                 { minR = 90; maxR = 99; }
+        // ─── ARENA ───────────────────────────────────────────────────────────────
 
-    const { data, error } = await _supabase
-        .from('soccer_stars')
-        .select('*')
-        .gte('rating', minR)
-        .lte('rating', maxR)
-        .neq('rarity', 'Limited')
-        .neq('rarity', '1st edition')
-        .eq('in_packs', true);
+        function arenaShowPhase(id) {
+            document.querySelectorAll('.arena-phase').forEach(p => p.classList.remove('active-phase'));
+            document.getElementById(id).classList.add('active-phase');
+        }
 
-    if (error || !data || data.length === 0) return null;
-    return data[Math.floor(Math.random() * data.length)];
-}
+        function arenaToLobby() {
+            arenaShowPhase('arena-lobby');
+        }
 
-async function startBotBattle() {
-    console.log("Battle started..."); 
+        async function getStandardCardForBattle() {
+            // Standard pack odds — same brackets as the store
+            const roll = Math.random() * 100;
+            let minR, maxR;
+            if      (roll < 50)    { minR = 70; maxR = 79; }
+            else if (roll < 80)    { minR = 80; maxR = 82; }
+            else if (roll < 90)    { minR = 83; maxR = 83; }
+            else if (roll < 95)    { minR = 84; maxR = 85; }
+            else if (roll < 98)    { minR = 86; maxR = 86; }
+            else if (roll < 99.5)  { minR = 87; maxR = 89; }
+            else                   { minR = 90; maxR = 99; }
 
-    if (balance < 500) { 
-        document.getElementById('arena-battle-result').innerHTML = '';
-        alert("You need 500 🪙 for a Standard Bot Battle!"); 
-        return; 
-    }
-    
-    // Deduct the 500 fee
-    balance -= 500;
-    updateUI();
+            const { data, error } = await _supabase
+                .from('soccer_stars')
+                .select('*')
+                .gte('rating', minR)
+                .lte('rating', maxR)
+                .neq('rarity', 'Limited')
+                .neq('rarity', '1st edition');
 
-    // Roll for both cards
-    const playerCard = await getStandardCardForBattle(Math.random() * 100);
-    const botCard = await getStandardCardForBattle(Math.random() * 100);
+            if (error || !data || data.length === 0) return null;
+            const card = data[Math.floor(Math.random() * data.length)];
+            if (card.rating >= 85 && Math.random() < 0.02) card.isSuperHolo = true;
+            return card;
+        }
 
-    if (!playerCard || !botCard) { 
-        alert("Connection error. Coins refunded."); 
-        balance += 500; 
-        updateUI(); 
-        return; 
-    }
+        async function startArenaBattle() {
+            const ENTRY = 500;
+            const WIN_BONUS = 250;
 
-    // 🌟 EXACT STORE LOGIC: 2% chance for Holo if rating is 85+
-    if (playerCard.rating >= 85 && Math.random() < 0.02) { playerCard.isSuperHolo = true; }
-    if (botCard.rating >= 85 && Math.random() < 0.02) { botCard.isSuperHolo = true; }
+            if (balance < ENTRY) {
+                showToast(`⚠ You need ${ENTRY.toLocaleString()} 🪙 to enter.`, 4000);
+                return;
+            }
 
-    // Calculate Market Value (This now includes the 3x Holo Multiplier if they hit it!)
-    const pVal = getCardValue(playerCard);
-    const bVal = getCardValue(botCard);
+            balance -= ENTRY;
+            updateUI();
 
-    if (pVal > bVal) {
-        // WINNER
-        balance += 250; 
-        playerCard.instanceId = "inst_" + Date.now();
-        playerCard.collectedDate = new Date().toLocaleDateString();
-        mySquad.push(playerCard); 
-        showBattleResults("WINNER", playerCard, botCard, `Victory! You kept ${playerCard.name} and won 250 🪙.`);
-    } else if (pVal === bVal) {
-        // TIE
-        balance += 500;
-        showBattleResults("TIE", playerCard, botCard, "It's a draw! Market values are identical. Entry fee refunded.");
-    } else {
-        // DEFEAT
-        showBattleResults("DEFEAT", playerCard, botCard, `The Bot's ${botCard.name} was more valuable. You lost the 500 🪙 and the card.`);
-    }
+            // ── PHASE: ROLLING ────────────────────────────────────────────────
+            arenaShowPhase('arena-rolling');
 
-    saveGame();
-}
+            const labels = ['PULLING CARDS...', 'SCANNING DATABASE...', 'LOCKING IN...', 'ALMOST READY...'];
+            let li = 0;
+            const lblEl = document.getElementById('arena-rolling-lbl');
+            const lblInterval = setInterval(() => { lblEl.innerText = labels[li++ % labels.length]; }, 600);
 
-function showBattleResults(status, pCard, bCard, msg) {
-    const visual = document.getElementById('arena-battle-result'); 
-    
-    const statusColor = status === 'WINNER' ? '#3ecf8e' : (status === 'TIE' ? '#ffd700' : '#ff4444');
+            // Fetch both cards + hold minimum drama time in parallel
+            const [pCard, bCard] = await Promise.all([
+                getStandardCardForBattle(),
+                getStandardCardForBattle(),
+                new Promise(r => setTimeout(r, 2400))
+            ]);
 
-    const pValDisplay = getCardValue(pCard).toLocaleString();
-    const bValDisplay = getCardValue(bCard).toLocaleString();
+            clearInterval(lblInterval);
 
-    visual.innerHTML = `
-        <div style="background: rgba(0,0,0,0.98); padding: 40px; border-radius: 20px; border: 2px solid ${statusColor}; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,1);">
-            <h1 style="color: ${statusColor}; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 10px;">${status}</h1>
-            <p style="color: #bbb; margin-bottom: 30px; font-size: 0.9rem;">${msg}</p>
-            
-            <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-bottom: 40px;">
-                <div>
-                    <div style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">YOUR PULL</div>
-                    ${generateCardHtml(pCard, false)}
-                    <div style="color: #3ecf8e; font-weight: bold; margin-top: 10px;">${pValDisplay} 🪙</div>
-                </div>
-                <div style="font-weight: bold; font-size: 1.5rem; color: #333;">VS</div>
-                <div>
-                    <div style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">BOT PULL</div>
-                    ${generateCardHtml(bCard, false)}
-                    <div style="color: #ff4444; font-weight: bold; margin-top: 10px;">${bValDisplay} 🪙</div>
-                </div>
-            </div>
-            
-            <div style="display: flex; gap: 15px; width: 100%;">
-                <button class="btn" style="background: #333; color: #fff; width: 50%;" onclick="document.getElementById('arena-battle-result').innerHTML = ''">LEAVE</button>
-                <button class="btn" style="background: #3ecf8e; color: #000; font-weight: bold; width: 50%;" onclick="startBotBattle()">PLAY AGAIN</button>
-            </div>
-        </div>
-    `;
-    visual.style.display = 'block';
-}
+            if (!pCard || !bCard) {
+                balance += ENTRY;
+                updateUI();
+                arenaToLobby();
+                showToast('❌ Connection error. Entry fee refunded.', 4000);
+                return;
+            }
 
-function renderCard(player) {
-    // 1. Get the rarity safely
-    const rarity = player.rarity ? player.rarity.toLowerCase() : 'common';
-    
-    // 2. Map the backgrounds
-    let cardBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // Default Gold
-    
-    if (rarity === 'common' || rarity === 'bronze') {
-        cardBg = 'linear-gradient(135deg, #cd7f32, #8b4513)'; // Bronze
-    } else if (rarity === 'silver') {
-        cardBg = 'linear-gradient(135deg, #e6e6e6, #999999)'; // Silver
-    } else if (rarity === 'limited') {
-        cardBg = 'linear-gradient(135deg, #ff41c6, #ba268d)'; // Pink Limited
-    } else if (rarity === '1st edition') {
-        cardBg = 'linear-gradient(135deg, #00f2ff, #0099a1)'; // Cyan Promo
-    }
+            // ── PHASE: REVEAL ─────────────────────────────────────────────────
+            pCard.instanceId    = 'inst_' + Date.now();
+            pCard.collectedDate = new Date().toLocaleDateString();
 
-    // 3. Return the HTML (keep your existing HTML block here)
-    return `
-        <div class="card-visual" style="
-            background: ${cardBg}; 
-            width: 160px; 
-            height: 230px; 
-            border-radius: 12px; 
-            padding: 10px; 
-            color: black; 
-            position: relative; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-            margin: 0 auto;
-            border: 2px solid rgba(255,255,255,0.2);
-            font-family: sans-serif;
-        ">
-            <div style="font-size: 1.5rem; font-weight: 900; text-align: left; line-height: 1;">${player.rating}</div>
-            <div style="font-size: 0.5rem; font-weight: bold; text-transform: uppercase; text-align: left; margin-top: 2px;">${player.rarity}</div>
-            
-            <img src="${player.image_url}" style="width: 110px; height: 110px; object-fit: contain; margin: 10px auto; display: block;">
-            
-            <div style="font-weight: bold; font-size: 1rem; margin-top: 5px; text-transform: uppercase; letter-spacing: -0.5px;">
-                ${player.name}
-            </div>
-            <div style="font-size: 0.6rem; font-weight: bold; opacity: 0.7;">${player.position || 'ST'}</div>
-        </div>
-    `;
-}
+            const pVal = getCardValue(pCard);
+            const bVal = getCardValue(bCard);
+
+            let bannerClass, bannerText, msg;
+            if (pVal > bVal) {
+                bannerClass = 'win';
+                bannerText  = 'VICTORY';
+                msg = `Your ${pCard.name} (${pVal.toLocaleString()} 🪙) beats Bot's ${bCard.name} (${bVal.toLocaleString()} 🪙). Card kept + ${WIN_BONUS.toLocaleString()} 🪙!`;
+                balance += WIN_BONUS;
+                mySquad.push(pCard);
+                renderSquad();
+            } else if (pVal === bVal) {
+                bannerClass = 'tie';
+                bannerText  = 'DRAW';
+                msg = `Both pulled ${pVal.toLocaleString()} 🪙 value. Entry fee refunded.`;
+                balance += ENTRY;
+            } else {
+                bannerClass = 'loss';
+                bannerText  = 'DEFEAT';
+                msg = `Bot's ${bCard.name} (${bVal.toLocaleString()} 🪙) beats your ${pCard.name} (${pVal.toLocaleString()} 🪙). Card burned.`;
+            }
+
+            updateUI();
+            await saveGame();
+
+            const banner = document.getElementById('arena-banner');
+            banner.className = 'arena-banner ' + bannerClass;
+            banner.innerText = bannerText;
+
+            // Flip cards in with staggered animation
+            document.getElementById('arena-card-player').innerHTML =
+                `<div class="arena-flipin">${generateCardHtml(pCard, false)}</div>`;
+            document.getElementById('arena-card-bot').innerHTML =
+                `<div class="arena-flipin" style="animation-delay:0.18s">${generateCardHtml(bCard, false)}</div>`;
+
+            const pValEl = document.getElementById('arena-val-player');
+            const bValEl = document.getElementById('arena-val-bot');
+            pValEl.innerText = pVal.toLocaleString() + ' 🪙';
+            bValEl.innerText = bVal.toLocaleString() + ' 🪙';
+            pValEl.style.color = pVal > bVal ? '#3ecf8e' : (pVal === bVal ? '#ffd700' : '#ef4444');
+            bValEl.style.color = bVal > pVal ? '#3ecf8e' : (pVal === bVal ? '#ffd700' : '#555');
+
+            document.getElementById('arena-result-msg').innerText = msg;
+            arenaShowPhase('arena-reveal');
+        }
 
 
     </script>
