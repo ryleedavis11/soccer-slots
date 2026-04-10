@@ -81,6 +81,22 @@
         @keyframes nebulaShift { from { transform: rotate(0deg) scale(1); } to { transform: rotate(20deg) scale(1.3); } }
         .premium-glow { position: absolute; inset: -20%; background: radial-gradient(circle at center, rgba(255, 217, 0, 0.658) 0%, transparent 70%); filter: blur(30px); animation: goldPulse 4s infinite alternate ease-in-out; z-index: 1; }
         @keyframes goldPulse { from { opacity: 0.5; transform: scale(1); } to { opacity: 0.8; transform: scale(1.2); } }
+        /* 1st Edition Promo Pack Aura */
+        /* 🔥 UPGRADED PROMO PACK AURA */
+        .promo-fire { 
+            position: absolute; 
+            inset: -50%; 
+            background: conic-gradient(from 0deg, #ff4500, #ffaa00, #b22222, #ff4500); 
+            filter: blur(25px); 
+            animation: infernoSpin 3s linear infinite; 
+            z-index: 1; 
+            opacity: 0.9;
+        }
+        @keyframes infernoSpin { 
+            0% { transform: rotate(0deg) scale(1); } 
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); } 
+        }
         .sealed-player-render { width: 90%; height: 80%; object-fit: contain; z-index: 4; filter: drop-shadow(0 0 15px rgba(0,0,0,0.8)); pointer-events: none; }
         .pack-label { position: absolute; top: 15px; font-weight: 900; font-size: 1.2rem; font-style: italic; z-index: 6; color: rgba(255,255,255,0.1); -webkit-text-stroke: 1px rgba(255,255,255,0.3); }
         .foil-shine { position: absolute; inset: 0; background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%); animation: shine 4s infinite; z-index: 5; pointer-events: none; }
@@ -93,7 +109,24 @@
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
         .premium-card.limited   { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/LimitedBackground.jpg'); border: 2px solid #bebebe; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
         .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
- 
+        /* 🔥 UPGRADED 1ST EDITION CARD STYLING (Cool/Vibrant Palette) */
+.premium-card[class*="1st"] {
+    background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/firstedbackground.jpg') !important;
+    background-size: 100% 100% !important; 
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    border: 3px solid #00f2ff !important; /* Intense Electric Cyan Border */
+    box-shadow: 0 0 35px rgba(0, 242, 255, 0.7), inset 0 0 20px rgba(0, 242, 255, 0.3) !important; /* Cyan & Blue Glowing Shadows */
+}
+.premium-card[class*="1st"] .nameplate {
+    background: linear-gradient(180deg, rgba(30, 0, 60, 0.9), rgba(0, 0, 0, 0.9)) !important; /* Deep Purple to Black Gradient */
+    border-color: #00f2ff44 !important; /* Subtler Cyan Border */
+}
+.premium-card[class*="1st"] .card-name {
+    color: #0077ff !important; /* Vibrant Electric Blue Name Text */
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.6); /* Cyan Glow */
+}
         .badge { position: absolute; top: 10px; padding: 4px 8px; border-radius: 5px; font-weight: 900; font-size: 0.8rem; color: black; z-index: 30; }
         .card-pos { left: 10px; background: #3ecf8e; }
         .card-ovr { right: 10px; background: #ffd700; }
@@ -524,7 +557,7 @@
             </button>
             <button id="nav-rank" onclick="showView('rank')">RANKINGS</button>
             <button id="nav-trade" onclick="showView('trade')">
-                TRADE
+                TRADE (not working)
                 <span class="trade-badge" id="trade-badge">!</span>
             </button>
             <button id="logout-btn" onclick="handleLogout()">LOGOUT</button>
@@ -569,6 +602,8 @@
                 <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (10 🪙)</button>
                 <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (500 🪙)</button>
                 <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1400 🪙)</button>
+
+                <button class="btn" style="background: #ff4500; margin-top: 15px; box-shadow: 0 0 15px rgba(255,69,0,0.4);" onclick="preparePack('promo')">1st Edition(2500 🪙)</button>
             </div>
         </div>
         <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
@@ -581,8 +616,9 @@
                 <button class="btn" style="background: #cd7f32; width: auto; padding: 10px 20px;" onclick="loadCatalog('common')">BRONZE</button>
                 <button class="btn" style="background: #c0c0c0; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('silver')">SILVER</button>
                 <button class="btn" style="background: #ffd700; color: black; width: auto; padding: 10px 20px;" onclick="loadCatalog('gold')">GOLD</button>
-                <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('limited')">LIMITED</button>
+                <button class="btn" style="background: #ff41c6; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #bebebe;" onclick="loadCatalog('limited')">LIMITED</button>
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
+                    <button class="btn" style="background: #ff4500; color: white; width: auto; padding: 10px 20px; box-shadow: 0 0 15px rgba(255,69,0,0.6);" onclick="loadCatalog('1st edition')">1ST EDITION</button>
             </div>
             <div id="holo-note" style="display: none; color: #00f2ff; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;">
                 * Holos are rare every 85+ rated card you pull has a 2% chance to become a Holo.
@@ -772,7 +808,8 @@
         const PACK_IMAGES = {
             std: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Barcelona%20team%20-%20FootyRenders.png',
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
-            elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png'
+            elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png',
+            promo: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/firstedbackground.jpg'
         };
  
         // ─── STATE ───────────────────────────────────────────────────────────────
@@ -1175,6 +1212,7 @@
             document.getElementById('default-message').style.display = 'none';
             let specialLayer = '';
             if (tier === 'elt') { specialLayer = '<div class="galaxy-nebula"></div>'; }
+            else if (tier === 'promo') { specialLayer = '<div class="promo-fire"></div>'; }
             else if (tier === 'pre') { specialLayer = '<div class="premium-glow"></div>'; }
             const visual = document.getElementById('pack-visual');
             visual.innerHTML = `
@@ -1191,7 +1229,7 @@
         }
  
         async function openPack() {
-            const costs = { std: 10, pre: 500, elt: 1400 };
+            const costs = { std: 10, pre: 500, elt: 1400, promo: 2500 };
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
             const roll = Math.random() * 100;
@@ -1206,6 +1244,16 @@
                     if ((countData || 0) < 10) { pulledPlayer = potential; pulledPlayer.serial = (countData || 0) + 1; }
                 }
             }
+
+            // PUT THIS RIGHT AFTER YOUR LIMITED ROLL FINISHES:
+            if (!pulledPlayer && activeTier === 'promo') {
+                if (roll < 10) { // 10% chance to hit the promo card
+                    const { data: promoPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
+                    if (promoPool && promoPool.length > 0) {
+                    pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+            }
+         }
+}   
  
             if (!pulledPlayer) {
                 let minR, maxR;
@@ -1225,6 +1273,14 @@
                     else if (roll < 95)  { minR = 87; maxR = 88; }
                     else if (roll < 99)  { minR = 89; maxR = 89; }
                     else                 { minR = 90; maxR = 99; }
+                } else if (activeTier === 'promo') {
+                    if (roll < 50)       { minR = 84; maxR = 86; }
+                    else if (roll < 70)  { minR = 87; maxR = 87; }
+                    else if (roll < 87)  { minR = 88; maxR = 88; }
+                    else if (roll < 97)  { minR = 89; maxR = 89; }
+                    else                 { minR = 90; maxR = 99; }
+
+                // --- ELITE PACK GOES LAST AS THE CATCH-ALL ---
                 } else {
                     if (roll < 50)       { minR = 84; maxR = 86; }
                     else if (roll < 70)  { minR = 87; maxR = 87; }
@@ -1232,7 +1288,8 @@
                     else if (roll < 97)  { minR = 89; maxR = 89; }
                     else                 { minR = 90; maxR = 99; }
                 }
-                let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited');
+// ...
+                let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited').neq('rarity', '1st edition').eq('in_packs', true);
                 if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
                 pulledPlayer = data[Math.floor(Math.random() * data.length)];
             }
