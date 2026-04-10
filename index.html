@@ -988,7 +988,7 @@
                         user_id: currentUser.id,
                         email: currentUser.email,
                         username: username,
-                        balance: 1000,
+                        balance: 5000,
                         squad: [],
                         club_value: 0,
                         last_collected: new Date().toISOString(),
@@ -996,7 +996,7 @@
                     }, { onConflict: 'user_id' })
                     .select();
                 if (dbError) { hideLoading(); setAuthError("Database error: " + dbError.message); return; }
-                balance = 1000;
+                balance = 5000;
                 mySquad = [];
                 lastCollected = new Date().toISOString();
                 hideLoading();
@@ -1011,7 +1011,7 @@
             stopOfficeTicker();
             stopTradePoll();
             await _supabase.auth.signOut();
-            currentUser = null; balance = 1000; mySquad = []; lastCollected = null;
+            currentUser = null; balance = 5000; mySquad = []; lastCollected = null;
             document.getElementById('main-nav').style.display = 'none';
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById('view-login').classList.add('active');
