@@ -1278,7 +1278,7 @@
             if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
             balance -= costs[activeTier];
             const roll = Math.random() * 100;
-            const limitedOdds = { std: 0, pre: 0.01, elt: 0.1 };
+            const limitedOdds = { std: 0, pre: 0.01, elt: 0.1, promo: 0.2 };
             let pulledPlayer = null;
  
             if (Math.random() * 100 < limitedOdds[activeTier]) {
