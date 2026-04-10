@@ -328,6 +328,34 @@
             100% { background: transparent; }
         }
         .collect-flash { animation: collectFlash 0.6s ease-out; }
+
+        /* ⚡ Electric Cyan Promo Flash */
+            .promo-flash {
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
+                background: radial-gradient(circle, #00f2ff, #0077ff, transparent);
+                z-index: 9999;
+                pointer-events: none;
+                animation: promoFlashAnim 1.2s ease-out forwards;
+            }
+
+            @keyframes promoFlashAnim {
+                0% { opacity: 0; transform: scale(0.5); }
+                15% { opacity: 1; transform: scale(1.1); }
+                100% { opacity: 0; transform: scale(1.4); filter: blur(20px); }
+            }
+
+            /* ⚡ Intense Cyan Shake */
+            .suspense-shake-promo {
+                animation: promoShake 0.08s infinite;
+                filter: drop-shadow(0 0 30px #00f2ff) brightness(1.2);
+            }
+
+            @keyframes promoShake {
+                0% { transform: translate(3px, 3px) rotate(0.5deg); }
+                50% { transform: translate(-3px, -3px) rotate(-0.5deg); }
+                100% { transform: translate(3px, -3px) rotate(0.5deg); }
+}
         /* Offline earnings toast */
         .toast {
             position: fixed;
@@ -1245,14 +1273,33 @@
                 }
             }
 
-            // PUT THIS RIGHT AFTER YOUR LIMITED ROLL FINISHES:
-            if (!pulledPlayer && activeTier === 'promo') {
-                if (roll < 10) { // 10% chance to hit the promo card
-                    const { data: promoPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
-                    if (promoPool && promoPool.length > 0) {
-                    pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+                // PUT THIS RIGHT AFTER YOUR LIMITED ROLL FINISHES:
+                if (!pulledPlayer && activeTier === 'promo') {
+                    if (roll < 10) { // 10% chance to hit the promo card
+                        const promoRatingRoll = Math.random() * 100;
+        let pMin, pMax;
+
+        if (promoRatingRoll < 60)       { pMin = 80; pMax = 86; } // 60% chance for lower tier
+        else if (promoRatingRoll < 90)  { pMin = 87; pMax = 89; } // 30% chance for mid tier
+        else                            { pMin = 90; pMax = 99; } // 10% chance for "God Tier"
+
+        let { data: promoPool } = await _supabase
+            .from('soccer_stars')
+            .select('*')
+            .ilike('rarity', '1st edition')
+            .gte('rating', pMin)
+            .lte('rating', pMax)
+            .eq('in_packs', true);
+        
+        // Safety Fallback: If your specific rating bracket is empty, grab ANY 1st edition
+        if (!promoPool || promoPool.length === 0) {
+            const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
+            promoPool = fallbackPool.data;
+        }
+                        if (promoPool && promoPool.length > 0) {
+                        pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+                }
             }
-         }
 }   
  
             if (!pulledPlayer) {
@@ -1299,7 +1346,7 @@
             currentPull.collectedDate = new Date().toLocaleDateString();
             if (currentPull.rating >= 87 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
  
-            const packVisual = document.getElementById('pack-visual');
+            /*const packVisual = document.getElementById('pack-visual');
             if (currentPull.rating > 87) {
                 packVisual.classList.add('suspense-shake');
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -1308,7 +1355,34 @@
                 document.body.appendChild(flash);
                 setTimeout(() => flash.remove(), 1500);
                 packVisual.classList.remove('suspense-shake');
-            }
+            }*/
+
+            const packVisual = document.getElementById('pack-visual');
+                        
+                        // Check for Promo Card Animation first
+                        if (currentPull.rarity.toLowerCase() === '1st edition') {
+                            packVisual.classList.add('suspense-shake-promo'); // The intense red shake
+                            await new Promise(resolve => setTimeout(resolve, 2500)); // Longer wait for hype
+                            
+                            const flash = document.createElement('div');
+                            flash.className = 'promo-flash'; // The fiery flash
+                            document.body.appendChild(flash);
+                            setTimeout(() => flash.remove(), 1500);
+                            
+                            packVisual.classList.remove('suspense-shake-promo');
+                        } 
+                        // Standard Walkout (for high-rated gold/limited cards)
+                        else if (currentPull.rating > 86) {
+                            packVisual.classList.add('suspense-shake');
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            
+                            const flash = document.createElement('div');
+                            flash.className = 'walkout-flash';
+                            document.body.appendChild(flash);
+                            setTimeout(() => flash.remove(), 1500);
+                            
+                            packVisual.classList.remove('suspense-shake');
+                        }
  
             const val = getCardValue(currentPull);
             const reveal = document.getElementById('pack-reveal');
