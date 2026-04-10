@@ -564,6 +564,39 @@
                 box-shadow: 0 0 35px rgba(0, 242, 255, 0.8), inset 0 0 20px rgba(0, 242, 255, 0.4) !important;
             }
 
+            /* 🏁 SUPER DRAMATIC LIMITED SHAKE (Black & White) */
+.suspense-shake-limited {
+    animation: limitedShake 0.05s infinite; /* Extreme speed */
+    filter: drop-shadow(0 0 40px #fff) contrast(2) grayscale(1);
+    background: white !important; /* Forces the pack to turn solid white */
+}
+
+@keyframes limitedShake {
+    0% { transform: translate(5px, 5px) rotate(1deg); }
+    25% { transform: translate(-5px, -10px) rotate(-2deg); }
+    50% { transform: translate(-8px, 0px) rotate(2deg); }
+    75% { transform: translate(8px, 10px) rotate(-1deg); }
+    100% { transform: translate(5px, -5px) rotate(2deg); }
+}
+
+/* 🏁 The "Void" Flash */
+.limited-flash {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: white;
+    z-index: 9999;
+    pointer-events: none;
+    animation: limitedFlashAnim 2s ease-out forwards;
+}
+
+@keyframes limitedFlashAnim {
+    0% { opacity: 0; }
+    10% { opacity: 1; background: white; }
+    20% { opacity: 1; background: black; }
+    30% { opacity: 1; background: white; }
+    100% { opacity: 0; filter: blur(50px); }
+}
+
     </style>
 </head>
 <body>
@@ -644,6 +677,7 @@
                 <button id="sellBtn" class="btn" style="background: #ef4444; width: 48%;" onclick="sellPlayer()">SELL</button>
             </div>
             <div id="packArea">
+                
                 <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (500 🪙)</button>
                 <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (2500 🪙)</button>
                 <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (10000 🪙)</button>
@@ -1381,7 +1415,19 @@
             const packVisual = document.getElementById('pack-visual');
                         
                         // Check for Promo Card Animation first
-                        if (currentPull.rarity.toLowerCase() === '1st edition') {
+
+                        if (currentPull.rarity.toLowerCase() === 'limited') {
+                            packVisual.classList.add('suspense-shake-limited'); 
+                            await new Promise(resolve => setTimeout(resolve, 5000)); 
+    
+                            const flash = document.createElement('div');
+                            flash.className = 'limited-flash'; 
+                            document.body.appendChild(flash);
+                            setTimeout(() => flash.remove(), 2000);
+    
+                            packVisual.classList.remove('suspense-shake-limited');
+                        }
+                        else if (currentPull.rarity.toLowerCase() === '1st edition') {
                             packVisual.classList.add('suspense-shake-promo'); // The intense red shake
                             await new Promise(resolve => setTimeout(resolve, 2500)); // Longer wait for hype
                             
