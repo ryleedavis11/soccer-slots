@@ -86,7 +86,7 @@
         .promo-fire { 
             position: absolute; 
             inset: -50%; 
-            background: conic-gradient(from 0deg, #ff4500, #ffaa00, #b22222, #ff4500); 
+            background: conic-gradient(from 0deg, #00f2ff, #0077ff, #000b2e, #00f2ff); 
             filter: blur(25px); 
             animation: infernoSpin 3s linear infinite; 
             z-index: 1; 
@@ -631,7 +631,7 @@
                 <button class="btn" style="background: #2563eb;" onclick="preparePack('pre')">Premium (500 🪙)</button>
                 <button class="btn" style="background: #7c3aed;" onclick="preparePack('elt')">Elite (1400 🪙)</button>
 
-                <button class="btn" style="background: #ff4500; margin-top: 15px; box-shadow: 0 0 15px rgba(255,69,0,0.4);" onclick="preparePack('promo')">1st Edition(2500 🪙)</button>
+                <button class="btn" style="background: #00f2ff; color: #000; margin-top: 15px; box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);" onclick="preparePack('promo')">1st Edition(2500 🪙)</button>
             </div>
         </div>
         <div id="catalog-container" style="display: none; width: 100%; max-width: 1050px; margin: 0 auto;">
@@ -837,7 +837,7 @@
             std: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Barcelona%20team%20-%20FootyRenders.png',
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
             elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png',
-            promo: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/firstedbackground.jpg'
+            promo: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/imagefor1sted-removebg-preview.png'
         };
  
         // ─── STATE ───────────────────────────────────────────────────────────────
@@ -1275,7 +1275,7 @@
 
                 // PUT THIS RIGHT AFTER YOUR LIMITED ROLL FINISHES:
                 if (!pulledPlayer && activeTier === 'promo') {
-                    if (roll < 10) { // 10% chance to hit the promo card
+                    if (roll < 20) { // 20% chance to hit the promo card
                         const promoRatingRoll = Math.random() * 100;
         let pMin, pMax;
 
