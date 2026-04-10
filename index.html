@@ -640,6 +640,7 @@
                 OFFICE
                 <span class="office-badge" id="office-badge">$</span>
             </button>
+            <button id="nav-arena" onclick="showView('arena')">ARENA</button>
             <button id="nav-rank" onclick="showView('rank')">RANKINGS</button>
             <button id="nav-trade" onclick="showView('trade')">
                 TRADE (not working)
@@ -730,6 +731,26 @@
                             </div>
                     </div>
 </div>
+<div id="view-arena" class="view">
+        <div style="text-align: center; margin-top: 50px;">
+            <h1 style="color: #3ecf8e; letter-spacing: 5px; text-transform: uppercase;">Battle Arena</h1>
+            <p style="color: #666; margin-bottom: 40px;">Standard Pack Duel: Market Value Wins</p>
+            
+            <div style="background: #111; border: 1px solid #333; padding: 40px; border-radius: 20px; display: inline-block; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <div style="font-size: 3.5rem; margin-bottom: 10px;">🤖</div>
+                <h3 style="margin-bottom: 10px; color: #fff; letter-spacing: 2px;">BOT BATTLE</h3>
+                <p style="font-size: 0.85rem; color: #555; margin-bottom: 30px; line-height: 1.5;">
+                    Entry: <span style="color: #3ecf8e;">500 🪙</span><br>
+                    Win: <span style="color: #3ecf8e;">250 🪙</span> + Keep Card<br>
+                    <span style="font-style: italic; font-size: 0.75rem;">Tie: Refund | Loss: Card Burned</span>
+                </p>
+                <button class="btn" style="background: #3ecf8e; color: #000; font-weight: bold; width: 220px;" onclick="startBotBattle()">
+                    START DUEL
+                </button>
+                <div id="arena-battle-result" style="margin-top:30px;"></div>
+            </div>
+        </div>
+    </div>
 </div>
  
     <div id="view-team" class="view">
@@ -2208,6 +2229,164 @@ function showPackWeights(tier) {
     document.body.appendChild(modal);
 
 }
+
+// Helper to get a card based on Standard Pack odds
+async function getStandardCardForBattle(roll) {
+    let minR, maxR;
+    if (roll < 50)       { minR = 70; maxR = 79; }
+    else if (roll < 80)  { minR = 80; maxR = 82; }
+    else if (roll < 90)  { minR = 83; maxR = 83; }
+    else if (roll < 95)  { minR = 84; maxR = 85; }
+    else if (roll < 98)  { minR = 86; maxR = 86; }
+    else if (roll < 99.5){ minR = 87; maxR = 89; }
+    else                 { minR = 90; maxR = 99; }
+
+    const { data, error } = await _supabase
+        .from('soccer_stars')
+        .select('*')
+        .gte('rating', minR)
+        .lte('rating', maxR)
+        .neq('rarity', 'Limited')
+        .neq('rarity', '1st edition')
+        .eq('in_packs', true);
+
+    if (error || !data || data.length === 0) return null;
+    return data[Math.floor(Math.random() * data.length)];
+}
+
+async function startBotBattle() {
+    console.log("Battle started..."); 
+
+    if (balance < 500) { 
+        document.getElementById('arena-battle-result').innerHTML = '';
+        alert("You need 500 🪙 for a Standard Bot Battle!"); 
+        return; 
+    }
+    
+    // Deduct the 500 fee
+    balance -= 500;
+    updateUI();
+
+    // Roll for both cards
+    const playerCard = await getStandardCardForBattle(Math.random() * 100);
+    const botCard = await getStandardCardForBattle(Math.random() * 100);
+
+    if (!playerCard || !botCard) { 
+        alert("Connection error. Coins refunded."); 
+        balance += 500; 
+        updateUI(); 
+        return; 
+    }
+
+    // 🌟 EXACT STORE LOGIC: 2% chance for Holo if rating is 85+
+    if (playerCard.rating >= 85 && Math.random() < 0.02) { playerCard.isSuperHolo = true; }
+    if (botCard.rating >= 85 && Math.random() < 0.02) { botCard.isSuperHolo = true; }
+
+    // Calculate Market Value (This now includes the 3x Holo Multiplier if they hit it!)
+    const pVal = getCardValue(playerCard);
+    const bVal = getCardValue(botCard);
+
+    if (pVal > bVal) {
+        // WINNER
+        balance += 250; 
+        playerCard.instanceId = "inst_" + Date.now();
+        playerCard.collectedDate = new Date().toLocaleDateString();
+        mySquad.push(playerCard); 
+        showBattleResults("WINNER", playerCard, botCard, `Victory! You kept ${playerCard.name} and won 250 🪙.`);
+    } else if (pVal === bVal) {
+        // TIE
+        balance += 500;
+        showBattleResults("TIE", playerCard, botCard, "It's a draw! Market values are identical. Entry fee refunded.");
+    } else {
+        // DEFEAT
+        showBattleResults("DEFEAT", playerCard, botCard, `The Bot's ${botCard.name} was more valuable. You lost the 500 🪙 and the card.`);
+    }
+
+    saveGame();
+}
+
+function showBattleResults(status, pCard, bCard, msg) {
+    const visual = document.getElementById('arena-battle-result'); 
+    
+    const statusColor = status === 'WINNER' ? '#3ecf8e' : (status === 'TIE' ? '#ffd700' : '#ff4444');
+
+    const pValDisplay = getCardValue(pCard).toLocaleString();
+    const bValDisplay = getCardValue(bCard).toLocaleString();
+
+    visual.innerHTML = `
+        <div style="background: rgba(0,0,0,0.98); padding: 40px; border-radius: 20px; border: 2px solid ${statusColor}; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,1);">
+            <h1 style="color: ${statusColor}; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 10px;">${status}</h1>
+            <p style="color: #bbb; margin-bottom: 30px; font-size: 0.9rem;">${msg}</p>
+            
+            <div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-bottom: 40px;">
+                <div>
+                    <div style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">YOUR PULL</div>
+                    ${generateCardHtml(pCard, false)}
+                    <div style="color: #3ecf8e; font-weight: bold; margin-top: 10px;">${pValDisplay} 🪙</div>
+                </div>
+                <div style="font-weight: bold; font-size: 1.5rem; color: #333;">VS</div>
+                <div>
+                    <div style="font-size: 0.6rem; color: #666; margin-bottom: 5px;">BOT PULL</div>
+                    ${generateCardHtml(bCard, false)}
+                    <div style="color: #ff4444; font-weight: bold; margin-top: 10px;">${bValDisplay} 🪙</div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; width: 100%;">
+                <button class="btn" style="background: #333; color: #fff; width: 50%;" onclick="document.getElementById('arena-battle-result').innerHTML = ''">LEAVE</button>
+                <button class="btn" style="background: #3ecf8e; color: #000; font-weight: bold; width: 50%;" onclick="startBotBattle()">PLAY AGAIN</button>
+            </div>
+        </div>
+    `;
+    visual.style.display = 'block';
+}
+
+function renderCard(player) {
+    // 1. Get the rarity safely
+    const rarity = player.rarity ? player.rarity.toLowerCase() : 'common';
+    
+    // 2. Map the backgrounds
+    let cardBg = 'linear-gradient(135deg, #ffd700, #b8860b)'; // Default Gold
+    
+    if (rarity === 'common' || rarity === 'bronze') {
+        cardBg = 'linear-gradient(135deg, #cd7f32, #8b4513)'; // Bronze
+    } else if (rarity === 'silver') {
+        cardBg = 'linear-gradient(135deg, #e6e6e6, #999999)'; // Silver
+    } else if (rarity === 'limited') {
+        cardBg = 'linear-gradient(135deg, #ff41c6, #ba268d)'; // Pink Limited
+    } else if (rarity === '1st edition') {
+        cardBg = 'linear-gradient(135deg, #00f2ff, #0099a1)'; // Cyan Promo
+    }
+
+    // 3. Return the HTML (keep your existing HTML block here)
+    return `
+        <div class="card-visual" style="
+            background: ${cardBg}; 
+            width: 160px; 
+            height: 230px; 
+            border-radius: 12px; 
+            padding: 10px; 
+            color: black; 
+            position: relative; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+            margin: 0 auto;
+            border: 2px solid rgba(255,255,255,0.2);
+            font-family: sans-serif;
+        ">
+            <div style="font-size: 1.5rem; font-weight: 900; text-align: left; line-height: 1;">${player.rating}</div>
+            <div style="font-size: 0.5rem; font-weight: bold; text-transform: uppercase; text-align: left; margin-top: 2px;">${player.rarity}</div>
+            
+            <img src="${player.image_url}" style="width: 110px; height: 110px; object-fit: contain; margin: 10px auto; display: block;">
+            
+            <div style="font-weight: bold; font-size: 1rem; margin-top: 5px; text-transform: uppercase; letter-spacing: -0.5px;">
+                ${player.name}
+            </div>
+            <div style="font-size: 0.6rem; font-weight: bold; opacity: 0.7;">${player.position || 'ST'}</div>
+        </div>
+    `;
+}
+
+
     </script>
 </body>
 </html>
