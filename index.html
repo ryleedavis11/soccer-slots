@@ -547,6 +547,23 @@
         .no-trades { text-align: center; padding: 50px 20px; color: #333; }
         .no-trades .nt-icon { font-size: 3rem; margin-bottom: 12px; }
         .no-trades p { font-size: 0.85rem; letter-spacing: 1px; }
+
+            /* ✨ SPECIALTY HOLO BACKGROUNDS */
+
+            /* 1. Holo 1st Edition Cards */
+            .premium-card.super-holo[class*="1st"] {
+                background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/HoloPromo.webp') !important;
+                border-color: #00f2ff !important;
+                box-shadow: 0 0 35px rgba(0, 242, 255, 0.8), inset 0 0 20px rgba(0, 242, 255, 0.4) !important;
+            }
+
+            /* 2. Holo Limited Cards */
+            .premium-card.super-holo.limited {
+                background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/HoloLimited.png') !important;
+                border-color: #00f2ff !important;
+                box-shadow: 0 0 35px rgba(0, 242, 255, 0.8), inset 0 0 20px rgba(0, 242, 255, 0.4) !important;
+            }
+
     </style>
 </head>
 <body>
@@ -1344,18 +1361,7 @@
             currentPull = pulledPlayer;
             currentPull.instanceId = "inst_" + Date.now();
             currentPull.collectedDate = new Date().toLocaleDateString();
-            if (currentPull.rating >= 87 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
- 
-            /*const packVisual = document.getElementById('pack-visual');
-            if (currentPull.rating > 87) {
-                packVisual.classList.add('suspense-shake');
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                const flash = document.createElement('div');
-                flash.className = 'walkout-flash';
-                document.body.appendChild(flash);
-                setTimeout(() => flash.remove(), 1500);
-                packVisual.classList.remove('suspense-shake');
-            }*/
+            if (currentPull.rating >= 85 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
 
             const packVisual = document.getElementById('pack-visual');
                         
