@@ -826,7 +826,7 @@
 
         /* ─── TOP PULLS TODAY MARQUEE (Store) ────────────────────────────── */
         .store-pulls-wrap {
-            position: absolute; top: 70%; left: 0; width: 100%;
+            position: absolute; top: 100%; left: 0; width: 100%;
             transform: translateY(-70%);
             overflow: visible; pointer-events: none;
             height: 700px; z-index: 1; opacity: 0.12;
@@ -1900,7 +1900,7 @@
                          title="View ${user.username || 'ANONYMOUS'}'s squad">
                         <div class="podium-user">#${i + 1} ${user.username || 'ANONYMOUS'}</div>
                         <div class="podium-val">${user.club_value.toLocaleString()} 🪙</div>
-                        <div class="podium-star-label">TAP TO VIEW SQUAD</div>
+                        <div class="podium-star-label"></div>
                         <div class="podium-card-mini">
                             ${user.squad && user.squad.length > 0
                                 ? generateCardHtml(starCard, false)
@@ -1920,7 +1920,7 @@
                         <td>#${i + 1}</td>
                         <td>${u.username || 'ANONYMOUS'}</td>
                         <td style="color:#ffd700;font-weight:bold;">${u.club_value.toLocaleString()} 🪙</td>
-                        <td class="view-col">👁 VIEW</td>
+                        <td class="view-col">VIEW</td>
                     </tr>`;
             }
             list.innerHTML = tableHtml + '</table>';
