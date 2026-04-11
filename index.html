@@ -1489,7 +1489,7 @@
             let pulledPlayer = null;
  
             if (Math.random() * 100 < limitedOdds[activeTier]) {
-                const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
+                const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited').eq('in_packs', true);
                 if (limitedPool && limitedPool.length > 0) {
                     let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
                     const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
@@ -1561,7 +1561,7 @@
                 }
 // ...
                 let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited').neq('rarity', '1st edition').eq('in_packs', true);
-                if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
+                if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').eq('in_packs', true).neq('rarity', 'Limited').neq('rarity', '1st edition').limit(20); data = fallback.data; }
                 pulledPlayer = data[Math.floor(Math.random() * data.length)];
             }
  
@@ -2390,7 +2390,8 @@ function showPackWeights(tier) {
                 .gte('rating', minR)
                 .lte('rating', maxR)
                 .neq('rarity', 'Limited')
-                .neq('rarity', '1st edition');
+                .neq('rarity', '1st edition')
+                .eq('in_packs', true);
 
             if (error || !data || data.length === 0) return null;
             const card = data[Math.floor(Math.random() * data.length)];
