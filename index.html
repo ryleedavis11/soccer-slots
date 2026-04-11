@@ -678,131 +678,89 @@
         @keyframes flipIn { from{ transform: rotateY(-90deg) scale(0.8); opacity:0; } to{ transform: rotateY(0deg) scale(1); opacity:1; } }
 
 
-        /* ─── RANKINGS LAYOUT ──────────────────────────────────────────────── */
-        #view-rank.active { display: flex; flex-direction: column; }
-
-        /* Outer wrapper: relative so sidebar can anchor to it */
-        .rank-outer {
-            position: relative;
-            width: 100%;
+        /* ── MULTI-SELECT SELL ─────────────────────────────────────────────── */
+        .squad-toolbar {
+            max-width: 1150px; margin: 0 auto 0; padding: 0 40px 0;
+            display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
         }
-        /* The centred content column — always centred, never squeezed by the sidebar */
-        .rank-center {
-            max-width: 860px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .squad-toolbar-left  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .squad-toolbar-right { display: flex; align-items: center; gap: 10px; }
+        .ms-toggle-btn {
+            padding: 9px 18px; border: 1px solid #333; border-radius: 10px;
+            background: #1a1a1a; color: #555; font-size: 0.75rem; font-weight: 900;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s;
         }
-        /* Sidebar: float to the right of the centred column on wide screens */
-        .rank-online-sidebar {
-            position: absolute;
-            right: 20px;
-            top: 0;
-            width: 190px;
-            background: rgba(22, 22, 22, 0.92);
-            border: 1px solid #333;
-            padding: 16px;
-            border-radius: 14px;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-        .rank-online-title {
-            font-size: 0.65rem;
-            color: #3ecf8e;
-            letter-spacing: 2px;
-            font-weight: 900;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-        /* On anything narrower than 1100px the absolute sidebar would overlap — 
-           switch to a small card at the top of the page instead */
-        @media (max-width: 1100px) {
-            .rank-online-sidebar {
-                position: static;
-                width: 100%;
-                max-width: 860px;
-                margin: 16px auto 0;
-                border-radius: 12px;
-                box-sizing: border-box;
-            }
-            /* Make the online list horizontal / wrapping on mobile */
-            #active-players-list {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-        }
-
-
-        /* ─── SQUAD VIEWER MODAL ───────────────────────────────────────────── */
-        #squad-viewer-modal {
+        .ms-toggle-btn.active { background: #1a2a1a; color: #3ecf8e; border-color: #3ecf8e; }
+        .ms-sell-btn {
+            padding: 9px 22px; border: none; border-radius: 10px;
+            background: #ef4444; color: white; font-size: 0.75rem; font-weight: 900;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.2s;
             display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.92);
-            z-index: 4000;
-            align-items: flex-start;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-            overflow-y: auto;
-            padding: 30px 16px 40px;
         }
-        .sv-box {
-            background: #161616;
-            border: 1px solid #333;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 1100px;
-            padding: 28px;
+        .ms-sell-btn:hover { background: #dc2626; }
+        .ms-count-label {
+            font-size: 0.7rem; color: #555; font-weight: 900; letter-spacing: 1px;
+            display: none;
         }
-        .sv-header {
+        /* card selection ring for multi-select mode */
+        .squad-card-wrap { position: relative; display: inline-block; cursor: pointer; }
+        .squad-card-wrap.ms-selected .premium-card {
+            outline: 3px solid #ef4444;
+            outline-offset: 2px;
+            box-shadow: 0 0 18px rgba(239,68,68,0.5);
+            filter: brightness(0.85);
+        }
+        .squad-card-wrap.ms-selected::after {
+            content: '✓'; position: absolute; top: 14px; left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444; color: white;
+            border-radius: 50%; width: 26px; height: 26px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1rem; z-index: 50;
+        }
+        /* favorite star badge on card */
+        .card-fav-btn {
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            z-index: 35; background: rgba(0,0,0,0.6); border: none;
+            border-radius: 50%; width: 24px; height: 24px;
+            font-size: 0.8rem; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; transition: 0.15s;
+            pointer-events: all;
+        }
+        .card-fav-btn:hover { background: rgba(0,0,0,0.85); transform: translateX(-50%) scale(1.2); }
+        .card-fav-badge {
+            position: absolute; bottom: 68px; left: 10px;
+            background: #ffd700; border-radius: 4px;
+            font-size: 0.55rem; font-weight: 900; color: black;
+            padding: 1px 5px; z-index: 35; letter-spacing: 0.5px;
+        }
+
+
+        /* ── RANKINGS LAYOUT ───────────────────────────────────────────────── */
+        .rank-layout {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
+            gap: 24px;
+            max-width: 1240px;
+            margin: 0 auto;
+            align-items: flex-start;
         }
-        .sv-title {
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: #3ecf8e;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .sv-close {
-            padding: 8px 20px;
+        .rank-main   { flex: 1; min-width: 0; }
+        .rank-sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            background: rgba(22, 22, 22, 0.9);
             border: 1px solid #333;
-            border-radius: 10px;
-            background: #111;
-            color: #666;
-            font-weight: 900;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.15s;
+            padding: 18px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 20px;
         }
-        .sv-close:hover { border-color: #555; color: #aaa; }
-        .sv-subtitle {
-            font-size: 0.7rem;
-            color: #555;
-            letter-spacing: 1px;
-            margin-bottom: 24px;
+        @media (max-width: 768px) {
+            .rank-layout   { flex-direction: column; }
+            .rank-sidebar  { width: 100%; position: static; order: -1; }
+            .podium-container { gap: 12px; margin-top: 20px; }
         }
-        .sv-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, 180px);
-            gap: 10px 30px;
-            justify-content: center;
-        }
-        .sv-empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: #444;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-        }
-        /* Make table rows clickable */
-        .rank-table tr.clickable-row { cursor: pointer; }
-        .rank-table tr.clickable-row:hover td { background: #1e1e1e; color: #3ecf8e; }
-        .rank-table tr.clickable-row td:first-child { transition: color 0.15s; }
 
     </style>
 </head>
@@ -915,22 +873,19 @@
     </div>
  
                     <div id="view-rank" class="view">
-                    <div class="rank-outer">
-
-                        <!-- Centred main content — podium + leaderboard -->
-                        <div class="rank-center">
+                    <div class="rank-layout">
+                        <div class="rank-main">
                             <h1 style="color: #3ecf8e; text-align: center; margin-top: 20px; margin-bottom: 5px;">GLOBAL RANKINGS</h1>
                             <p style="color: #555; text-align: center; margin-bottom: 40px; letter-spacing: 2px; font-size: 0.7rem;">THE TOP 25 EXECUTIVE CLUBS</p>
                             <div id="podium-area" class="podium-container"></div>
                             <div id="leaderboard-container"></div>
                         </div>
-
-                        <!-- Online sidebar: absolute on wide screens, inline block on narrow -->
-                        <div id="active-sidebar" class="rank-online-sidebar">
-                            <div class="rank-online-title">Online Now (<span id="online-count">0</span>)</div>
+                        <div id="active-sidebar" class="rank-sidebar">
+                            <div style="font-size: 0.7rem; color: #3ecf8e; letter-spacing: 2px; font-weight: 900; margin-bottom: 16px; text-transform: uppercase;">
+                                Online Now (<span id="online-count">0</span>)
+                            </div>
                             <div id="active-players-list"></div>
                         </div>
-
                     </div>
 </div>
 <!-- ─── ARENA VIEW ──────────────────────────────────────────────── -->
@@ -1008,15 +963,22 @@
 </div>
  
     <div id="view-team" class="view">
-        <div style="max-width: 1150px; margin: 0 auto 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 0 40px;">
-            <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
-            <select id="squad-sort" class="login-input" style="width: 220px; margin: 0; padding: 8px; font-size: 0.8rem; border-color: #333;" onchange="renderSquad()">
-                <option value="date-desc">Date Collected (Newest)</option>
-                <option value="date-asc">Date Collected (Oldest)</option>
-                <option value="value-desc">Market Value (Highest)</option>
-                <option value="value-asc">Market Value (Lowest)</option>
-                <option value="rating-desc">Rating (Highest)</option>
-            </select>
+        <div class="squad-toolbar" style="margin-bottom: 20px;">
+            <div class="squad-toolbar-left">
+                <button class="ms-toggle-btn" id="ms-toggle-btn" onclick="toggleMultiSelect()">☑ SELECT MULTIPLE</button>
+                <span class="ms-count-label" id="ms-count-label">0 SELECTED</span>
+                <button class="ms-sell-btn" id="ms-sell-btn" onclick="sellSelected()">SELL SELECTED (0 🪙)</button>
+            </div>
+            <div class="squad-toolbar-right">
+                <span style="font-size: 0.75rem; color: #555; letter-spacing: 1px; font-weight: bold;">SORT BY:</span>
+                <select id="squad-sort" class="login-input" style="width: 220px; margin: 0; padding: 8px; font-size: 0.8rem; border-color: #333;" onchange="renderSquad()">
+                    <option value="date-desc">Date Collected (Newest)</option>
+                    <option value="date-asc">Date Collected (Oldest)</option>
+                    <option value="value-desc">Market Value (Highest)</option>
+                    <option value="value-asc">Market Value (Lowest)</option>
+                    <option value="rating-desc">Rating (Highest)</option>
+                </select>
+            </div>
         </div>
         <div id="teamGrid" class="team-grid"></div>
     </div>
@@ -1370,7 +1332,11 @@
  
         async function saveGame() {
             if (!currentUser) return;
-            const cv = mySquad.reduce((sum, p) => sum + getCardValue(p), 0);
+            // Club value = top 10 by market value (Fix 5)
+            const cv = [...mySquad]
+                .sort((a,b) => getCardValue(b) - getCardValue(a))
+                .slice(0, 10)
+                .reduce((sum, p) => sum + getCardValue(p), 0);
             await _supabase
                 .from('user_saves')
                 .upsert({
@@ -1750,9 +1716,6 @@
         }
  
         // ─── LEADERBOARD ─────────────────────────────────────────────────────────
-        // Cache leaderboard data so squad viewer can reference it
-        let _leaderboardData = [];
-
         async function loadLeaderboard() {
             const podium = document.getElementById('podium-area');
             const list = document.getElementById('leaderboard-container');
@@ -1764,79 +1727,60 @@
                 .order('club_value', { ascending: false })
                 .limit(25);
             if (error) return;
-            _leaderboardData = data;
-
-            // ── Podium (top 3) ──────────────────────────────────────────────
             let podiumHtml = '';
             for (let i = 0; i < Math.min(3, data.length); i++) {
                 const user = data[i];
                 let starCard = { name: "No Cards", position: "-", rating: 0, rarity: "common" };
                 if (user.squad && user.squad.length > 0) {
+                    // Show favorited card on podium if one exists, else highest value (Fix 5)
                     const favCard = user.squad.find(c => c.isFavorite);
                     starCard = favCard || user.squad.reduce((prev, curr) => (getCardValue(curr) > getCardValue(prev)) ? curr : prev);
                 }
                 podiumHtml += `
-                    <div class="podium-slot slot-${i + 1}" style="cursor:pointer"
-                         onclick="openSquadViewer(${i}, true)" title="View ${user.username || 'ANONYMOUS'}'s squad">
+                    <div class="podium-slot slot-${i + 1}">
                         <div class="podium-user">#${i + 1} ${user.username || 'ANONYMOUS'}</div>
                         <div class="podium-val">${user.club_value.toLocaleString()} 🪙</div>
-                        <div class="podium-star-label">MVP Card · tap to view squad</div>
+                        <div class="podium-star-label">MVP Card</div>
                         <div class="podium-card-mini">
-                            ${user.squad && user.squad.length > 0 ? generateCardHtml(starCard, false) : '<div style="height:100px; color:#333">EMPTY</div>'}
+                            ${user.squad.length > 0 ? generateCardHtml(starCard, false) : '<div style="height:100px; color:#333">EMPTY</div>'}
                         </div>
                     </div>`;
             }
             podium.innerHTML = podiumHtml;
-
-            // ── Leaderboard table (4-25) — clickable rows ───────────────────
-            let tableHtml = `<table class="rank-table">
-                <tr><th>Rank</th><th>Manager</th><th>Club Value</th><th style="color:#555;font-size:0.7rem">SQUAD</th></tr>`;
+            let tableHtml = `<table class="rank-table"><tr><th>Rank</th><th>Manager</th><th>Club Value</th></tr>`;
             for (let i = 3; i < data.length; i++) {
-                tableHtml += `<tr class="clickable-row" onclick="openSquadViewer(${i}, false)">
-                    <td>#${i + 1}</td>
-                    <td>${data[i].username || 'ANONYMOUS'}</td>
-                    <td style="color:#ffd700; font-weight:bold;">${data[i].club_value.toLocaleString()} 🪙</td>
-                    <td style="color:#555; font-size:0.8rem;">👁 VIEW</td>
-                </tr>`;
+                tableHtml += `<tr><td>#${i + 1}</td><td>${data[i].username || 'ANONYMOUS'}</td><td style="color:#ffd700; font-weight:bold;">${data[i].club_value.toLocaleString()} 🪙</td></tr>`;
             }
             list.innerHTML = tableHtml + `</table>`;
-        }
-
-        function openSquadViewer(dataIndex, fromPodium) {
-            const user = _leaderboardData[dataIndex];
-            if (!user) return;
-            document.getElementById('sv-title').innerText = (user.username || 'ANONYMOUS') + "'S SQUAD";
-            document.getElementById('sv-subtitle').innerText =
-                `${(user.squad || []).length} cards · Club value: ${user.club_value.toLocaleString()} 🪙`;
-            const grid = document.getElementById('sv-grid');
-            if (!user.squad || user.squad.length === 0) {
-                grid.innerHTML = '<div class="sv-empty">This manager has no cards yet.</div>';
-            } else {
-                // Sort by value descending for the viewer
-                const sorted = [...user.squad].sort((a, b) => getCardValue(b) - getCardValue(a));
-                grid.innerHTML = sorted.map(p => generateCardHtml(p, false)).join('');
-            }
-            document.getElementById('squad-viewer-modal').style.display = 'flex';
-        }
-
-        function closeSquadViewer(event) {
-            // Close if clicking the backdrop or the close button
-            if (!event || event.target === document.getElementById('squad-viewer-modal')) {
-                document.getElementById('squad-viewer-modal').style.display = 'none';
-            }
         }
  
         // ─── CARD HTML ───────────────────────────────────────────────────────────
         function generateCardHtml(p, clickable = true) {
             const rarity = (p.rarity || 'common').toLowerCase();
+            const is1st   = rarity === '1st edition';
             const holoClass = p.isSuperHolo ? 'super-holo' : '';
             const artClass = p.id === 64 ? 'full-art' : '';
             const val = getCardValue(p);
             const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
+            const isFav = p.isFavorite ? true : false;
+
+            // 1st edition: use cyan for pos/rating badges, add 1ST badge
+            const posBg  = is1st ? '#00c8ff' : '#3ecf8e';
+            const ovrBg  = is1st ? '#001aff' : '#ffd700';
+            const ovrColor = is1st ? '#fff' : 'black';
+            const firstBadge = is1st
+                ? `<div class="badge" style="top:auto;bottom:68px;left:10px;background:linear-gradient(135deg,#00f2ff,#0055ff);color:#fff;font-size:0.55rem;padding:2px 6px;letter-spacing:1px;">1ST ED</div>`
+                : '';
+            const favBadge = isFav
+                ? `<div class="card-fav-badge">⭐ FAV</div>`
+                : '';
+
             return `<div class="premium-card ${rarity} ${holoClass} ${artClass}" ${clickAttr}>
-                        <div class="badge card-pos">${p.position}</div>
-                        <div class="badge card-ovr">${p.rating}</div>
+                        <div class="badge card-pos" style="background:${posBg};color:black">${p.position}</div>
+                        <div class="badge card-ovr" style="background:${ovrBg};color:${ovrColor}">${p.rating}</div>
+                        ${firstBadge}
                         ${p.serial ? `<div class="card-serial">LIMITED ${p.serial}/10</div>` : ''}
+                        ${favBadge}
                         <img src="${p.image_url}" class="player-img">
                         <div class="nameplate">
                             <div class="card-name">${p.name}</div>
@@ -1855,9 +1799,18 @@
             document.getElementById('val-orig').innerText = val.toLocaleString() + " 🪙";
             document.getElementById('val-sell').innerText = sellValue.toLocaleString() + " 🪙";
             document.getElementById('val-date').innerText = p.collectedDate || "Historical";
-            document.getElementById('modal-sell-btn').onclick = () => {
-                if (confirm("Sell " + p.name + "?")) { finalizeSale(id); }
-            };
+            const sellBtn = document.getElementById('modal-sell-btn');
+            if (p.isFavorite) {
+                sellBtn.disabled = true;
+                sellBtn.innerText = '⭐ FAVORITED — UNFAVORITE TO SELL';
+                sellBtn.style.background = '#333';
+                sellBtn.onclick = null;
+            } else {
+                sellBtn.disabled = false;
+                sellBtn.innerText = 'QUICK SELL';
+                sellBtn.style.background = '#ef4444';
+                sellBtn.onclick = () => { if (confirm("Sell " + p.name + "?")) { finalizeSale(id); } };
+            }
             document.getElementById('modal-overlay').style.display = 'flex';
         }
  
@@ -1875,25 +1828,19 @@
  
         // ─── VIEW MANAGEMENT ─────────────────────────────────────────────────────
         function showView(id) {
-            // Fix 3: if a card is pending keep/sell decision and player navigates away, auto-keep it
-            if (id !== 'slots' && currentPull) {
-                mySquad.push(currentPull);
-                renderSquad();
-                showToast(`✅ ${currentPull.name} auto-kept — you navigated away`);
-                currentPull = null;
-                saveGame();
-            }
-
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + id).classList.add('active');
             const navBtn = document.getElementById('nav-' + id);
             if (navBtn) navBtn.classList.add('active');
-            if (id === 'rank')   loadLeaderboard();
+            if (id === 'rank')  loadLeaderboard();
             if (id === 'office') renderOfficeView();
-            if (id === 'trade')  switchTradeTab('board');
-            if (id === 'arena')  arenaToLobby();
-            if (id !== 'slots')  resetUI();
+            if (id === 'trade') switchTradeTab('board');
+            if (id === 'arena') arenaToLobby();
+            // Fix 3: always reset store to pack selection when navigating to slots
+            if (id === 'slots') { resetUI(); closeCatalog(); }
+            // Fix 1: exit multi-select mode when leaving squad view
+            if (id !== 'team') exitMultiSelect();
         }
  
         async function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); await saveGame(); }
@@ -1910,7 +1857,12 @@
  
         function updateUI() {
             document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString());
-            document.getElementById('nav-club-value').innerText = mySquad.reduce((sum, p) => sum + getCardValue(p), 0).toLocaleString();
+            // Club value = sum of top 10 cards by market value (Fix 5)
+            const top10Val = [...mySquad]
+                .sort((a,b) => getCardValue(b) - getCardValue(a))
+                .slice(0, 10)
+                .reduce((sum, p) => sum + getCardValue(p), 0);
+            document.getElementById('nav-club-value').innerText = top10Val.toLocaleString();
             document.getElementById('team-count').innerText = mySquad.length;
         }
  
@@ -1924,7 +1876,18 @@
                 else if (sortVal === 'value-asc') return getCardValue(a) - getCardValue(b);
                 else if (sortVal === 'rating-desc') return b.rating - a.rating;
             });
-            grid.innerHTML = mySquad.map(p => generateCardHtml(p, true)).join('');
+            // Wrap each card for multi-select + fav button (Fix 1 + Fix 5)
+            grid.innerHTML = mySquad.map(p => {
+                const isSelected = multiSelectMode && multiSelectIds.has(p.instanceId);
+                const favIcon = p.isFavorite ? '⭐' : '☆';
+                const favTitle = p.isFavorite ? 'Unfavorite' : 'Favorite (protects from sale)';
+                return `<div class="squad-card-wrap ${isSelected ? 'ms-selected' : ''}"
+                             onclick="squadCardClick(event, '${p.instanceId}')">
+                            ${generateCardHtml(p, !multiSelectMode)}
+                            <button class="card-fav-btn" title="${favTitle}"
+                                onclick="event.stopPropagation(); toggleFavorite('${p.instanceId}')">${favIcon}</button>
+                        </div>`;
+            }).join('');
             updateUI();
         }
  
@@ -2415,6 +2378,92 @@
             return Math.floor(h / 24) + 'd ago';
         }
  
+
+        // ─── MULTI-SELECT SELL (Fix 1) ────────────────────────────────────────────
+        let multiSelectMode = false;
+        let multiSelectIds  = new Set();
+
+        function toggleMultiSelect() {
+            multiSelectMode = !multiSelectMode;
+            const btn = document.getElementById('ms-toggle-btn');
+            btn.classList.toggle('active', multiSelectMode);
+            btn.innerText = multiSelectMode ? '✕ CANCEL SELECTION' : '☑ SELECT MULTIPLE';
+            if (!multiSelectMode) {
+                multiSelectIds.clear();
+                updateMultiSelectUI();
+            }
+            renderSquad();
+        }
+
+        function exitMultiSelect() {
+            if (!multiSelectMode) return;
+            multiSelectMode = false;
+            multiSelectIds.clear();
+            document.getElementById('ms-toggle-btn').classList.remove('active');
+            document.getElementById('ms-toggle-btn').innerText = '☑ SELECT MULTIPLE';
+            updateMultiSelectUI();
+        }
+
+        function squadCardClick(event, instanceId) {
+            if (!multiSelectMode) return; // normal click handled by generateCardHtml onclick
+            if (multiSelectIds.has(instanceId)) {
+                multiSelectIds.delete(instanceId);
+            } else {
+                multiSelectIds.add(instanceId);
+            }
+            updateMultiSelectUI();
+            renderSquad();
+        }
+
+        function updateMultiSelectUI() {
+            const countEl  = document.getElementById('ms-count-label');
+            const sellBtn  = document.getElementById('ms-sell-btn');
+            const n        = multiSelectIds.size;
+            const sellable = [...multiSelectIds].filter(id => {
+                const p = mySquad.find(c => c.instanceId === id);
+                return p && !p.isFavorite;
+            });
+            const totalVal = sellable.reduce((sum, id) => {
+                const p = mySquad.find(c => c.instanceId === id);
+                return sum + (p ? Math.floor(getCardValue(p) * SELL_RATE) : 0);
+            }, 0);
+
+            countEl.style.display  = n > 0 ? 'block' : 'none';
+            sellBtn.style.display  = n > 0 ? 'block' : 'none';
+            countEl.innerText = `${n} SELECTED${sellable.length < n ? ' (' + (n - sellable.length) + ' favorited, protected)' : ''}`;
+            sellBtn.innerText = `SELL ${sellable.length} CARD${sellable.length !== 1 ? 'S' : ''} (+${totalVal.toLocaleString()} 🪙)`;
+        }
+
+        async function sellSelected() {
+            const sellable = [...multiSelectIds].filter(id => {
+                const p = mySquad.find(c => c.instanceId === id);
+                return p && !p.isFavorite;
+            });
+            if (sellable.length === 0) { showToast('⚠ All selected cards are favorited.'); return; }
+            const totalVal = sellable.reduce((sum, id) => {
+                const p = mySquad.find(c => c.instanceId === id);
+                return sum + (p ? Math.floor(getCardValue(p) * SELL_RATE) : 0);
+            }, 0);
+            if (!confirm(`Sell ${sellable.length} card${sellable.length !== 1 ? 's' : ''} for ${totalVal.toLocaleString()} 🪙?`)) return;
+            balance += totalVal;
+            mySquad = mySquad.filter(p => !sellable.includes(p.instanceId));
+            multiSelectIds.clear();
+            exitMultiSelect();
+            updateUI(); renderSquad();
+            await saveGame();
+            showToast(`🪙 Sold ${sellable.length} card${sellable.length !== 1 ? 's' : ''} for ${totalVal.toLocaleString()} 🪙`);
+        }
+
+        // ─── FAVORITE SYSTEM (Fix 5) ──────────────────────────────────────────────
+        async function toggleFavorite(instanceId) {
+            const p = mySquad.find(c => c.instanceId === instanceId);
+            if (!p) return;
+            p.isFavorite = !p.isFavorite;
+            renderSquad();
+            await saveGame();
+            showToast(p.isFavorite ? `⭐ ${p.name} favorited — protected from sale` : `${p.name} unfavorited`);
+        }
+
         // ─── BOOT ────────────────────────────────────────────────────────────────
         checkExistingSession();
 
@@ -2665,20 +2714,5 @@ function showPackWeights(tier) {
 
 
     </script>
-
-    <!-- ─── SQUAD VIEWER MODAL ────────────────────────────────────────── -->
-    <div id="squad-viewer-modal" onclick="closeSquadViewer(event)">
-        <div class="sv-box" onclick="event.stopPropagation()">
-            <div class="sv-header">
-                <div class="sv-title" id="sv-title">SQUAD</div>
-                <button class="sv-close" onclick="closeSquadViewer()">✕ CLOSE</button>
-            </div>
-            <div class="sv-subtitle" id="sv-subtitle"></div>
-            <div class="sv-grid" id="sv-grid">
-                <div class="sv-empty">Loading...</div>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
