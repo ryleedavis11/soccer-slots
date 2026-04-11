@@ -2065,8 +2065,8 @@
             if (id !== 'team')   exitMultiSelect();
         }
  
-        async function keepPlayer() { mySquad.push(currentPull); renderSquad(); resetUI(); await saveGame(); }
-        async function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); resetUI(); await saveGame(); }
+        async function keepPlayer() { mySquad.push(currentPull); currentPull = null; renderSquad(); resetUI(); await saveGame(); }
+        async function sellPlayer() { balance += Math.floor(getCardValue(currentPull) * SELL_RATE); currentPull = null; resetUI(); await saveGame(); }
  
         function resetUI() {
             document.getElementById('choiceArea').style.display = 'none';
