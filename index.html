@@ -908,6 +908,14 @@
                     cursor:pointer;letter-spacing:1px;text-transform:uppercase;margin-top:6px;
                     transition:0.2s;width:100%;">☆ FAVOURITE</button>
             </div>
+            <div class="data-point" style="border-bottom:none; margin-bottom: 0;">
+                <div class="data-label">Showcase</div>
+                <button id="modal-showcase-btn" onclick="modalToggleShowcase()" style="
+                    background:none; border:1px solid #333; border-radius:8px;
+                    color:#888; font-size:0.8rem; font-weight:900; padding:6px 16px;
+                    cursor:pointer; letter-spacing:1px; text-transform:uppercase; margin-top:6px;
+                    transition:0.2s; width:100%;">SET AS SHOWCASE</button>
+            </div>
             <button class="btn" style="background: #ef4444;" id="modal-sell-btn">QUICK SELL</button>
         </div>
     </div>
@@ -1891,8 +1899,9 @@
                 const user = filtered[i];
                 let starCard = { name: "No Cards", position: "-", rating: 0, rarity: "common", image_url: '' };
                 if (user.squad && user.squad.length > 0) {
-                    const favCard = user.squad.find(c => c.isFavorite);
-                    starCard = favCard || user.squad.reduce((prev, curr) =>
+                    const showcaseCard = user.squad.find(c => c.isShowcase);
+                    const favCard      = user.squad.find(c => c.isFavorite);
+                    starCard = showcaseCard || favCard || user.squad.reduce((prev, curr) =>
                         getCardValue(curr) > getCardValue(prev) ? curr : prev);
                 }
                 podiumHtml += `
@@ -2005,6 +2014,20 @@
                 favBtn.style.color       = '#888';
             }
 
+            // --- Showcase Button ---
+            const scBtn = document.getElementById('modal-showcase-btn');
+            if (p.isShowcase) {
+                scBtn.innerText = '🏆 CURRENT SHOWCASE';
+                scBtn.style.borderColor = '#3ecf8e';
+                scBtn.style.color       = '#3ecf8e';
+                scBtn.style.background  = 'rgba(62, 207, 142, 0.1)';
+            } else {
+                scBtn.innerText = '🏆 SET AS SHOWCASE';
+                scBtn.style.borderColor = '#333';
+                scBtn.style.color       = '#888';
+                scBtn.style.background  = 'none';
+            }
+
             // Sell button — blocked if favourited
             const sellBtn = document.getElementById('modal-sell-btn');
             if (p.isFavorite) {
@@ -2037,6 +2060,23 @@
                 await saveGame();
             }
         }
+
+        async function modalToggleShowcase() {
+    if (!_modalCurrentId) return;
+    
+    // 1. Set every card to false
+    mySquad.forEach(c => c.isShowcase = false);
+    
+    // 2. Set only the current card to true
+    const p = mySquad.find(c => c.instanceId === _modalCurrentId);
+    if (p) p.isShowcase = true;
+
+    // 3. Save and refresh
+    renderSquad();
+    await saveGame();
+    showCardDetails(_modalCurrentId); // Refresh modal UI
+    showToast(`🏆 ${p.name} is now your Showcase Card!`);
+}
  
         function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
  
