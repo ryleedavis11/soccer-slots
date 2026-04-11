@@ -826,9 +826,10 @@
 
         /* ─── TOP PULLS TODAY MARQUEE (Store) ────────────────────────────── */
         .store-pulls-wrap {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            overflow: hidden; pointer-events: none;
-            height: 310px; z-index: 1; opacity: 0.18;
+            position: absolute; top: 50%; left: 0; width: 100%;
+            transform: translateY(-50%);
+            overflow: visible; pointer-events: none;
+            height: 700px; z-index: 1; opacity: 0.12;
             white-space: nowrap;
         }
         .store-pulls-track {
@@ -838,7 +839,7 @@
         }
         .store-pull-item {
             display: inline-flex; flex-direction: column;
-            align-items: center; gap: 4px;
+            align-items: center; gap: 15px; transform: scale(1.5); margin: 0 80px
         }
         .store-pull-username {
             font-size: 0.55rem; font-weight: 900; color: #3ecf8e;
@@ -2941,6 +2942,55 @@ function showPackWeights(tier) {
             document.getElementById('arena-result-msg').innerText = msg;
             arenaShowPhase('arena-reveal');
         }
+
+        async function loadLimitedStock() {
+    const banner = document.getElementById('limited-stock-banner');
+    const list = document.getElementById('limited-stock-list');
+    
+    // 1. Fetch all players marked as 'Limited'
+    const { data: limitedPlayers, error } = await _supabase
+        .from('soccer_stars')
+        .select('id, name')
+        .ilike('rarity', 'Limited');
+
+    if (error || !limitedPlayers || limitedPlayers.length === 0) {
+        banner.style.display = 'none';
+        return;
+    }
+
+    // 2. Clear current list and show banner
+    list.innerHTML = '';
+    banner.style.display = 'block';
+
+    // 3. For each Limited player, check how many have been issued
+    for (const player of limitedPlayers) {
+        const { data: issuedCount } = await _supabase.rpc('count_limited_player', { pid: player.id });
+        
+        const remaining = 10 - (issuedCount || 0);
+        const stockColor = remaining > 3 ? '#3ecf8e' : (remaining > 0 ? '#ffd700' : '#ef4444');
+
+        // 4. Create the stock indicator pill
+        const item = document.createElement('div');
+        item.style = `
+            background: rgba(255,255,255,0.05);
+            border: 1px solid ${stockColor}44;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        `;
+        
+        item.innerHTML = `
+            <span style="color: #888;">${player.name.toUpperCase()}</span>
+            <span style="color: ${stockColor};">${remaining}/10 LEFT</span>
+        `;
+        
+        list.appendChild(item);
+    }
+}
 
 
     </script>
