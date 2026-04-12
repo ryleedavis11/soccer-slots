@@ -847,6 +847,162 @@
             margin-top: 2px;
         }
 
+
+        /* ─── GLOBAL LIMITED PULL ALERT ───────────────────────────────────── */
+        #limited-pull-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 99999;
+            align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.0);
+            pointer-events: none;
+        }
+        #limited-pull-overlay.active {
+            display: flex;
+            animation: limitedAlertIn 0.5s ease forwards;
+        }
+        @keyframes limitedAlertIn {
+            0%   { background: rgba(0,0,0,0); }
+            20%  { background: rgba(0,0,0,0.75); }
+            80%  { background: rgba(0,0,0,0.75); }
+            100% { background: rgba(0,0,0,0); }
+        }
+        .lpa-shake-bg {
+            position: absolute; inset: 0;
+            animation: lpaScreenShake 0.15s infinite;
+            background: transparent;
+            pointer-events: none;
+        }
+        @keyframes lpaScreenShake {
+            0%   { transform: translate(4px,  2px) rotate(0.3deg); }
+            25%  { transform: translate(-4px, -2px) rotate(-0.3deg); }
+            50%  { transform: translate(3px, -3px) rotate(0.2deg); }
+            75%  { transform: translate(-3px,  3px) rotate(-0.2deg); }
+            100% { transform: translate(4px,  2px) rotate(0.3deg); }
+        }
+        .lpa-box {
+            background: linear-gradient(135deg, #0a0a0a, #111);
+            border: 2px solid #bebebe;
+            border-radius: 20px;
+            padding: 36px 48px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            box-shadow: 0 0 60px rgba(190,190,190,0.3), 0 0 120px rgba(0,242,255,0.1);
+            position: relative;
+            z-index: 1;
+            animation: lpaBoxIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        @keyframes lpaBoxIn {
+            from { transform: scale(0.6); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .lpa-badge {
+            font-size: 0.65rem; font-weight: 900; letter-spacing: 3px;
+            color: #bebebe; text-transform: uppercase; margin-bottom: 10px;
+            border: 1px solid #bebebe44; display: inline-block;
+            padding: 3px 12px; border-radius: 20px;
+        }
+        .lpa-headline {
+            font-size: 1.8rem; font-weight: 900; color: #fff;
+            letter-spacing: 2px; margin: 8px 0 6px;
+            text-shadow: 0 0 20px rgba(190,190,190,0.5);
+        }
+        .lpa-sub {
+            font-size: 0.85rem; color: #888; margin-bottom: 20px;
+        }
+        .lpa-card-wrap { display: flex; justify-content: center; margin: 16px 0; }
+        .lpa-countdown {
+            font-size: 0.65rem; color: #555; letter-spacing: 2px; margin-top: 14px;
+        }
+        .lpa-progress {
+            height: 3px; background: #222; border-radius: 2px;
+            margin-top: 8px; overflow: hidden;
+        }
+        .lpa-progress-bar {
+            height: 100%; background: linear-gradient(90deg, #bebebe, #00f2ff);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+
+        /* ─── EXCHANGES ────────────────────────────────────────────────────── */
+        .exchange-card-bg { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/exchangebackground.jpg') !important; }
+        .premium-card.exchange { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/exchangebackground.jpg'); border: 2px solid #f97316; box-shadow: 0 0 18px rgba(249,115,22,0.4); }
+
+        #view-exchanges.active { display: flex; flex-direction: column; align-items: center; padding-top: 30px; }
+        .exc-header { text-align: center; margin-bottom: 30px; width: 100%; max-width: 900px; }
+        .exc-header h1 { color: #f97316; font-size: 2rem; font-weight: 900; letter-spacing: 4px; margin-bottom: 6px; }
+        .exc-header p  { color: #555; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; }
+
+        .exc-list { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 860px; padding-bottom: 60px; }
+
+        .exc-item {
+            background: #141414; border: 1px solid #222; border-radius: 18px;
+            padding: 24px; transition: border-color 0.2s;
+        }
+        .exc-item.completed { border-color: #3ecf8e33; opacity: 0.6; }
+        .exc-item.available { border-color: #f9731633; }
+        .exc-item.available:hover { border-color: #f97316; }
+
+        .exc-item-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .exc-item-name { font-size: 1.05rem; font-weight: 900; color: #fff; letter-spacing: 1px; }
+        .exc-item-desc { font-size: 0.75rem; color: #555; margin-top: 4px; }
+        .exc-status-badge {
+            font-size: 0.6rem; font-weight: 900; letter-spacing: 2px;
+            padding: 4px 12px; border-radius: 20px; text-transform: uppercase; flex-shrink: 0;
+        }
+        .exc-status-badge.done      { background: #3ecf8e22; color: #3ecf8e; border: 1px solid #3ecf8e44; }
+        .exc-status-badge.available { background: #f9731622; color: #f97316; border: 1px solid #f9731644; }
+        .exc-status-badge.locked    { background: #33333322; color: #555;    border: 1px solid #33333344; }
+
+        .exc-cards-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+        .exc-side-label { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; margin-bottom: 8px; }
+        .exc-arrow { font-size: 1.8rem; color: #f97316; flex-shrink: 0; }
+        .exc-cost-col, .exc-reward-col { display: flex; flex-direction: column; align-items: center; }
+
+        /* Stacked cost cards */
+        .exc-cost-stack { display: flex; flex-direction: column; align-items: center; }
+        .exc-cost-card { transform: scale(0.52); margin: -42px 0; pointer-events: none; }
+        .exc-cost-card:first-child { margin-top: 0; }
+        .exc-cost-count {
+            background: #f97316; color: black; font-weight: 900;
+            font-size: 0.7rem; padding: 3px 10px; border-radius: 20px;
+            margin-top: 52px; letter-spacing: 1px;
+        }
+        .exc-reward-wrap { transform: scale(0.75); margin: -30px 0; pointer-events: none; }
+
+        /* Progress bar */
+        .exc-progress-wrap { background: #1a1a1a; border-radius: 6px; height: 6px; margin-bottom: 10px; overflow: hidden; }
+        .exc-progress-bar  { height: 100%; background: linear-gradient(90deg, #f97316, #fbbf24); border-radius: 6px; transition: width 0.4s; }
+        .exc-progress-label { font-size: 0.65rem; color: #555; letter-spacing: 1px; margin-bottom: 14px; }
+
+        .exc-btn {
+            width: 100%; padding: 13px; border: none; border-radius: 12px;
+            font-weight: 900; font-size: 0.9rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer; transition: 0.2s;
+        }
+        .exc-btn.go     { background: #f97316; color: black; }
+        .exc-btn.go:hover { background: #ea6c0a; box-shadow: 0 0 16px rgba(249,115,22,0.4); }
+        .exc-btn.done   { background: #1a1a1a; color: #3ecf8e; cursor: default; border: 1px solid #3ecf8e33; }
+        .exc-btn.locked { background: #1a1a1a; color: #444; cursor: not-allowed; border: 1px solid #222; }
+
+        /* Nav dropdown */
+        .nav-dropdown { position: relative; display: inline-block; }
+        .nav-dropdown-menu {
+            display: none; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); background: #161616;
+            border: 1px solid #333; border-radius: 10px; overflow: hidden;
+            min-width: 160px; z-index: 9999; margin-top: 8px;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-menu button {
+            display: block; width: 100%; padding: 12px 20px;
+            background: none; border: none; color: #888; font-size: 0.8rem;
+            font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; text-align: left; transition: 0.15s; margin: 0;
+        }
+        .nav-dropdown-menu button:hover { background: #222; color: #fff; }
+
     </style>
 </head>
 <body>
@@ -878,7 +1034,13 @@
         <div class="nav-center">
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
-            <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>)</button>
+            <div class="nav-dropdown">
+                <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>) ▾</button>
+                <div class="nav-dropdown-menu">
+                    <button onclick="showView('team')">My Squad</button>
+                    <button onclick="showView('exchanges')">⚡ Exchanges</button>
+                </div>
+            </div>
             <button id="nav-office" onclick="showView('office')">
                 OFFICE
                 <span class="office-badge" id="office-badge">$</span>
@@ -973,6 +1135,7 @@
                 <button class="btn" style="background: #ff41c6; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #bebebe;" onclick="loadCatalog('limited')">LIMITED</button>
                 <button class="btn" style="background: #00f2ff; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 10px #00f2ff;" onclick="loadCatalog('holo')">HOLO</button>
                     <button class="btn" style="background: #ff4500; color: white; width: auto; padding: 10px 20px; box-shadow: 0 0 15px rgba(255,69,0,0.6);" onclick="loadCatalog('1st edition')">1ST EDITION</button>
+                    <button class="btn" style="background: #f97316; color: black; width: auto; padding: 10px 20px; box-shadow: 0 0 15px rgba(249,115,22,0.5);" onclick="loadCatalog('exchange')">⚡ EXCHANGE</button>
             </div>
             <div id="holo-note" style="display: none; color: #00f2ff; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;">
                 * Holos are rare every 85+ rated card you pull has a 2% chance to become a Holo.
@@ -1093,6 +1256,25 @@
         <div id="teamGrid" class="team-grid"></div>
     </div>
  
+    <!-- ─── EXCHANGES VIEW ─────────────────────────────────────────────── -->
+    <!-- ╔═══════════════════════════════════════════════════════════════════╗
+         ║  TO ADD A NEW EXCHANGE:                                          ║
+         ║  1. In soccer_stars: add the reward card with rarity='exchange'  ║
+         ║     in_packs=false, and note its ID.                             ║
+         ║  2. In the EXCHANGES array below, add one object following the   ║
+         ║     same pattern as the existing entry.                           ║
+         ║  TO RETIRE AN EXCHANGE: set active: false or delete the object.  ║
+         ╚═══════════════════════════════════════════════════════════════════╝ -->
+    <div id="view-exchanges" class="view">
+        <div class="exc-header">
+            <h1>⚡ EXCHANGES</h1>
+            <p>Trade duplicate cards for exclusive exchange-only rewards</p>
+        </div>
+        <div class="exc-list" id="exc-list">
+            <div style="color:#555;text-align:center;padding:40px;">Loading exchanges...</div>
+        </div>
+    </div>
+
     <!-- ─── OFFICE VIEW ──────────────────────────────────────────────────── -->
     <div id="view-office" class="view">
         <div class="office-header">
@@ -1404,6 +1586,7 @@
             }
             loadTopPullsToday();
             loadLimitedStock();
+            loadExchangeState();
         }
 
         async function loadTopPullsToday() {
@@ -1458,12 +1641,13 @@
             if (!currentUser) return;
             const { data, error } = await _supabase
                 .from('user_saves')
-                .select('balance, squad, last_collected')
+                .select('balance, squad, last_collected, completed_exchanges')
                 .eq('user_id', currentUser.id)
                 .single();
             if (data) {
                 balance = data.balance ?? 5000;
                 mySquad = data.squad || [];
+                completedExchanges = data.completed_exchanges || [];
                 lastCollected = data.last_collected || new Date().toISOString();
  
                 // ── OFFLINE EARNINGS: credit coins for real time spent away ──
@@ -1501,6 +1685,7 @@
                     squad: mySquad,
                     club_value: cv,
                     last_collected: lastCollected,
+                    completed_exchanges: completedExchanges,
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' });
         }
@@ -1510,6 +1695,12 @@
             let val = p.base_price || 0;
             if (p.isSuperHolo) val *= HOLO_MULTIPLIER;
             return val;
+        }
+
+        // Exchange cards have market value but ZERO quick sell value
+        function getSellValue(p) {
+            if ((p.rarity || '').toLowerCase() === 'exchange' || p.isExchange) return 0;
+            return Math.floor(getCardValue(p) * SELL_RATE);
         }
  
         // ─── OFFICE PASSIVE INCOME ────────────────────────────────────────────────
@@ -1819,6 +2010,23 @@
             currentPull.collectedDate = new Date().toLocaleDateString();
             if (currentPull.rating >= 85 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
 
+            // If limited — broadcast to everyone else BEFORE showing our own animation
+            if (currentPull.rarity && currentPull.rarity.toLowerCase() === 'limited' && _roomChannel) {
+                try {
+                    await _roomChannel.send({
+                        type: 'broadcast',
+                        event: 'limited_pull',
+                        payload: {
+                            packerId:  currentUser.id,
+                            username:  currentUser.user_metadata?.username || currentUser.email?.split('@')[0] || 'A MANAGER',
+                            cardName:  currentPull.name,
+                            serial:    currentPull.serial || '?',
+                            cardData:  currentPull
+                        }
+                    });
+                } catch(e) { /* non-critical */ }
+            }
+
             const packVisual = document.getElementById('pack-visual');
                         
                         // Check for Promo Card Animation first
@@ -1999,7 +2207,8 @@
             const sellValue = Math.floor(val * SELL_RATE);
             document.getElementById('modal-card-render').innerHTML = generateCardHtml(p, false);
             document.getElementById('val-orig').innerText  = val.toLocaleString() + " 🪙";
-            document.getElementById('val-sell').innerText  = sellValue.toLocaleString() + " 🪙";
+            const actualSellValue = getSellValue(p);
+            document.getElementById('val-sell').innerText  = actualSellValue > 0 ? actualSellValue.toLocaleString() + " 🪙" : 'NOT FOR SALE';
             document.getElementById('val-date').innerText  = p.collectedDate || "Historical";
 
             // Favourite button
@@ -2030,7 +2239,13 @@
 
             // Sell button — blocked if favourited
             const sellBtn = document.getElementById('modal-sell-btn');
-            if (p.isFavorite) {
+            const isExchangeCard = (p.rarity || '').toLowerCase() === 'exchange' || p.isExchange;
+            if (isExchangeCard) {
+                sellBtn.disabled = true;
+                sellBtn.innerText = '⚡ EXCHANGE REWARD — CANNOT SELL';
+                sellBtn.style.background = '#1a1a0a';
+                sellBtn.onclick = null;
+            } else if (p.isFavorite) {
                 sellBtn.disabled = true;
                 sellBtn.innerText = '⭐ UNFAVOURITE FIRST TO SELL';
                 sellBtn.style.background = '#333';
@@ -2098,7 +2313,8 @@
             const navBtn = document.getElementById('nav-' + id);
             if (navBtn) navBtn.classList.add('active');
             if (id === 'rank')   loadLeaderboard();
-            if (id === 'office') renderOfficeView();
+            if (id === 'office')    renderOfficeView();
+            if (id === 'exchanges') { loadExchangeState().then(renderExchanges); }
             if (id === 'trade')  switchTradeTab('board');
             if (id === 'arena')  arenaToLobby();
             if (id === 'slots')  { resetUI(); closeCatalog(); }
@@ -2650,6 +2866,202 @@
         }
  
 
+
+        // ══════════════════════════════════════════════════════════════════════
+        // ─── EXCHANGES ────────────────────────────────────────────────────────
+        //
+        // HOW TO ADD A NEW EXCHANGE:
+        //   1. Add your reward card to soccer_stars in Supabase:
+        //      - rarity = 'exchange'
+        //      - in_packs = false
+        //      - base_price = whatever you want (no quick sell, just market value)
+        //      Note the card's ID.
+        //
+        //   2. Copy the object below and add it to the EXCHANGES array.
+        //      Change: id, name, description, playerId (ID of card to collect),
+        //      playerName, quantity (how many needed), rewardId (ID of reward card).
+        //
+        //   3. To retire: set active: false — it will show as greyed out.
+        //      To remove completely: delete the object.
+        //
+        // ══════════════════════════════════════════════════════════════════════
+        const EXCHANGES = [
+            // ── ADD / EDIT EXCHANGES HERE ────────────────────────────────────
+            {
+                id:          'fermin_exchange_1',   // unique string — NEVER change once live
+                active:      true,                  // false = retired/hidden
+                name:        'The Fermin Special',
+                description: 'Exchange 6 Fermín López cards for an exclusive upgraded version',
+                playerId:    25,                    // soccer_stars.id of the card to collect
+                playerName:  'Fermín López',
+                quantity:    6,                     // how many of playerId are needed
+                rewardId:    95,                  // soccer_stars.id of the exchange reward card
+                                                    // Set to the actual DB id once you create it
+                rewardName:  'Fermín López (Exchange)',
+            },
+            // ── END OF EXCHANGES — add new ones above this line ──────────────
+        ];
+
+        // ─── Exchange state ───────────────────────────────────────────────────
+        let completedExchanges = []; // loaded from user_saves.completed_exchanges
+
+        async function loadExchangeState() {
+            if (!currentUser) return;
+            const { data } = await _supabase
+                .from('user_saves')
+                .select('completed_exchanges')
+                .eq('user_id', currentUser.id)
+                .single();
+            completedExchanges = data?.completed_exchanges || [];
+        }
+
+        async function saveExchangeState() {
+            if (!currentUser) return;
+            await _supabase.from('user_saves').update({
+                completed_exchanges: completedExchanges,
+                updated_at: new Date().toISOString()
+            }).eq('user_id', currentUser.id);
+        }
+
+        // ─── Render exchanges view ────────────────────────────────────────────
+        async function renderExchanges() {
+            const list = document.getElementById('exc-list');
+            const activeExchanges = EXCHANGES.filter(e => e.active !== false);
+
+            if (activeExchanges.length === 0) {
+                list.innerHTML = '<div style="color:#555;text-align:center;padding:60px;letter-spacing:1px;font-size:0.85rem;">NO ACTIVE EXCHANGES RIGHT NOW — CHECK BACK SOON</div>';
+                return;
+            }
+
+            // Fetch cost card data + reward card data from DB for display
+            const allIds = [...new Set([
+                ...activeExchanges.map(e => e.playerId),
+                ...activeExchanges.filter(e => e.rewardId).map(e => e.rewardId)
+            ])];
+
+            let cardDb = {};
+            if (allIds.length > 0) {
+                const { data: cards } = await _supabase
+                    .from('soccer_stars')
+                    .select('*')
+                    .in('id', allIds);
+                (cards || []).forEach(c => { cardDb[c.id] = c; });
+            }
+
+            list.innerHTML = activeExchanges.map(exc => {
+                const isDone    = completedExchanges.includes(exc.id);
+                const costCard  = cardDb[exc.playerId];
+                const rewCard   = exc.rewardId ? cardDb[exc.rewardId] : null;
+
+                // Count how many of the cost card the player currently owns
+                const owned = mySquad.filter(c => c.id === exc.playerId).length;
+                const canDo = !isDone && owned >= exc.quantity;
+                const pct   = Math.min(100, Math.floor((owned / exc.quantity) * 100));
+
+                // Build a tiny stacked display of cost cards
+                const costCardHtml = costCard
+                    ? Array.from({ length: Math.min(3, exc.quantity) })
+                        .map((_, i) => `<div class="exc-cost-card" style="margin-top:${i===0?'0':'-42px'}">${generateCardHtml(costCard, false)}</div>`)
+                        .join('')
+                    : `<div style="color:#555;font-size:0.8rem;padding:20px;">${exc.playerName}</div>`;
+
+                const rewardCardHtml = rewCard
+                    ? `<div class="exc-reward-wrap">${generateCardHtml({ ...rewCard, rarity: 'exchange' }, false)}</div>`
+                    : `<div style="color:#f97316;font-size:0.85rem;font-weight:900;padding:20px;border:1px solid #f9731644;border-radius:12px;">${exc.rewardName}<br><span style="font-size:0.65rem;color:#555;">EXCLUSIVE</span></div>`;
+
+                const statusLabel = isDone ? 'COMPLETED' : (canDo ? 'AVAILABLE' : `${owned}/${exc.quantity} OWNED`);
+                const statusClass = isDone ? 'done' : (canDo ? 'available' : 'locked');
+                const btnClass    = isDone ? 'done' : (canDo ? 'go' : 'locked');
+                const btnLabel    = isDone ? '✓ EXCHANGE DONE' : (canDo ? '⚡ EXCHANGE NOW' : `NEED ${exc.quantity - owned} MORE ${exc.playerName.toUpperCase()}`);
+                const itemClass   = isDone ? 'completed' : (canDo ? 'available' : '');
+
+                return `
+                    <div class="exc-item ${itemClass}">
+                        <div class="exc-item-header">
+                            <div>
+                                <div class="exc-item-name">${exc.name}</div>
+                                <div class="exc-item-desc">${exc.description}</div>
+                            </div>
+                            <div class="exc-status-badge ${statusClass}">${statusLabel}</div>
+                        </div>
+
+                        <div class="exc-cards-row">
+                            <div class="exc-cost-col">
+                                <div class="exc-side-label">You give · ${exc.quantity}×</div>
+                                <div class="exc-cost-stack">${costCardHtml}</div>
+                                <div class="exc-cost-count">× ${exc.quantity}</div>
+                            </div>
+                            <div class="exc-arrow">→</div>
+                            <div class="exc-reward-col">
+                                <div class="exc-side-label">You receive</div>
+                                ${rewardCardHtml}
+                            </div>
+                        </div>
+
+                        <div class="exc-progress-wrap">
+                            <div class="exc-progress-bar" style="width:${isDone?100:pct}%"></div>
+                        </div>
+                        <div class="exc-progress-label">${isDone ? 'Exchange completed' : owned + ' / ' + exc.quantity + ' cards owned'}</div>
+
+                        <button class="exc-btn ${btnClass}"
+                            onclick="${canDo ? `doExchange('${exc.id}')` : ''}"
+                            ${isDone || !canDo ? 'disabled' : ''}>${btnLabel}</button>
+                    </div>`;
+            }).join('');
+        }
+
+        // ─── Execute exchange ─────────────────────────────────────────────────
+        async function doExchange(exchangeId) {
+            const exc = EXCHANGES.find(e => e.id === exchangeId);
+            if (!exc) return;
+            if (completedExchanges.includes(exchangeId)) { showToast('⚠ Already completed.'); return; }
+
+            // Verify player has enough copies
+            const copies = mySquad.filter(c => c.id === exc.playerId);
+            if (copies.length < exc.quantity) { showToast('⚠ Not enough cards.'); return; }
+
+            if (!confirm(`Exchange ${exc.quantity}× ${exc.playerName} for ${exc.rewardName}? This CANNOT be undone.`)) return;
+
+            showLoading();
+
+            // Remove qty copies from squad (pick lowest-value ones first to protect good ones)
+            const sorted = copies.sort((a, b) => getCardValue(a) - getCardValue(b));
+            const toRemove = sorted.slice(0, exc.quantity).map(c => c.instanceId);
+            mySquad = mySquad.filter(c => !toRemove.includes(c.instanceId));
+
+            // Fetch the reward card from DB if rewardId is set
+            let rewardCard = null;
+            if (exc.rewardId) {
+                const { data } = await _supabase
+                    .from('soccer_stars')
+                    .select('*')
+                    .eq('id', exc.rewardId)
+                    .single();
+                if (data) {
+                    rewardCard = {
+                        ...data,
+                        rarity: 'exchange',
+                        instanceId: 'inst_' + Date.now(),
+                        collectedDate: new Date().toLocaleDateString(),
+                        isExchange: true
+                    };
+                    mySquad.push(rewardCard);
+                }
+            }
+
+            // Mark exchange as done
+            completedExchanges.push(exchangeId);
+
+            renderSquad();
+            updateUI();
+            await saveGame();
+            await saveExchangeState();
+            hideLoading();
+
+            showToast('⚡ Exchange complete! ' + exc.rewardName + ' added to your squad.');
+            renderExchanges(); // Refresh the exchange list
+        }
+
         // ─── MULTI-SELECT SELL (Fix 1) ────────────────────────────────────────────
         let multiSelectMode = false;
         let multiSelectIds  = new Set();
@@ -2692,7 +3104,8 @@
             const n        = multiSelectIds.size;
             const sellable = [...multiSelectIds].filter(id => {
                 const p = mySquad.find(c => c.instanceId === id);
-                return p && !p.isFavorite;
+                const isExc = p && ((p.rarity||'').toLowerCase()==='exchange' || p.isExchange);
+                return p && !p.isFavorite && !isExc;
             });
             const totalVal = sellable.reduce((sum, id) => {
                 const p = mySquad.find(c => c.instanceId === id);
@@ -2708,7 +3121,8 @@
         async function sellSelected() {
             const sellable = [...multiSelectIds].filter(id => {
                 const p = mySquad.find(c => c.instanceId === id);
-                return p && !p.isFavorite;
+                const isExc = p && ((p.rarity||'').toLowerCase()==='exchange' || p.isExchange);
+                return p && !p.isFavorite && !isExc;
             });
             if (sellable.length === 0) { showToast('⚠ All selected cards are favorited.'); return; }
             const totalVal = sellable.reduce((sum, id) => {
@@ -2740,31 +3154,84 @@
 
         let onlineUsers = {}; // Stores { presenceId: { username } }
 
+let _roomChannel = null; // global so we can broadcast from openPack
+
 function setupPresence() {
     if (!currentUser) return;
 
-    // 1. Create the channel
-    const roomOne = _supabase.channel('ranking_room', {
-        config: { presence: { key: currentUser.id } }
+    // Create the channel with both presence + broadcast support
+    _roomChannel = _supabase.channel('ranking_room', {
+        config: {
+            presence: { key: currentUser.id },
+            broadcast: { self: false } // don't echo back to sender
+        }
     });
 
-    // 2. Listen for people joining/leaving
-    roomOne
+    // Listen for presence sync (online users list)
+    _roomChannel
         .on('presence', { event: 'sync' }, () => {
-            const newState = roomOne.presenceState();
-            console.log('Syncing presence:', newState);
+            const newState = _roomChannel.presenceState();
             renderOnlineList(newState);
+        })
+        // Listen for limited pull broadcasts from OTHER players
+        .on('broadcast', { event: 'limited_pull' }, ({ payload }) => {
+            // Only show if it's not us who packed it
+            if (payload.packerId !== currentUser.id) {
+                showLimitedPullAlert(payload);
+            }
         })
         .subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
-                // 3. "Track" our own username so others see us
                 const myUsername = currentUser.user_metadata?.username || "Manager";
-                await roomOne.track({
+                await _roomChannel.track({
                     username: myUsername,
                     onlineAt: new Date().toISOString(),
                 });
             }
         });
+}
+
+// Show the 5-second full-screen alert to everyone else
+let _lpaTimer = null;
+function showLimitedPullAlert(payload) {
+    const overlay  = document.getElementById('limited-pull-overlay');
+    const headline = document.getElementById('lpa-headline');
+    const sub      = document.getElementById('lpa-sub');
+    const cardWrap = document.getElementById('lpa-card-wrap');
+    const countdown = document.getElementById('lpa-countdown');
+    const bar      = document.getElementById('lpa-progress-bar');
+
+    headline.innerText = (payload.username || 'A MANAGER').toUpperCase() + ' PACKED A LIMITED!';
+    sub.innerText      = payload.cardName + ' · Serial #' + (payload.serial || '?') + ' / 10';
+
+    // Render a mini card if we have enough data
+    if (payload.cardData) {
+        cardWrap.innerHTML = generateCardHtml(payload.cardData, false);
+    } else {
+        cardWrap.innerHTML = '<div style="color:#bebebe;font-size:2rem;padding:20px">🔒</div>';
+    }
+
+    overlay.classList.add('active');
+    overlay.style.pointerEvents = 'all';
+
+    // Clear any previous timer
+    if (_lpaTimer) clearInterval(_lpaTimer);
+    let remaining = 5;
+    bar.style.width = '100%';
+    countdown.innerText = 'CLOSING IN 5s';
+
+    _lpaTimer = setInterval(() => {
+        remaining -= 0.1;
+        const pct = Math.max(0, (remaining / 5) * 100);
+        bar.style.width = pct + '%';
+        countdown.innerText = 'CLOSING IN ' + Math.ceil(remaining) + 's';
+        if (remaining <= 0) {
+            clearInterval(_lpaTimer);
+            overlay.classList.remove('active');
+            overlay.style.pointerEvents = 'none';
+            cardWrap.innerHTML = '';
+        }
+    }, 100);
 }
 
 function renderOnlineList(presenceState) {
@@ -2787,76 +3254,114 @@ function renderOnlineList(presenceState) {
     document.getElementById('online-count').innerText = uniqueUsers.length;
 }
 
-function showPackWeights(tier) {
-    // These numbers are reverse-engineered from your openPack logic:
-    const weights = {
-        std: { 
-            limited: "0%", 
-            promo: "0%", 
-            walkout: "2%", // Based on roll >= 98
-            floor: "70-86 Rating" 
-        },
-        pre: { 
-            limited: "0.01%", 
-            promo: "0%", 
-            walkout: "10%", // Based on roll >= 90
-            floor: "80-86 Rating" 
-        },
-        elt: { 
-            limited: "0.1%", 
-            promo: "0%", 
-            walkout: "50%", // Based on roll >= 50
-            floor: "84-86 Rating" 
-        },
-        promo: { 
-            limited: "0.2%", 
-            promo: "20%",  // Based on your promoRoll < 20 check
-            walkout: "50%", // Based on roll >= 50
-            floor: "84-86 Rating" 
-        }
-    };
+// Rating ranges per tier — used by both weight display and player list
+const PACK_RATING_RANGES = {
+    std:   { min: 70, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
+    pre:   { min: 80, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
+    elt:   { min: 84, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
+    promo: { min: 84, max: 99, excludeRarities: ['Limited','exchange'] }  // promo includes 1st edition
+};
 
+function showPackWeights(tier) {
+    const weights = {
+        std:   { limited: "0%",    promo: "0%",   walkout: "2%",  floor: "70-86 Rating" },
+        pre:   { limited: "0.01%", promo: "0%",   walkout: "10%", floor: "80-86 Rating" },
+        elt:   { limited: "0.1%",  promo: "0%",   walkout: "50%", floor: "84-86 Rating" },
+        promo: { limited: "0.2%",  promo: "20%",  walkout: "50%", floor: "84-86 Rating" }
+    };
     const w = weights[tier];
-    
-    // Create a sleek modal instead of a boring alert
+
     const modal = document.createElement('div');
     modal.id = "weight-modal";
     modal.style = `
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.9); display: flex; align-items: center;
+        background: rgba(0,0,0,0.9); display: flex; 
+        align-items: flex-start; /* 🚀 CHANGED FROM center TO flex-start */
         justify-content: center; z-index: 10000; backdrop-filter: blur(10px);
+        overflow-y: auto; padding: 40px 20px; /* Added more top padding */
+        box-sizing: border-box;
     `;
-    
+
     modal.innerHTML = `
-        <div style="background: #111; border: 2px solid #3ecf8e; padding: 30px; border-radius: 20px; width: 320px; text-align: center; box-shadow: 0 0 30px rgba(62,207,142,0.2);">
-            <h2 style="color: #3ecf8e; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; font-size: 1.2rem;">${tier.toUpperCase()} PACK</h2>
-            <p style="color: #555; font-size: 0.7rem; margin-bottom: 25px; letter-spacing: 1px;">OFFICIAL PROBABILITY DISTRIBUTION</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 8px;">
-                    <span style="color: #aaa; font-size: 0.8rem;">Limited 1/10</span>
-                    <span style="color: #fff; font-weight: bold;">${w.limited}</span>
+        <div id="weight-modal-inner" style="background:#111;border:2px solid #3ecf8e;padding:30px;
+             border-radius:20px;width:100%;max-width:860px;text-align:center;
+             margin: auto; /* 🚀 ADDED margin: auto to center small content safely */
+             box-shadow:0 0 30px rgba(62,207,142,0.2);">
+            <h2 style="color:#3ecf8e;margin-bottom:5px;text-transform:uppercase;letter-spacing:3px;font-size:1.2rem;">
+                ${tier.toUpperCase()} PACK</h2>
+            <p style="color:#555;font-size:0.7rem;margin-bottom:25px;letter-spacing:1px;">
+                OFFICIAL PROBABILITY DISTRIBUTION</p>
+
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+                <div style="display:flex;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:8px;">
+                    <span style="color:#aaa;font-size:0.8rem;">Limited 1/10</span>
+                    <span style="color:#fff;font-weight:bold;">${w.limited}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 8px;">
-                    <span style="color: #aaa; font-size: 0.8rem;">1st Edition</span>
-                    <span style="color: #fff; font-weight: bold;">${w.promo}</span>
+                <div style="display:flex;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:8px;">
+                    <span style="color:#aaa;font-size:0.8rem;">1st Edition</span>
+                    <span style="color:#fff;font-weight:bold;">${w.promo}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 8px;">
-                    <span style="color: #aaa; font-size: 0.8rem;">Walkout (87+)</span>
-                    <span style="color: #fff; font-weight: bold;">${w.walkout}</span>
+                <div style="display:flex;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:8px;">
+                    <span style="color:#aaa;font-size:0.8rem;">Walkout (87+)</span>
+                    <span style="color:#fff;font-weight:bold;">${w.walkout}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 8px;">
-                    <span style="color: #aaa; font-size: 0.8rem;">Pack Floor</span>
-                    <span style="color: #555; font-size: 0.8rem;">${w.floor}</span>
+                <div style="display:flex;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:8px;">
+                    <span style="color:#aaa;font-size:0.8rem;">Pack Floor</span>
+                    <span style="color:#555;font-size:0.8rem;">${w.floor}</span>
                 </div>
             </div>
-            
-            <button class="btn" style="width: 100%; color: #000;" onclick="document.getElementById('weight-modal').remove()">CLOSE</button>
+
+            <div style="display:flex;gap:12px;margin-bottom:20px;">
+                <button class="btn" style="flex:1;background:#2a2a2a;color:#3ecf8e;border:1px solid #3ecf8e;padding:10px;"
+                    onclick="showPackPlayerList('${tier}')">👁 VIEW PLAYERS IN THIS PACK</button>
+                <button class="btn" style="flex:1;color:#000;padding:10px;"
+                    onclick="document.getElementById('weight-modal').remove()">CLOSE</button>
+            </div>
+
+            <!-- Player list panel — hidden until button clicked -->
+            <div id="pack-player-list" style="display:none;text-align:left;">
+                <div style="font-size:0.65rem;color:#555;letter-spacing:2px;font-weight:900;margin-bottom:16px;text-align:center;">
+                    ALL AVAILABLE PLAYERS · SORTED BY MARKET VALUE</div>
+                <div id="pack-player-grid" style="
+                    display:grid;grid-template-columns:repeat(auto-fill,180px);
+                    gap:30px 30px;justify-content:center;"></div>
+            </div>
         </div>
     `;
-    
-    document.body.appendChild(modal);
 
+    document.body.appendChild(modal);
+}
+
+async function showPackPlayerList(tier) {
+    const panel = document.getElementById('pack-player-list');
+    const grid  = document.getElementById('pack-player-grid');
+    if (!panel || !grid) return;
+
+    panel.style.display = 'block';
+    grid.innerHTML = '<div style="color:#555;text-align:center;padding:30px;grid-column:1/-1;">Loading players...</div>';
+
+    const range = PACK_RATING_RANGES[tier];
+    if (!range) return;
+
+    let query = _supabase.from('soccer_stars').select('*')
+        .gte('rating', range.min)
+        .lte('rating', range.max)
+        .eq('in_packs', true);
+
+    // Exclude rarities not in this pack
+    for (const r of range.excludeRarities) {
+        query = query.neq('rarity', r);
+    }
+
+    const { data, error } = await query;
+    if (error || !data || data.length === 0) {
+        grid.innerHTML = '<div style="color:#555;text-align:center;padding:30px;grid-column:1/-1;">No players found.</div>';
+        return;
+    }
+
+    // Sort by market value descending
+    data.sort((a, b) => (b.base_price || 0) - (a.base_price || 0));
+    grid.innerHTML = data.map(p => generateCardHtml(p, false)).join('');
 }
 
         // ─── ARENA ───────────────────────────────────────────────────────────────
@@ -3034,6 +3539,20 @@ function showPackWeights(tier) {
 
 
     </script>
+
+
+    <!-- ─── GLOBAL LIMITED PULL ALERT ─────────────────────────────────── -->
+    <div id="limited-pull-overlay">
+        <div class="lpa-shake-bg"></div>
+        <div class="lpa-box">
+            <div class="lpa-badge">🔒 LIMITED CARD PACKED</div>
+            <div class="lpa-headline" id="lpa-headline">SOMEONE PULLED A LIMITED!</div>
+            <div class="lpa-sub" id="lpa-sub">A new serial-numbered card just entered the game</div>
+            <div class="lpa-card-wrap" id="lpa-card-wrap"></div>
+            <div class="lpa-countdown" id="lpa-countdown">CLOSING IN 5s</div>
+            <div class="lpa-progress"><div class="lpa-progress-bar" id="lpa-progress-bar" style="width:100%"></div></div>
+        </div>
+    </div>
 
     <!-- ─── SQUAD VIEWER MODAL ────────────────────────────────── -->
     <div id="squad-viewer-modal" onclick="if(event.target===this)closeSquadViewer()">
