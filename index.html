@@ -3011,56 +3011,87 @@
         }
 
         // ─── Execute exchange ─────────────────────────────────────────────────
-        async function doExchange(exchangeId) {
-            const exc = EXCHANGES.find(e => e.id === exchangeId);
-            if (!exc) return;
-            if (completedExchanges.includes(exchangeId)) { showToast('⚠ Already completed.'); return; }
+// Add a lock to prevent spam-clicking
+let _isExchanging = false; 
 
-            // Verify player has enough copies
-            const copies = mySquad.filter(c => c.id === exc.playerId);
-            if (copies.length < exc.quantity) { showToast('⚠ Not enough cards.'); return; }
+// ─── Execute exchange ─────────────────────────────────────────────────
+async function doExchange(exchangeId) {
+    if (_isExchanging) return; // Block double-clicks
 
-            if (!confirm(`Exchange ${exc.quantity}× ${exc.playerName} for ${exc.rewardName}? This CANNOT be undone.`)) return;
+    const exc = EXCHANGES.find(e => e.id === exchangeId);
+    if (!exc) return;
+    
+    // 1. Check the completed list
+    if (completedExchanges.includes(exchangeId)) { 
+        showToast('⚠ Already completed.'); 
+        return; 
+    }
 
-            showLoading();
-
-            // Remove qty copies from squad (pick lowest-value ones first to protect good ones)
-            const sorted = copies.sort((a, b) => getCardValue(a) - getCardValue(b));
-            const toRemove = sorted.slice(0, exc.quantity).map(c => c.instanceId);
-            mySquad = mySquad.filter(c => !toRemove.includes(c.instanceId));
-
-            // Fetch the reward card from DB if rewardId is set
-            let rewardCard = null;
-            if (exc.rewardId) {
-                const { data } = await _supabase
-                    .from('soccer_stars')
-                    .select('*')
-                    .eq('id', exc.rewardId)
-                    .single();
-                if (data) {
-                    rewardCard = {
-                        ...data,
-                        rarity: 'exchange',
-                        instanceId: 'inst_' + Date.now(),
-                        collectedDate: new Date().toLocaleDateString(),
-                        isExchange: true
-                    };
-                    mySquad.push(rewardCard);
-                }
-            }
-
-            // Mark exchange as done
+    // 2. BULLETPROOF CHECK: Do they already own the reward?
+    if (exc.rewardId && mySquad.some(c => c.id === exc.rewardId)) {
+        showToast('⚠ You already own this exclusive reward card!');
+        
+        // Auto-fix the database if their completed list got wiped somehow
+        if (!completedExchanges.includes(exchangeId)) {
             completedExchanges.push(exchangeId);
-
-            renderSquad();
-            updateUI();
-            await saveGame();
-            await saveExchangeState();
-            hideLoading();
-
-            showToast('⚡ Exchange complete! ' + exc.rewardName + ' added to your squad.');
-            renderExchanges(); // Refresh the exchange list
+            saveGame(); 
+            renderExchanges();
         }
+        return;
+    }
+
+    // Verify player has enough copies
+    const copies = mySquad.filter(c => c.id === exc.playerId);
+    if (copies.length < exc.quantity) { showToast('⚠ Not enough cards.'); return; }
+
+    if (!confirm(`Exchange ${exc.quantity}× ${exc.playerName} for ${exc.rewardName}? This CANNOT be undone.`)) return;
+
+    _isExchanging = true; // Lock the function
+    showLoading();
+
+    try {
+        // Remove qty copies from squad (pick lowest-value ones first to protect good ones)
+        const sorted = copies.sort((a, b) => getCardValue(a) - getCardValue(b));
+        const toRemove = sorted.slice(0, exc.quantity).map(c => c.instanceId);
+        mySquad = mySquad.filter(c => !toRemove.includes(c.instanceId));
+
+        // Fetch the reward card from DB if rewardId is set
+        let rewardCard = null;
+        if (exc.rewardId) {
+            const { data } = await _supabase
+                .from('soccer_stars')
+                .select('*')
+                .eq('id', exc.rewardId)
+                .single();
+            if (data) {
+                rewardCard = {
+                    ...data,
+                    rarity: 'exchange',
+                    instanceId: 'inst_' + Date.now(),
+                    collectedDate: new Date().toLocaleDateString(),
+                    isExchange: true
+                };
+                mySquad.push(rewardCard);
+            }
+        }
+
+        // Mark exchange as done
+        completedExchanges.push(exchangeId);
+
+        renderSquad();
+        updateUI();
+        await saveGame(); // saveGame automatically handles completedExchanges now
+
+        showToast('⚡ Exchange complete! ' + exc.rewardName + ' added to your squad.');
+        renderExchanges(); // Refresh the exchange list
+    } catch (error) {
+        showToast('❌ Error processing exchange.');
+        console.error(error);
+    }
+
+    _isExchanging = false; // Unlock the function
+    hideLoading();
+}
 
         // ─── MULTI-SELECT SELL (Fix 1) ────────────────────────────────────────────
         let multiSelectMode = false;
