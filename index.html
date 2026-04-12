@@ -3877,6 +3877,20 @@ async function showPackPlayerList(tier) {
             arenaShowPhase('arena-reveal');
         }
 
+        // ─── ARENA KEYBOARD SHORTCUTS ─────────────────────────────────────────────
+        // Put this OUTSIDE the function!
+        document.addEventListener('keydown', function(event) {
+            // Check if the key pressed was 'Enter'
+            if (event.key === 'Enter') {
+                const revealPhase = document.getElementById('arena-reveal');
+                // Only trigger if the reveal screen is currently active
+                if (revealPhase && revealPhase.classList.contains('active-phase')) {
+                    event.preventDefault(); // Stops Enter from accidentally clicking other focused buttons
+                    startArenaBattle();
+                }
+            }
+        });
+
         async function loadLimitedStock() {
     const banner = document.getElementById('limited-stock-banner');
     const list = document.getElementById('limited-stock-list');
