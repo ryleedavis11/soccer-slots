@@ -2885,57 +2885,29 @@
         }
  
         // ── EXECUTE THE ACTUAL CARD SWAP ──────────────────────────────────────────
+        // ── EXECUTE THE ACTUAL CARD SWAP (Secure Server-Side RPC) ───────────────────────
         async function executeSwap(trade) {
             closeTAModal();
             showLoading();
- 
-            // 1. Fetch BOTH users' full saves
-            const { data: senderSave } = await _supabase.from('user_saves').select('squad,balance').eq('user_id', trade.sender_id).single();
-            const { data: receiverSave } = await _supabase.from('user_saves').select('squad,balance').eq('user_id', trade.receiver_id).single();
- 
-            if (!senderSave || !receiverSave) { hideLoading(); showToast('❌ Could not load both squads.'); return; }
- 
-            // 2. Verify cards still exist
-            const senderCard   = senderSave.squad.find(c => c.instanceId === trade.offered_card.instanceId);
-            const receiverCard = receiverSave.squad.find(c => c.instanceId === trade.receiver_card.instanceId);
- 
-            if (!senderCard || !receiverCard) {
+
+            // 1. Tell Supabase to run our secure backend function
+            const { data, error } = await _supabase.rpc('execute_secure_trade', {
+                trade_uuid: trade.id
+            });
+
+            if (error || data !== 'SUCCESS') {
                 hideLoading();
-                await _supabase.from('trades').update({ status: 'cancelled' }).eq('id', trade.id);
-                showToast('❌ One or both cards no longer exist. Trade cancelled.');
-                loadIncomingTrades(); return;
+                showToast('❌ Trade failed: ' + (error?.message || data));
+                return;
             }
- 
-            // 3. Swap: remove from each squad, add the other
-            const newSenderSquad   = senderSave.squad.filter(c => c.instanceId !== trade.offered_card.instanceId);
-            const newReceiverSquad = receiverSave.squad.filter(c => c.instanceId !== trade.receiver_card.instanceId);
-            newSenderSquad.push(receiverCard);
-            newReceiverSquad.push(senderCard);
- 
-            // 4. Update both saves + mark trade complete
-            const cv_sender   = newSenderSquad.reduce((s,p) => s + getCardValue(p), 0);
-            const cv_receiver = newReceiverSquad.reduce((s,p) => s + getCardValue(p), 0);
- 
-            const [r1, r2, r3] = await Promise.all([
-                _supabase.from('user_saves').update({ squad: newSenderSquad,   club_value: cv_sender,   updated_at: new Date().toISOString() }).eq('user_id', trade.sender_id),
-                _supabase.from('user_saves').update({ squad: newReceiverSquad, club_value: cv_receiver, updated_at: new Date().toISOString() }).eq('user_id', trade.receiver_id),
-                _supabase.from('trades').update({ status: 'completed', updated_at: new Date().toISOString() }).eq('id', trade.id)
-            ]);
- 
-            if (r1.error || r2.error || r3.error) {
-                hideLoading(); showToast('❌ Swap failed — please try again.'); return;
-            }
- 
-            // 5. Update local state for whoever is currently logged in
-            if (currentUser.id === trade.sender_id) {
-                mySquad = newSenderSquad;
-            } else {
-                mySquad = newReceiverSquad;
-            }
- 
+
+            // 2. The database successfully swapped the cards! Now we just reload our save to see our new card.
+            await loadCloudSave();
+
             hideLoading();
-            renderSquad(); updateUI();
-            showToast('🎉 Trade complete! Check your squad.');
+            renderSquad();
+            updateUI();
+            showToast('🎉 Trade complete! Both accounts securely updated.');
             tradeState.pendingAcceptTrade = null;
             loadIncomingTrades();
             checkTradeBadge();
