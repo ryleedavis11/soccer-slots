@@ -934,11 +934,17 @@
         .exc-header h1 { color: #f97316; font-size: 2rem; font-weight: 900; letter-spacing: 4px; margin-bottom: 6px; }
         .exc-header p  { color: #555; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; }
 
-        .exc-list { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 860px; padding-bottom: 60px; }
+        .exc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 16px;
+            width: 100%; max-width: 900px;
+            padding-bottom: 40px;
+        }
 
         .exc-item {
-            background: #141414; border: 1px solid #222; border-radius: 18px;
-            padding: 24px; transition: border-color 0.2s;
+            background: #141414; border: 1px solid #222; border-radius: 16px;
+            padding: 16px; transition: border-color 0.2s;
         }
         .exc-item.completed { border-color: #3ecf8e33; opacity: 0.6; }
         .exc-item.available { border-color: #f9731633; }
@@ -962,14 +968,14 @@
 
         /* Stacked cost cards */
         .exc-cost-stack { display: flex; flex-direction: column; align-items: center; }
-        .exc-cost-card { transform: scale(0.52); margin: -42px 0; pointer-events: none; }
+        .exc-cost-card { transform: scale(0.44); margin: -48px 0; pointer-events: none; }
         .exc-cost-card:first-child { margin-top: 0; }
         .exc-cost-count {
             background: #f97316; color: black; font-weight: 900;
             font-size: 0.7rem; padding: 3px 10px; border-radius: 20px;
-            margin-top: 52px; letter-spacing: 1px;
+            margin-top: 44px; letter-spacing: 1px;
         }
-        .exc-reward-wrap { transform: scale(0.75); margin: -30px 0; pointer-events: none; }
+        .exc-reward-wrap { transform: scale(0.62); margin: -42px 0; pointer-events: none; }
 
         /* Progress bar */
         .exc-progress-wrap { background: #1a1a1a; border-radius: 6px; height: 6px; margin-bottom: 10px; overflow: hidden; }
@@ -989,19 +995,81 @@
         /* Nav dropdown */
         .nav-dropdown { position: relative; display: inline-block; }
         .nav-dropdown-menu {
-            display: none; position: absolute; top: 100%; left: 50%;
-            transform: translateX(-50%); background: #161616;
-            border: 1px solid #333; border-radius: 10px; overflow: hidden;
-            min-width: 160px; z-index: 9999; margin-top: 8px;
+            display: none; position: absolute; top: calc(100% + 10px); left: 50%;
+            transform: translateX(-50%); background: #1a1a1a;
+            border: 1px solid #333; border-radius: 12px; overflow: hidden;
+            min-width: 200px; z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
-        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        /* Invisible bridge between button and menu so mouse can travel down */
+        .nav-dropdown-menu::before {
+            content: ''; position: absolute; top: -10px; left: 0;
+            width: 100%; height: 10px;
+        }
+        .nav-dropdown-menu.open { display: block; }
         .nav-dropdown-menu button {
-            display: block; width: 100%; padding: 12px 20px;
-            background: none; border: none; color: #888; font-size: 0.8rem;
+            display: block; width: 100%; padding: 13px 20px;
+            background: none; border: none; color: #888; font-size: 0.82rem;
             font-weight: 900; letter-spacing: 1px; text-transform: uppercase;
             cursor: pointer; text-align: left; transition: 0.15s; margin: 0;
+            box-sizing: border-box;
         }
-        .nav-dropdown-menu button:hover { background: #222; color: #fff; }
+        .nav-dropdown-menu button:hover { background: #252525; color: #fff; }
+        .nav-dropdown-menu .menu-divider { height: 1px; background: #2a2a2a; }
+
+
+        /* ─── PLAYTIME FOOTER ──────────────────────────────────────────────── */
+        .squad-playtime-footer {
+            text-align: center;
+            padding: 20px 40px 40px;
+            color: #333;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .squad-playtime-footer span { color: #3ecf8e; }
+
+
+        /* ─── DAILY COLLECT ────────────────────────────────────────────────── */
+        .daily-collect-banner {
+            width: 100%; max-width: 450px; margin: 0 auto 14px;
+            border-radius: 14px; padding: 14px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 14px; box-sizing: border-box;
+        }
+        .daily-collect-banner.ready {
+            background: linear-gradient(135deg, #0d1a00, #111);
+            border: 1px solid #3ecf8e;
+            box-shadow: 0 0 18px rgba(62,207,142,0.15);
+            animation: dailyPulse 2.5s infinite;
+        }
+        @keyframes dailyPulse { 0%,100%{box-shadow:0 0 18px rgba(62,207,142,0.15);}
+                                50%   {box-shadow:0 0 32px rgba(62,207,142,0.35);} }
+        .daily-collect-banner.done {
+            background: #111; border: 1px solid #222; opacity: 0.6;
+        }
+        .daily-collect-info { flex: 1; }
+        .daily-collect-title { font-size: 0.75rem; font-weight: 900; color: #3ecf8e; letter-spacing: 1px; text-transform: uppercase; }
+        .daily-collect-sub   { font-size: 0.62rem; color: #555; letter-spacing: 1px; margin-top: 3px; }
+        .daily-collect-btn {
+            padding: 10px 20px; border: none; border-radius: 10px;
+            font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+        }
+        .daily-collect-btn.ready { background: #3ecf8e; color: black; }
+        .daily-collect-btn.ready:hover { background: #2ab87a; }
+        .daily-collect-btn.done  { background: #222; color: #444; cursor: not-allowed; }
+
+
+        /* ─── EXCHANGE FILTER TABS ────────────────────────────────────────── */
+        .exc-filter-tab {
+            padding: 8px 18px; border: 1px solid #222; border-radius: 8px;
+            background: #1a1a1a; color: #555; font-size: 0.72rem; font-weight: 900;
+            letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.15s;
+        }
+        .exc-filter-tab.active { background: #f97316; color: black; border-color: #f97316; }
+        .exc-filter-tab:hover:not(.active) { border-color: #555; color: #aaa; }
 
     </style>
 </head>
@@ -1034,11 +1102,12 @@
         <div class="nav-center">
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
-            <div class="nav-dropdown">
-                <button id="nav-team" onclick="toggleNavDropdown(event)">MY SQUAD ▾</button>
+            <div class="nav-dropdown" id="squad-nav-dropdown">
+                <button id="nav-team" onclick="handleSquadNavClick(event)">MY SQUAD (<span id="team-count">0</span>) ▾</button>
                 <div class="nav-dropdown-menu" id="nav-squad-menu">
-                    <button onclick="showView('team'); closeNavDropdown()">My Squad (<span id="team-count">0</span>)</button>
-                    <button onclick="showView('exchanges'); closeNavDropdown()">⚡ Exchanges</button>
+                    <button onclick="showView('team'); closeNavDropdown()">My Squad (<span class="team-count-menu">0</span>)</button>
+                    <div class="menu-divider"></div>
+                    <button onclick="showView('exchanges'); closeNavDropdown()">Exchanges</button>
                 </div>
             </div>
             <button id="nav-office" onclick="showView('office')">
@@ -1048,7 +1117,7 @@
             <button id="nav-arena" onclick="showView('arena')">ARENA</button>
             <button id="nav-rank" onclick="showView('rank')">RANKINGS</button>
             <button id="nav-trade" onclick="showView('trade')">
-                TRADE (not working)
+                TRADE
                 <span class="trade-badge" id="trade-badge">!</span>
             </button>
             <button id="logout-btn" onclick="handleLogout()">LOGOUT</button>
@@ -1106,6 +1175,15 @@
                 <button class="btn" style="background: #3b82f6; width: 48%;" onclick="keepPlayer()">KEEP</button>
                 <button id="sellBtn" class="btn" style="background: #ef4444; width: 48%;" onclick="sellPlayer()">SELL</button>
             </div>
+            <!-- Daily Collect Banner -->
+            <div id="daily-collect-banner" class="daily-collect-banner" style="display:none;">
+                <div class="daily-collect-info">
+                    <div class="daily-collect-title">🎁 DAILY REWARD</div>
+                    <div class="daily-collect-sub" id="daily-collect-sub">Loading...</div>
+                </div>
+                <button class="daily-collect-btn" id="daily-collect-btn" onclick="claimDailyReward()">COLLECT</button>
+            </div>
+
             <div id="packArea">
                 
                 <button class="btn" style="background: #333;" onclick="preparePack('std')">Standard (500 🪙)</button>
@@ -1254,6 +1332,9 @@
             </div>
         </div>
         <div id="teamGrid" class="team-grid"></div>
+        <div class="squad-playtime-footer" id="squad-playtime-footer">
+            ⏱ TIME IN GAME: <span id="squad-playtime-label">—</span>
+        </div>
     </div>
  
     <!-- ─── EXCHANGES VIEW ─────────────────────────────────────────────── -->
@@ -1267,11 +1348,30 @@
          ╚═══════════════════════════════════════════════════════════════════╝ -->
     <div id="view-exchanges" class="view">
         <div class="exc-header">
-            <h1>⚡ EXCHANGES</h1>
+            <h1>EXCHANGES</h1>
             <p>Trade duplicate cards for exclusive exchange-only rewards</p>
         </div>
+        <!-- Filter + sort toolbar -->
+        <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;width:100%;max-width:900px;">
+            <div style="display:flex;gap:6px;">
+                <button class="exc-filter-tab active" id="exc-tab-all"       onclick="setExcFilter('all')">ALL</button>
+                <button class="exc-filter-tab"        id="exc-tab-active"    onclick="setExcFilter('active')">AVAILABLE</button>
+                <button class="exc-filter-tab"        id="exc-tab-completed" onclick="setExcFilter('completed')">COMPLETED</button>
+            </div>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:0.65rem;color:#555;font-weight:900;letter-spacing:1px;">SORT:</span>
+                <select id="exc-sort" onchange="renderExchanges()" style="
+                    background:#1a1a1a;border:1px solid #333;border-radius:8px;
+                    color:#888;font-size:0.75rem;font-weight:900;padding:7px 12px;
+                    cursor:pointer;letter-spacing:1px;outline:none;">
+                    <option value="reward-value-desc">Reward Value (High→Low)</option>
+                    <option value="reward-value-asc">Reward Value (Low→High)</option>
+                    <option value="date-added">Date Added</option>
+                </select>
+            </div>
+        </div>
         <div class="exc-list" id="exc-list">
-            <div style="color:#555;text-align:center;padding:40px;">Loading exchanges...</div>
+            <div style="color:#555;text-align:center;padding:40px;grid-column:1/-1;">Loading exchanges...</div>
         </div>
     </div>
 
@@ -1319,7 +1419,7 @@
                 </div>
             </div>
             <div class="trade-accept-btns">
-                <button id="trade-confirm-yes" onclick="finaliseAccept()">CONFIRM TRADE</button>
+                <button id="trade-confirm-yes" onclick="handleTradeConfirm()">CONFIRM TRADE</button>
                 <button id="trade-confirm-no" onclick="closeTAModal()">CANCEL</button>
             </div>
         </div>
@@ -1587,6 +1687,7 @@
             loadTopPullsToday();
             loadLimitedStock();
             loadExchangeState();
+            startPlaytimeTracking();
         }
 
         async function loadTopPullsToday() {
@@ -1637,17 +1738,27 @@
         }
  
         // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
+        // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
         async function loadCloudSave() {
             if (!currentUser) return;
             const { data, error } = await _supabase
                 .from('user_saves')
-                .select('balance, squad, last_collected, completed_exchanges')
+                .select('balance, squad, last_collected, completed_exchanges, hours_played, last_daily_collect')
                 .eq('user_id', currentUser.id)
                 .single();
+            
+            // 🚨 THE SAFETY NET: If the database crashes, stop everything and warn the user!
+            if (error) {
+                console.error("CRITICAL LOAD ERROR:", error.message);
+                showToast('🚨 Database Error! Check console. DO NOT SAVE.', 10000);
+                return; 
+            }
+
             if (data) {
                 balance = data.balance ?? 5000;
                 mySquad = data.squad || [];
                 completedExchanges = data.completed_exchanges || [];
+                _totalHoursPlayed  = data.hours_played || 0;
                 lastCollected = data.last_collected || new Date().toISOString();
  
                 // ── OFFLINE EARNINGS: credit coins for real time spent away ──
@@ -1670,6 +1781,7 @@
  
         async function saveGame() {
             if (!currentUser) return;
+            await flushPlaytime();
             // Club value = top 10 by market value (Fix 5)
             const cv = [...mySquad]
                 .sort((a,b) => getCardValue(b) - getCardValue(a))
@@ -2317,7 +2429,7 @@
             if (id === 'exchanges') { loadExchangeState().then(renderExchanges); }
             if (id === 'trade')  switchTradeTab('board');
             if (id === 'arena')  arenaToLobby();
-            if (id === 'slots')  { resetUI(); closeCatalog(); }
+            if (id === 'slots')  { resetUI(); closeCatalog(); initDailyReward(); }
             if (id !== 'team')   exitMultiSelect();
         }
  
@@ -2335,6 +2447,7 @@
  
         function updateUI() {
             document.querySelectorAll('.bal-text').forEach(el => el.innerText = balance.toLocaleString());
+            document.querySelectorAll('.team-count-menu').forEach(el => el.innerText = mySquad.length);
             // Club value = sum of top 10 cards by market value (Fix 5)
             const top10Val = [...mySquad]
                 .sort((a,b) => getCardValue(b) - getCardValue(a))
@@ -2376,6 +2489,7 @@
                         </div>`;
             }).join('');
             updateUI();
+            updatePlaytimeLabel();
         }
  
         // ─── CATALOG ─────────────────────────────────────────────────────────────
@@ -2407,6 +2521,21 @@
         }
  
  
+
+        // ─── TRADE CONFIRM DISPATCHER ────────────────────────────────────────────
+        // 'board'    = I am Player2 and clicked OFFER CARD — finalise sending my offer
+        // 'incoming' = I am Player1 (original poster) and confirming the swap
+        let _tradeConfirmMode = 'board';
+
+        function handleTradeConfirm() {
+            if (_tradeConfirmMode === 'incoming') {
+                const trade = tradeState.pendingAcceptTrade;
+                if (trade) executeSwap(trade);
+            } else {
+                finaliseAccept();
+            }
+        }
+
         // ─── TRADE SYSTEM ────────────────────────────────────────────────────────
         let tradeState = {
             activeTab: 'board',
@@ -2701,6 +2830,7 @@
             const trade  = tradeState.pendingAcceptTrade;
             const myCard = tradeState.pendingAcceptMyCard;
             if (!trade || !myCard) return;
+            _tradeConfirmMode = 'board'; // Player2 path — calls finaliseAccept
             document.getElementById('tam-receive-card').innerHTML = generateCardHtml(trade.offered_card, false);
             document.getElementById('tam-send-card').innerHTML    = generateCardHtml(myCard, false);
             document.getElementById('trade-pick-modal').style.display = 'none';
@@ -2747,13 +2877,11 @@
             if (!myOffered) { showToast('⚠ You no longer own the card you listed. Trade cannot proceed.'); return; }
 
             tradeState.pendingAcceptTrade = trade;
+            _tradeConfirmMode = 'incoming'; // tell handleTradeConfirm to call executeSwap
             // Player1 perspective: YOU RECEIVE = receiver_card (Player2's), YOU SEND = offered_card (mine)
             document.getElementById('tam-receive-card').innerHTML = generateCardHtml(trade.receiver_card, false);
             document.getElementById('tam-send-card').innerHTML    = generateCardHtml(trade.offered_card, false);
             document.getElementById('trade-accept-modal').style.display = 'flex';
-
-            // Wire confirm button to run the actual swap
-            document.getElementById('trade-confirm-yes').onclick = () => executeSwap(trade);
         }
  
         // ── EXECUTE THE ACTUAL CARD SWAP ──────────────────────────────────────────
@@ -2902,6 +3030,17 @@
             // ── END OF EXCHANGES — add new ones above this line ──────────────
         ];
 
+
+        let _excFilter = 'all'; // 'all' | 'active' | 'completed'
+
+        function setExcFilter(f) {
+            _excFilter = f;
+            document.querySelectorAll('.exc-filter-tab').forEach(b => b.classList.remove('active'));
+            const tab = document.getElementById('exc-tab-' + f);
+            if (tab) tab.classList.add('active');
+            renderExchanges();
+        }
+
         // ─── Exchange state ───────────────────────────────────────────────────
         let completedExchanges = []; // loaded from user_saves.completed_exchanges
 
@@ -2926,12 +3065,29 @@
         // ─── Render exchanges view ────────────────────────────────────────────
         async function renderExchanges() {
             const list = document.getElementById('exc-list');
-            const activeExchanges = EXCHANGES.filter(e => e.active !== false);
+            let visibleExchanges = EXCHANGES.filter(e => e.active !== false);
 
-            if (activeExchanges.length === 0) {
-                list.innerHTML = '<div style="color:#555;text-align:center;padding:60px;letter-spacing:1px;font-size:0.85rem;">NO ACTIVE EXCHANGES RIGHT NOW — CHECK BACK SOON</div>';
+            if (visibleExchanges.length === 0) {
+                list.innerHTML = '<div style="color:#555;text-align:center;padding:60px;letter-spacing:1px;font-size:0.85rem;grid-column:1/-1;">NO ACTIVE EXCHANGES RIGHT NOW — CHECK BACK SOON</div>';
                 return;
             }
+
+            // Apply filter
+            if (_excFilter === 'completed') {
+                visibleExchanges = visibleExchanges.filter(e => completedExchanges.includes(e.id));
+            } else if (_excFilter === 'active') {
+                visibleExchanges = visibleExchanges.filter(e => !completedExchanges.includes(e.id));
+            }
+
+            if (visibleExchanges.length === 0) {
+                const msg = _excFilter === 'completed'
+                    ? 'NO COMPLETED EXCHANGES YET — GET TRADING!'
+                    : 'ALL EXCHANGES COMPLETED — CHECK BACK FOR NEW ONES!';
+                list.innerHTML = `<div style="color:#555;text-align:center;padding:60px;letter-spacing:1px;font-size:0.85rem;grid-column:1/-1;">${msg}</div>`;
+                return;
+            }
+
+            const activeExchanges = visibleExchanges;
 
             // Fetch cost card data + reward card data from DB for display
             const allIds = [...new Set([
@@ -2947,6 +3103,15 @@
                     .in('id', allIds);
                 (cards || []).forEach(c => { cardDb[c.id] = c; });
             }
+
+            // Apply sort
+            const sortVal = document.getElementById('exc-sort')?.value || 'reward-value-desc';
+            if (sortVal === 'reward-value-desc') {
+                activeExchanges.sort((a,b) => (cardDb[b.rewardId]?.base_price||0) - (cardDb[a.rewardId]?.base_price||0));
+            } else if (sortVal === 'reward-value-asc') {
+                activeExchanges.sort((a,b) => (cardDb[a.rewardId]?.base_price||0) - (cardDb[b.rewardId]?.base_price||0));
+            }
+            // 'date-added' = natural EXCHANGES array order (already preserved)
 
             list.innerHTML = activeExchanges.map(exc => {
                 const isDone    = completedExchanges.includes(exc.id);
@@ -3093,6 +3258,154 @@ async function doExchange(exchangeId) {
     hideLoading();
 }
 
+
+        // ─── PLAYTIME TRACKING ────────────────────────────────────────────────────
+        let _sessionStart = null;
+        let _totalHoursPlayed = 0; // loaded from DB
+        let _playtimeInterval = null;
+
+        function startPlaytimeTracking() {
+            _sessionStart = Date.now();
+            // Tick every minute to update the footer label
+            _playtimeInterval = setInterval(updatePlaytimeLabel, 60000);
+            updatePlaytimeLabel();
+        }
+
+        function updatePlaytimeLabel() {
+            const el = document.getElementById('squad-playtime-label');
+            if (!el) return;
+            const sessionMs = _sessionStart ? Date.now() - _sessionStart : 0;
+            const totalMs   = (_totalHoursPlayed * 3600000) + sessionMs;
+            const totalMins = Math.floor(totalMs / 60000);
+            const h = Math.floor(totalMins / 60);
+            const m = totalMins % 60;
+            el.innerText = h > 0 ? `${h}h ${m}m` : `${m}m`;
+        }
+
+        async function flushPlaytime() {
+            if (!currentUser || !_sessionStart) return;
+            const sessionHours = (Date.now() - _sessionStart) / 3600000;
+            if (sessionHours < 0.001) return; // less than 3.6 seconds — skip
+            _totalHoursPlayed += sessionHours;
+            _sessionStart = Date.now(); // reset session start so we don't double-count
+            await _supabase.from('user_saves').update({
+                hours_played: _totalHoursPlayed,
+                updated_at: new Date().toISOString()
+            }).eq('user_id', currentUser.id);
+        }
+
+
+        // ─── DAILY COLLECT ────────────────────────────────────────────────────────
+        const DAILY_REWARD_COINS = 2000;
+        // Central Time = UTC-6 standard, UTC-5 daylight. We determine midnight CT.
+
+        function getMidnightCT() {
+            // Get current time in Central Time
+            const now = new Date();
+            const ctOffset = -6; // Standard; JS can't reliably detect DST automatically
+            // Use Intl to figure out the CT date string
+            const ctStr = now.toLocaleDateString('en-US', { timeZone: 'America/Chicago' });
+            // Build a Date representing midnight CT = the start of today in CT as UTC
+            const ctParts = ctStr.split('/');
+            const m = ctParts[0].padStart(2,'0'), d = ctParts[1].padStart(2,'0'), y = ctParts[2];
+            // midnight CT in ISO = yyyy-mm-dd + offset
+            const ctDateStr = `${y}-${m}-${d}T00:00:00`;
+            // Figure out CT offset from UTC at this moment
+            const ctNow    = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+            const diffMs   = now - ctNow; // diff between UTC and CT
+            return new Date(new Date(ctDateStr).getTime() + diffMs);
+        }
+
+        function getTodayKeyCT() {
+            return new Date().toLocaleDateString('en-US', { timeZone: 'America/Chicago' });
+        }
+
+        async function initDailyReward() {
+            const banner = document.getElementById('daily-collect-banner');
+            const sub    = document.getElementById('daily-collect-sub');
+            const btn    = document.getElementById('daily-collect-btn');
+            if (!banner) return;
+
+            // Fetch last_daily_collect from DB
+            const { data } = await _supabase
+                .from('user_saves')
+                .select('last_daily_collect')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            const lastCollect = data?.last_daily_collect || null;
+            const todayCT     = getTodayKeyCT();
+            const alreadyDone = lastCollect === todayCT;
+
+            banner.style.display = 'flex';
+
+            if (alreadyDone) {
+                banner.className = 'daily-collect-banner done';
+                sub.innerText    = 'Already collected today · Resets at midnight CT';
+                btn.className    = 'daily-collect-btn done';
+                btn.innerText    = '✓ COLLECTED';
+                btn.disabled     = true;
+            } else {
+                banner.className = 'daily-collect-banner ready';
+                sub.innerText    = `+${DAILY_REWARD_COINS.toLocaleString()} 🪙 free coins — resets midnight CT`;
+                btn.className    = 'daily-collect-btn ready';
+                btn.innerText    = `COLLECT +${DAILY_REWARD_COINS.toLocaleString()} 🪙`;
+                btn.disabled     = false;
+            }
+        }
+
+        async function claimDailyReward() {
+            const btn  = document.getElementById('daily-collect-btn');
+            const sub  = document.getElementById('daily-collect-sub');
+            const banner = document.getElementById('daily-collect-banner');
+            if (!btn || btn.disabled) return;
+
+            // Double-check server-side that it hasn't been claimed
+            const { data } = await _supabase
+                .from('user_saves')
+                .select('last_daily_collect')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            const todayCT = getTodayKeyCT();
+            if (data?.last_daily_collect === todayCT) {
+                showToast('⚠ Already collected today!');
+                initDailyReward();
+                return;
+            }
+
+            // Save the collect date FIRST (prevent double-collect race)
+            const { error } = await _supabase.from('user_saves').update({
+                last_daily_collect: todayCT,
+                updated_at: new Date().toISOString()
+            }).eq('user_id', currentUser.id);
+
+            if (error) { showToast('❌ Error claiming reward.'); return; }
+
+            // Credit coins
+            balance += DAILY_REWARD_COINS;
+            updateUI();
+            await saveGame();
+
+            // Update UI
+            banner.className = 'daily-collect-banner done';
+            sub.innerText    = 'Already collected today · Resets at midnight CT';
+            btn.className    = 'daily-collect-btn done';
+            btn.innerText    = '✓ COLLECTED';
+            btn.disabled     = true;
+
+            showToast(`🎁 Daily reward claimed! +${DAILY_REWARD_COINS.toLocaleString()} 🪙`);
+        }
+
+
+        function handleSquadNavClick(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('nav-squad-menu');
+            if (menu.classList.contains('open')) { closeNavDropdown(); }
+            else { openNavDropdown(); }
+        }
+        function openNavDropdown()  { document.getElementById('nav-squad-menu').classList.add('open'); }
+        function closeNavDropdown() { document.getElementById('nav-squad-menu').classList.remove('open'); }
         // ─── MULTI-SELECT SELL (Fix 1) ────────────────────────────────────────────
         let multiSelectMode = false;
         let multiSelectIds  = new Set();
@@ -3181,6 +3494,12 @@ async function doExchange(exchangeId) {
         }
 
         // ─── BOOT ────────────────────────────────────────────────────────────────
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('squad-nav-dropdown');
+            if (dd && !dd.contains(e.target)) closeNavDropdown();
+        });
+
         checkExistingSession();
 
         let onlineUsers = {}; // Stores { presenceId: { username } }
