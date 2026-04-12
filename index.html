@@ -3424,7 +3424,8 @@ async function showPackPlayerList(tier) {
                 .gte('rating', minR)
                 .lte('rating', maxR)
                 .neq('rarity', 'Limited')
-                .neq('rarity', '1st edition');
+                .neq('rarity', '1st edition')
+                .eq('in_packs', true);
 
             if (error || !data || data.length === 0) return null;
             const card = data[Math.floor(Math.random() * data.length)];
