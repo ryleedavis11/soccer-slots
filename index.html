@@ -1548,6 +1548,10 @@
         let isLoginMode = false;
         let lastCollected = null;        // ISO timestamp of last office collection
         let officeTickInterval = null;   // setInterval handle for the office ticker
+
+        let _lockedCardIds = new Set();
+        let _lastSaveCheckDate = null;
+        let _myPendingTradeIds = [];
  
         // ─── TOAST ───────────────────────────────────────────────────────────────
         function showToast(msg, duration = 4000) {
@@ -1760,6 +1764,8 @@
                 completedExchanges = data.completed_exchanges || [];
                 _totalHoursPlayed  = data.hours_played || 0;
                 lastCollected = data.last_collected || new Date().toISOString();
+                _lastSaveCheckDate = data.updated_at;
+            updateLockedCards();
  
                 // ── OFFLINE EARNINGS: credit coins for real time spent away ──
                 const offlineRoster = [...mySquad]
@@ -1800,6 +1806,33 @@
                     completed_exchanges: completedExchanges,
                     updated_at: new Date().toISOString()
                 }, { onConflict: 'user_id' });
+        }
+
+        // ── LOCK CARDS IN ACTIVE TRADES ──────────────────────────────────────────
+        async function updateLockedCards() {
+            if (!currentUser) return;
+            
+            // 1. Fetch any active trade where you are the sender OR the receiver
+            const { data } = await _supabase.from('trades')
+                .select('offered_card, receiver_card')
+                .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+                .in('status', ['open', 'pending']);
+            
+            // 2. Clear the old list and build a fresh one
+            _lockedCardIds.clear();
+            
+            if (data) {
+                data.forEach(t => {
+                    // Lock Player 1's card
+                    if (t.offered_card?.instanceId) {
+                        _lockedCardIds.add(t.offered_card.instanceId);
+                    }
+                    // Lock Player 2's card (if they have offered one)
+                    if (t.receiver_card?.instanceId) {
+                        _lockedCardIds.add(t.receiver_card.instanceId);
+                    }
+                });
+            }
         }
  
         // ─── GAME LOGIC ──────────────────────────────────────────────────────────
@@ -2362,6 +2395,11 @@
                 sellBtn.innerText = '⭐ UNFAVOURITE FIRST TO SELL';
                 sellBtn.style.background = '#333';
                 sellBtn.onclick = null;
+                } else if (_lockedCardIds.has(p.instanceId)) {       // 🚀 NEW LOCK CHECK
+                sellBtn.disabled = true;
+                sellBtn.innerText = '🔒 LOCKED IN ACTIVE TRADE';
+                sellBtn.style.background = '#333';
+                sellBtn.onclick = null;
             } else {
                 sellBtn.disabled = false;
                 sellBtn.innerText = 'QUICK SELL';
@@ -2663,6 +2701,7 @@
             if (error) { showToast('❌ Failed to post offer: ' + error.message, 4000); return; }
  
             showToast('✅ Trade offer posted!');
+            updateLockedCards();
             // Reset post panel
             tradeState.postSelectedCard = null;
             document.getElementById('want-rating-min').value = 70;
@@ -2696,14 +2735,15 @@
         async function loadMyTrades() {
             const list = document.getElementById('trade-mine-list');
             list.innerHTML = '<div class="no-trades"><div class="nt-icon">⏳</div><p>LOADING...</p></div>';
-            const { data, error } = await _supabase
-                .from('trades')
-                .select('*')
-                .eq('sender_id', currentUser.id)
+            
+            // Fetch trades where I am the sender OR the person offering a card (receiver)
+            const { data, error } = await _supabase.from('trades').select('*')
+                .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
                 .in('status', ['open','pending'])
                 .order('created_at', { ascending: false });
+
             if (error || !data?.length) {
-                list.innerHTML = '<div class="no-trades"><div class="nt-icon">📤</div><p>YOU HAVE NO ACTIVE OFFERS — POST ONE ABOVE</p></div>';
+                list.innerHTML = '<div class="no-trades"><div class="nt-icon">📤</div><p>YOU HAVE NO ACTIVE OFFERS OR BIDS</p></div>';
                 return;
             }
             list.innerHTML = data.map(t => buildTradeRow(t, 'mine')).join('');
@@ -2742,11 +2782,50 @@
                     <button class="trade-btn accept" onclick="initiateBoardAccept('${t.id}')">OFFER CARD</button>
                 </div>`;
             } else if (mode === 'mine') {
-                const statusColor = t.status === 'pending' ? '#ffd700' : '#555';
-                actions = `<div class="trade-actions">
-                    <div style="font-size:0.65rem;color:${statusColor};font-weight:900;letter-spacing:1px;text-align:center;">${t.status.toUpperCase()}</div>
-                    <button class="trade-btn cancel" onclick="cancelTrade('${t.id}')">CANCEL</button>
-                </div>`;
+                const isSender = t.sender_id === currentUser.id;
+                const isReceiver = t.receiver_id === currentUser.id;
+
+                if (isSender) {
+                    // This is YOUR post
+                    const statusColor = t.status === 'pending' ? '#ffd700' : '#555';
+                    const statusText = t.status === 'pending' ? 'CHECK INCOMING TAB' : 'OPEN';
+                    actions = `<div class="trade-actions">
+                        <div style="font-size:0.65rem;color:${statusColor};font-weight:900;letter-spacing:1px;text-align:center;">${statusText}</div>
+                        <button class="trade-btn cancel" onclick="cancelTrade('${t.id}')">CANCEL</button>
+                    </div>`;
+                    
+                    return `
+                        <div class="trade-card mine">
+                            ${miniCard}
+                            <div class="trade-arrow">⇄</div>
+                            <div class="trade-want-info">
+                                <div class="trade-want-title">YOUR POSTED OFFER</div>
+                                <div class="trade-want-val">${wantDesc}</div>
+                                <div class="trade-want-sub">Value: ${getCardValue(card).toLocaleString()} 🪙 · ${card.name}</div>
+                            </div>
+                            <div class="trade-poster">${ago}</div>
+                            ${actions}
+                        </div>`;
+                } else if (isReceiver) {
+                    // This is YOUR PROPOSAL to someone else
+                    actions = `<div class="trade-actions">
+                        <div style="font-size:0.65rem;color:#ffd700;font-weight:900;letter-spacing:1px;text-align:center;">PENDING REVIEW</div>
+                        <button class="trade-btn cancel" onclick="retractBid('${t.id}')">RETRACT OFFER</button>
+                    </div>`;
+                    
+                    return `
+                        <div class="trade-card mine" style="border-color:#ffd70044;">
+                            <div class="trade-mini-card">${generateCardHtml(t.receiver_card, false)}</div>
+                            <div class="trade-arrow">⇄</div>
+                            ${miniCard}
+                            <div class="trade-want-info">
+                                <div class="trade-want-title">YOUR PROPOSAL TO ${(t.sender_username || 'MANAGER').toUpperCase()}</div>
+                                <div class="trade-want-val">Trading ${t.receiver_card.name} for ${card.name}</div>
+                                <div class="trade-want-sub">${ago}</div>
+                            </div>
+                            ${actions}
+                        </div>`;
+                }
             } else if (mode === 'incoming') {
                 // I am Player1 (sender). offered_card = my card. receiver_card = what Player2 offers me.
                 const theirCard = t.receiver_card;
@@ -2863,6 +2942,8 @@
             showToast('📨 Trade request sent! Waiting for them to confirm.');
             tradeState.pendingAcceptTrade = null;
             tradeState.pendingAcceptMyCard = null;
+            _myPendingTradeIds.push(trade.id);
+            updateLockedCards();
             loadTradeBoard();
             checkTradeBadge();
         }
@@ -2903,6 +2984,7 @@
 
             // 2. The database successfully swapped the cards! Now we just reload our save to see our new card.
             await loadCloudSave();
+            await updateLockedCards();
 
             hideLoading();
             renderSquad();
@@ -2927,16 +3009,83 @@
             showToast('Trade offer cancelled.');
             loadMyTrades();
         }
+        // ── RETRACT AN OFFER (For Player 2/Receiver) ──────────────────────────────
+        async function retractBid(tradeId) {
+            if (!confirm('Retract your offered card and unlock it?')) return;
+            
+            showLoading();
+            
+            // 1. Update the trade: Set status back to 'open' and wipe your offer info
+            const { error } = await _supabase.from('trades')
+                .update({ 
+                    status: 'open', 
+                    receiver_id: null, 
+                    receiver_username: null, 
+                    receiver_card: null, 
+                    updated_at: new Date().toISOString() 
+                })
+                .eq('id', tradeId);
+
+            if (error) {
+                showToast('❌ Failed to retract: ' + error.message);
+                hideLoading();
+                return;
+            }
+
+            // 2. Refresh the local state
+            await updateLockedCards(); // This unlocks the card in your squad UI
+            hideLoading();
+            showToast('Offer retracted. Your card is unlocked!');
+            
+            // 3. Refresh the "My Offers" list so the card disappears/updates
+            loadMyTrades(); 
+        }
  
         // ── BADGE POLLING ─────────────────────────────────────────────────────────
         async function checkTradeBadge() {
             if (!currentUser) return;
-            // Badge fires when I'm the POSTER (sender_id = me) and someone has proposed a card (status = pending)
+
+            // 1. Existing Badge Logic
             const { count } = await _supabase.from('trades')
                 .select('id', { count: 'exact', head: true })
                 .eq('sender_id', currentUser.id)
                 .eq('status', 'pending');
             updateTradeBadge(count || 0);
+
+            // 2. NEW: Accepted Trade Detector
+            // We check if the database says your save file is newer than what you have open
+            const { data: saveCheck } = await _supabase.from('user_saves')
+                .select('updated_at')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            if (saveCheck && _lastSaveCheckDate && saveCheck.updated_at > _lastSaveCheckDate) {
+                // Someone (the trade server) updated your save!
+                _lastSaveCheckDate = saveCheck.updated_at;
+                await loadCloudSave();    // Refresh your squad
+                await updateLockedCards(); // Unlock the new cards
+                showToast('🎉 TRADE ACCEPTED! Your new cards have been added to your squad.', 6000);
+            }
+            // 3. NEW: Declined Trade Detector (For when you are the bidder)
+            if (_myPendingTradeIds.length > 0) {
+                const { data: myBids } = await _supabase.from('trades')
+                    .select('id, status, receiver_id')
+                    .in('id', _myPendingTradeIds);
+
+                if (myBids) {
+                    let stillPending = [];
+                    myBids.forEach(t => {
+                        // If status went back to 'open' and you're no longer the receiver, it was declined
+                        if (t.status === 'open' && t.receiver_id !== currentUser.id) {
+                            showToast('❌ A trade proposal was declined. Your card has been unlocked.', 6000);
+                            updateLockedCards(); 
+                        } else if (t.status === 'pending') {
+                            stillPending.push(t.id);
+                        }
+                    });
+                    _myPendingTradeIds = stillPending;
+                }
+            }
         }
  
         function updateTradeBadge(n) {
@@ -2948,7 +3097,7 @@
  
         function startTradePoll() {
             checkTradeBadge();
-            tradePollInterval = setInterval(checkTradeBadge, 30000); // poll every 30s
+            tradePollInterval = setInterval(checkTradeBadge, 10000); // poll every 10s
         }
  
         function stopTradePoll() {
@@ -3459,7 +3608,7 @@ async function doExchange(exchangeId) {
             const sellable = [...multiSelectIds].filter(id => {
                 const p = mySquad.find(c => c.instanceId === id);
                 const isExc = p && ((p.rarity||'').toLowerCase()==='exchange' || p.isExchange);
-                return p && !p.isFavorite && !isExc;
+                return p && !p.isFavorite && !isExc && !_lockedCardIds.has(id);
             });
             const totalVal = sellable.reduce((sum, id) => {
                 const p = mySquad.find(c => c.instanceId === id);
