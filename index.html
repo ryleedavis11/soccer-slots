@@ -3935,7 +3935,7 @@ async function showPackPlayerList(tier) {
             const [pCard, bCard] = await Promise.all([
                 getStandardCardForBattle(),
                 getStandardCardForBattle(),
-                new Promise(r => setTimeout(r, 2400))
+                new Promise(r => setTimeout(r, 1600))
             ]);
 
             clearInterval(lblInterval);
