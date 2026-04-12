@@ -3619,9 +3619,9 @@ function renderOnlineList(presenceState) {
 // Rating ranges per tier — used by both weight display and player list
 const PACK_RATING_RANGES = {
     std:   { min: 70, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
-    pre:   { min: 80, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
-    elt:   { min: 84, max: 99, excludeRarities: ['Limited','1st edition','exchange'] },
-    promo: { min: 84, max: 99, excludeRarities: ['Limited','exchange'] }  // promo includes 1st edition
+    pre:   { min: 80, max: 99, excludeRarities: ['1st edition','exchange'] },
+    elt:   { min: 84, max: 99, excludeRarities: ['1st edition','exchange'] },
+    promo: { min: 84, max: 99, excludeRarities: ['exchange'] }  // promo includes 1st edition
 };
 
 function showPackWeights(tier) {
