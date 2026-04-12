@@ -1035,10 +1035,10 @@
             <button id="nav-home" onclick="showView('home')">HOME</button>
             <button id="nav-slots" onclick="showView('slots')">STORE</button>
             <div class="nav-dropdown">
-                <button id="nav-team" onclick="showView('team')">MY SQUAD (<span id="team-count">0</span>) ▾</button>
-                <div class="nav-dropdown-menu">
-                    <button onclick="showView('team')">My Squad</button>
-                    <button onclick="showView('exchanges')">⚡ Exchanges</button>
+                <button id="nav-team" onclick="toggleNavDropdown(event)">MY SQUAD ▾</button>
+                <div class="nav-dropdown-menu" id="nav-squad-menu">
+                    <button onclick="showView('team'); closeNavDropdown()">My Squad (<span id="team-count">0</span>)</button>
+                    <button onclick="showView('exchanges'); closeNavDropdown()">⚡ Exchanges</button>
                 </div>
             </div>
             <button id="nav-office" onclick="showView('office')">
