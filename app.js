@@ -13,6 +13,7 @@
  
         // ─── STATE ───────────────────────────────────────────────────────────────
         let balance = 1000;
+        let holoConfig = { min_rating: 85, chance: 0.02 }; // Default fallback
         let mySquad = [];
         let currentPull = null;
         let activeTier = null;
@@ -162,7 +163,7 @@
             }
 
             loadStorePrices();
-            
+            loadGameSettings();
             loadTopPullsToday();
             loadLimitedStock();
             loadExchangeState();
@@ -648,7 +649,7 @@
     currentPull = pulledPlayer;
     currentPull.instanceId = "inst_" + Date.now();
     currentPull.collectedDate = new Date().toLocaleDateString();
-    if (currentPull.rating >= 85 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
+    if (currentPull.rating >= holoConfig.min_rating && Math.random() < holoConfig.chance) { currentPull.isSuperHolo = true; }
 
     if (currentPull.rarity && currentPull.rarity.toLowerCase() === 'limited' && _roomChannel) {
         try {
@@ -703,6 +704,19 @@
     updateUI();
     await saveGame();
 }
+
+
+                async function loadGameSettings() {
+                    const { data, error } = await _supabase
+                        .from('game_settings')
+                        .select('setting_value')
+                        .eq('setting_key', 'holo_rules')
+                        .single();
+
+                    if (data && !error) {
+                        holoConfig = data.setting_value;
+                    }
+                }
  
         // ─── LEADERBOARD ─────────────────────────────────────────────────────────
         const BANNED_USERNAMES = ['yleer']; // testing accounts hidden from rankings (Fix 7)
@@ -2389,7 +2403,7 @@ async function showPackPlayerList(tier) {
 
             if (error || !data || data.length === 0) return null;
             const card = data[Math.floor(Math.random() * data.length)];
-            if (card.rating >= 85 && Math.random() < 0.02) card.isSuperHolo = true;
+            if (card.rating >= holoConfig.min_rating && Math.random() < holoConfig.chance) card.isSuperHolo = true;
             return card;
         }
 
