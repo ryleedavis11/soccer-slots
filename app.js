@@ -160,6 +160,9 @@
                 showToast(`💰 While you were away, your Office earned +${window._offlineEarnedNotif.toLocaleString()} 🪙`);
                 window._offlineEarnedNotif = null;
             }
+
+            loadStorePrices();
+            
             loadTopPullsToday();
             loadLimitedStock();
             loadExchangeState();
@@ -510,7 +513,8 @@
         }
  
         // ─── PACK LOGIC ───────────────────────────────────────────────────────────
-        function preparePack(tier) {
+
+            function preparePack(tier) {
             activeTier = tier;
             document.getElementById('packArea').style.display = 'none';
             document.getElementById('default-message').style.display = 'none';
@@ -536,163 +540,169 @@
                 <button class="btn" style="background:#333; font-size:0.7rem;" onclick="resetUI()">← CANCEL</button>`;
             visual.style.display = 'block';
         }
- 
-        async function openPack() {
-            const costs = { std: 500, pre: 2500, elt: 10000, promo: 15000 };
-            if (balance < costs[activeTier]) { alert("Not enough balance!"); return; }
-            balance -= costs[activeTier];
-            const roll = Math.random() * 100;
-            const limitedOdds = { std: 0, pre: 0.01, elt: 0.1, promo: 0.2 };
-            let pulledPlayer = null;
- 
-            if (Math.random() * 100 < limitedOdds[activeTier]) {
-                const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
-                if (limitedPool && limitedPool.length > 0) {
-                    let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
-                    const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
-                    if ((countData || 0) < 10) { pulledPlayer = potential; pulledPlayer.serial = (countData || 0) + 1; }
-                }
-            }
 
-                // PUT THIS RIGHT AFTER YOUR LIMITED ROLL FINISHES:
-                if (!pulledPlayer && activeTier === 'promo') {
-                    if (roll < 20) { // 20% chance to hit the promo card
-                        const promoRatingRoll = Math.random() * 100;
-        let pMin, pMax;
-
-        if (promoRatingRoll < 60)       { pMin = 80; pMax = 86; } // 60% chance for lower tier
-        else if (promoRatingRoll < 90)  { pMin = 87; pMax = 89; } // 30% chance for mid tier
-        else                            { pMin = 90; pMax = 99; } // 10% chance for "God Tier"
-
-        let { data: promoPool } = await _supabase
-            .from('soccer_stars')
-            .select('*')
-            .ilike('rarity', '1st edition')
-            .gte('rating', pMin)
-            .lte('rating', pMax)
-            .eq('in_packs', true);
         
-        // Safety Fallback: If your specific rating bracket is empty, grab ANY 1st edition
-        if (!promoPool || promoPool.length === 0) {
-            const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
-            promoPool = fallbackPool.data;
-        }
-                        if (promoPool && promoPool.length > 0) {
-                        pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+        async function loadStorePrices() {
+            // 1. Get all the pack costs from Supabase
+            const { data: packs, error } = await _supabase.from('packs').select('tier, cost');
+            if (error || !packs) return;
+            
+            // 2. The display names for our packs
+            const names = { 
+                std: 'Standard', 
+                pre: 'Premium', 
+                elt: 'Elite', 
+                promo: '1st Edition' 
+            };
+
+            // 3. Update the button text for each pack dynamically
+            packs.forEach(pack => {
+                const btn = document.getElementById(`btn-${pack.tier}`);
+                if (btn && names[pack.tier]) {
+                    btn.innerText = `${names[pack.tier]} (${pack.cost.toLocaleString()} 🪙)`;
                 }
-            }
-}   
- 
-            if (!pulledPlayer) {
-                let minR, maxR;
-                if (activeTier === 'std') {
-                    if (roll < 50)       { minR = 70; maxR = 79; }
-                    else if (roll < 80)  { minR = 80; maxR = 82; }
-                    else if (roll < 90)  { minR = 83; maxR = 83; }
-                    else if (roll < 95)  { minR = 84; maxR = 85; }
-                    else if (roll < 98)  { minR = 86; maxR = 86; }
-                    else if (roll < 99.5){ minR = 87; maxR = 89; }
-                    else                 { minR = 90; maxR = 99; }
-                } else if (activeTier === 'pre') {
-                    if (roll < 50)       { minR = 80; maxR = 82; }
-                    else if (roll < 70)  { minR = 83; maxR = 83; }
-                    else if (roll < 80)  { minR = 84; maxR = 85; }
-                    else if (roll < 90)  { minR = 86; maxR = 86; }
-                    else if (roll < 95)  { minR = 87; maxR = 88; }
-                    else if (roll < 99)  { minR = 89; maxR = 89; }
-                    else                 { minR = 90; maxR = 99; }
-                } else if (activeTier === 'promo') {
-                    if (roll < 50)       { minR = 84; maxR = 86; }
-                    else if (roll < 70)  { minR = 87; maxR = 87; }
-                    else if (roll < 87)  { minR = 88; maxR = 88; }
-                    else if (roll < 97)  { minR = 89; maxR = 89; }
-                    else                 { minR = 90; maxR = 99; }
-
-                // --- ELITE PACK GOES LAST AS THE CATCH-ALL ---
-                } else {
-                    if (roll < 50)       { minR = 84; maxR = 86; }
-                    else if (roll < 70)  { minR = 87; maxR = 87; }
-                    else if (roll < 87)  { minR = 88; maxR = 88; }
-                    else if (roll < 97)  { minR = 89; maxR = 89; }
-                    else                 { minR = 90; maxR = 99; }
-                }
-// ...
-                let { data } = await _supabase.from('soccer_stars').select('*').gte('rating', minR).lte('rating', maxR).neq('rarity', 'Limited').neq('rarity', '1st edition').eq('in_packs', true);
-                if (!data || data.length === 0) { let fallback = await _supabase.from('soccer_stars').select('*').limit(20); data = fallback.data; }
-                pulledPlayer = data[Math.floor(Math.random() * data.length)];
-            }
- 
-            currentPull = pulledPlayer;
-            currentPull.instanceId = "inst_" + Date.now();
-            currentPull.collectedDate = new Date().toLocaleDateString();
-            if (currentPull.rating >= 85 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
-
-            // If limited — broadcast to everyone else BEFORE showing our own animation
-            if (currentPull.rarity && currentPull.rarity.toLowerCase() === 'limited' && _roomChannel) {
-                try {
-                    await _roomChannel.send({
-                        type: 'broadcast',
-                        event: 'limited_pull',
-                        payload: {
-                            packerId:  currentUser.id,
-                            username:  currentUser.user_metadata?.username || currentUser.email?.split('@')[0] || 'A MANAGER',
-                            cardName:  currentPull.name,
-                            serial:    currentPull.serial || '?',
-                            cardData:  currentPull
-                        }
-                    });
-                } catch(e) { /* non-critical */ }
-            }
-
-            const packVisual = document.getElementById('pack-visual');
-                        
-                        // Check for Promo Card Animation first
-
-                        if (currentPull.rarity.toLowerCase() === 'limited') {
-                            packVisual.classList.add('suspense-shake-limited'); 
-                            await new Promise(resolve => setTimeout(resolve, 5000)); 
-    
-                            const flash = document.createElement('div');
-                            flash.className = 'limited-flash'; 
-                            document.body.appendChild(flash);
-                            setTimeout(() => flash.remove(), 2000);
-    
-                            packVisual.classList.remove('suspense-shake-limited');
-                        }
-                        else if (currentPull.rarity.toLowerCase() === '1st edition') {
-                            packVisual.classList.add('suspense-shake-promo'); // The intense red shake
-                            await new Promise(resolve => setTimeout(resolve, 2500)); // Longer wait for hype
-                            
-                            const flash = document.createElement('div');
-                            flash.className = 'promo-flash'; // The fiery flash
-                            document.body.appendChild(flash);
-                            setTimeout(() => flash.remove(), 1500);
-                            
-                            packVisual.classList.remove('suspense-shake-promo');
-                        } 
-                        // Standard Walkout (for high-rated gold/limited cards)
-                        else if (currentPull.rating > 86) {
-                            packVisual.classList.add('suspense-shake');
-                            await new Promise(resolve => setTimeout(resolve, 2000));
-                            
-                            const flash = document.createElement('div');
-                            flash.className = 'walkout-flash';
-                            document.body.appendChild(flash);
-                            setTimeout(() => flash.remove(), 1500);
-                            
-                            packVisual.classList.remove('suspense-shake');
-                        }
- 
-            const val = getCardValue(currentPull);
-            const reveal = document.getElementById('pack-reveal');
-            reveal.innerHTML = generateCardHtml(currentPull, false);
-            packVisual.style.display = 'none';
-            reveal.style.display = 'block';
-            document.getElementById('choiceArea').style.display = 'flex';
-            document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
-            updateUI();
-            await saveGame();
+            });
         }
+
+
+        async function openPack() {
+    showLoading();
+
+    // 1. Fetch pack rules from Supabase
+    const { data: pack, error } = await _supabase
+        .from('packs')
+        .select('*')
+        .eq('tier', activeTier)
+        .single();
+
+    if (error || !pack) {
+        hideLoading();
+        showToast("Error loading pack data from server.");
+        return;
+    }
+
+    if (balance < pack.cost) { 
+        hideLoading();
+        showToast("Not enough balance!"); 
+        return; 
+    }
+    
+    balance -= pack.cost;
+    const roll = Math.random() * 100;
+    let pulledPlayer = null;
+
+    // 2. Check Limited Pull (using DB odds)
+    if (Math.random() * 100 < pack.limited_odds) {
+        const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
+        if (limitedPool && limitedPool.length > 0) {
+            let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
+            const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
+            if ((countData || 0) < 10) { pulledPlayer = potential; pulledPlayer.serial = (countData || 0) + 1; }
+        }
+    }
+
+    // 3. Check Promo/1st Edition Pull (using DB odds)
+    if (!pulledPlayer && pack.promo_odds > 0) {
+        if (roll < pack.promo_odds) {
+            const promoRatingRoll = Math.random() * 100;
+            let pMin, pMax;
+            if (promoRatingRoll < 60)      { pMin = 80; pMax = 86; }
+            else if (promoRatingRoll < 90) { pMin = 87; pMax = 89; }
+            else                           { pMin = 90; pMax = 99; }
+
+            let { data: promoPool } = await _supabase.from('soccer_stars').select('*')
+                .ilike('rarity', '1st edition').gte('rating', pMin).lte('rating', pMax).eq('in_packs', true);
+            
+            if (!promoPool || promoPool.length === 0) {
+                const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
+                promoPool = fallbackPool.data;
+            }
+            if (promoPool && promoPool.length > 0) {
+                pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+            }
+        }
+    }
+
+    // 4. Standard Pool Pull (using JSON DB rules)
+    if (!pulledPlayer) {
+        const rule = pack.odds_config.find(r => roll < r.threshold);
+        
+        let { data } = await _supabase.from('soccer_stars')
+            .select('*')
+            .gte('rating', rule.min)
+            .lte('rating', rule.max)
+            .neq('rarity', 'Limited')
+            .neq('rarity', '1st edition')
+            .eq('in_packs', true);
+            
+        if (!data || data.length === 0) { 
+            let fallback = await _supabase.from('soccer_stars').select('*').limit(20); 
+            data = fallback.data; 
+        }
+        pulledPlayer = data[Math.floor(Math.random() * data.length)];
+    }
+
+    hideLoading();
+
+    // 5. Apply metadata and trigger animations
+    currentPull = pulledPlayer;
+    currentPull.instanceId = "inst_" + Date.now();
+    currentPull.collectedDate = new Date().toLocaleDateString();
+    if (currentPull.rating >= 85 && Math.random() < 0.02) { currentPull.isSuperHolo = true; }
+
+    if (currentPull.rarity && currentPull.rarity.toLowerCase() === 'limited' && _roomChannel) {
+        try {
+            await _roomChannel.send({
+                type: 'broadcast', event: 'limited_pull',
+                payload: {
+                    packerId: currentUser.id,
+                    username: currentUser.user_metadata?.username || currentUser.email?.split('@')[0] || 'A MANAGER',
+                    cardName: currentPull.name,
+                    serial: currentPull.serial || '?',
+                    cardData: currentPull
+                }
+            });
+        } catch(e) {}
+    }
+
+    const packVisual = document.getElementById('pack-visual');
+    
+    if (currentPull.rarity.toLowerCase() === 'limited') {
+        packVisual.classList.add('suspense-shake-limited'); 
+        await new Promise(resolve => setTimeout(resolve, 5000)); 
+        const flash = document.createElement('div');
+        flash.className = 'limited-flash'; 
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 2000);
+        packVisual.classList.remove('suspense-shake-limited');
+    } else if (currentPull.rarity.toLowerCase() === '1st edition') {
+        packVisual.classList.add('suspense-shake-promo');
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        const flash = document.createElement('div');
+        flash.className = 'promo-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 1500);
+        packVisual.classList.remove('suspense-shake-promo');
+    } else if (currentPull.rating > 86) {
+        packVisual.classList.add('suspense-shake');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        const flash = document.createElement('div');
+        flash.className = 'walkout-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 1500);
+        packVisual.classList.remove('suspense-shake');
+    }
+
+    const val = getCardValue(currentPull);
+    const reveal = document.getElementById('pack-reveal');
+    reveal.innerHTML = generateCardHtml(currentPull, false);
+    packVisual.style.display = 'none';
+    reveal.style.display = 'block';
+    document.getElementById('choiceArea').style.display = 'flex';
+    document.getElementById('sellBtn').innerText = `SELL (+${Math.floor(val * SELL_RATE)})`;
+    updateUI();
+    await saveGame();
+}
  
         // ─── LEADERBOARD ─────────────────────────────────────────────────────────
         const BANNED_USERNAMES = ['yleer']; // testing accounts hidden from rankings (Fix 7)
