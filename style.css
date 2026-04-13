@@ -42,7 +42,7 @@
         @keyframes pulseBadge { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
  
         /* VIEW MANAGEMENT */
-        .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
+        .view { display: none; padding: 20px; flex-grow: 1; overflow-y: auto; overflow-x: hidden; position: relative; width: 100%; box-sizing: border-box; z-index: 10; }
         .view.active { display: block; }
         
         #view-home.active { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
@@ -824,7 +824,7 @@
         .store-pulls-wrap {
             position: absolute; top: 100%; left: 0; width: 100%;
             transform: translateY(-70%);
-            overflow: visible; pointer-events: none;
+            overflow: hidden; pointer-events: none;
             height: 700px; z-index: 1; opacity: 0.12;
             white-space: nowrap;
         }
