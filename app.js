@@ -1774,7 +1774,8 @@
                 const rewCard   = exc.rewardId ? cardDb[exc.rewardId] : null;
 
                 // Count how many of the cost card the player currently owns
-                const owned = mySquad.filter(c => c.id === exc.playerId).length;
+                // Count copies owned (EXCLUDING Holos and Favorited cards)
+                const owned = mySquad.filter(c => c.id === exc.playerId && !c.isSuperHolo && !c.isFavorite).length;
                 const canDo = !isDone && owned >= exc.quantity;
                 const pct   = Math.min(100, Math.floor((owned / exc.quantity) * 100));
 
@@ -1861,7 +1862,8 @@ async function doExchange(exchangeId) {
     }
 
     // Verify player has enough copies
-    const copies = mySquad.filter(c => c.id === exc.playerId);
+    // Gather eligible copies (EXCLUDING Holos and Favorited cards so we don't burn them!)
+    const copies = mySquad.filter(c => c.id === exc.playerId && !c.isSuperHolo && !c.isFavorite);
     if (copies.length < exc.quantity) { showToast('⚠ Not enough cards.'); return; }
 
     if (!confirm(`Exchange ${exc.quantity}× ${exc.playerName} for ${exc.rewardName}? This CANNOT be undone.`)) return;
