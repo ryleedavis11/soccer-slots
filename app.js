@@ -214,7 +214,7 @@
  
         function updateWelcomeMsg() {
             const username = currentUser?.user_metadata?.username || currentUser?.email || 'MANAGER';
-            document.getElementById('welcome-msg').innerText = `WELCOME BACK, ${username.toUpperCase()}`;
+            document.getElementById('welcome-msg').innerText = `WELCOME TO THE FOOTY BASE BETA, ${username.toUpperCase()}`;
         }
  
         // ─── CLOUD SAVE ──────────────────────────────────────────────────────────
