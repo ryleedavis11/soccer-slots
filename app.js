@@ -626,7 +626,16 @@
 
     // 4. Standard Pool Pull (using JSON DB rules)
     if (!pulledPlayer) {
-        const rule = pack.odds_config.find(r => roll < r.threshold);
+        let cumulative = 0;
+let rule = pack.odds_config[pack.odds_config.length - 1]; // Fallback to the top tier just in case
+
+for (const r of pack.odds_config) {
+    cumulative += r.chance;
+    if (roll < cumulative) {
+        rule = r;
+        break;
+    }
+}
         
         let { data } = await _supabase.from('soccer_stars')
             .select('*')
@@ -2269,31 +2278,59 @@ const PACK_RATING_RANGES = {
     promo: { min: 84, max: 99, excludeRarities: ['exchange'] }  // promo includes 1st edition
 };
 
-function showPackWeights(tier) {
-    const weights = {
-        std:   { limited: "0%",    promo: "0%",   walkout: "2%",  floor: "70-86 Rating" },
-        pre:   { limited: "0.01%", promo: "0%",   walkout: "10%", floor: "80-86 Rating" },
-        elt:   { limited: "0.1%",  promo: "0%",   walkout: "50%", floor: "84-86 Rating" },
-        promo: { limited: "0.2%",  promo: "20%",  walkout: "50%", floor: "84-86 Rating" }
-    };
-    const w = weights[tier];
+async function showPackWeights(tier) {
+    // 1. Fetch the live data from Supabase
+    const { data: pack, error } = await _supabase
+        .from('packs')
+        .select('*')
+        .eq('tier', tier)
+        .single();
 
+    if (error || !pack) {
+        showToast("Failed to load pack odds.");
+        return;
+    }
+
+    // 2. Calculate the UI display values from your new JSON
+    let walkoutTotal = 0;
+    let floorMin = 99;
+    let floorMax = 0;
+
+    pack.odds_config.forEach(rule => {
+        // Find the absolute lowest rating for the "Floor"
+        if (rule.min < floorMin) floorMin = rule.min; 
+        
+        // If the bucket is 87 or higher, it counts toward the Walkout %
+        if (rule.min >= 87) {
+            walkoutTotal += rule.chance;
+        } else {
+            // If it's below 87, it helps define the top of the "Floor" range
+            if (rule.max > floorMax) floorMax = rule.max;
+        }
+    });
+
+    const w = {
+        limited: pack.limited_odds + "%",
+        promo: pack.promo_odds + "%",
+        walkout: walkoutTotal + "%",
+        floor: `${floorMin}-${floorMax} Rating`
+    };
+
+    // 3. Render the Modal (UI code remains the same)
     const modal = document.createElement('div');
     modal.id = "weight-modal";
     modal.style = `
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
         background: rgba(0,0,0,0.9); display: flex; 
-        align-items: flex-start; /* 🚀 CHANGED FROM center TO flex-start */
-        justify-content: center; z-index: 10000; backdrop-filter: blur(10px);
-        overflow-y: auto; padding: 40px 20px; /* Added more top padding */
+        align-items: flex-start; justify-content: center; z-index: 10000; 
+        backdrop-filter: blur(10px); overflow-y: auto; padding: 40px 20px; 
         box-sizing: border-box;
     `;
 
     modal.innerHTML = `
         <div id="weight-modal-inner" style="background:#111;border:2px solid #3ecf8e;padding:30px;
              border-radius:20px;width:100%;max-width:860px;text-align:center;
-             margin: auto; /* 🚀 ADDED margin: auto to center small content safely */
-             box-shadow:0 0 30px rgba(62,207,142,0.2);">
+             margin: auto; box-shadow:0 0 30px rgba(62,207,142,0.2);">
             <h2 style="color:#3ecf8e;margin-bottom:5px;text-transform:uppercase;letter-spacing:3px;font-size:1.2rem;">
                 ${tier.toUpperCase()} PACK</h2>
             <p style="color:#555;font-size:0.7rem;margin-bottom:25px;letter-spacing:1px;">
@@ -2325,7 +2362,6 @@ function showPackWeights(tier) {
                     onclick="document.getElementById('weight-modal').remove()">CLOSE</button>
             </div>
 
-            <!-- Player list panel — hidden until button clicked -->
             <div id="pack-player-list" style="display:none;text-align:left;">
                 <div style="font-size:0.65rem;color:#555;letter-spacing:2px;font-weight:900;margin-bottom:16px;text-align:center;">
                     ALL AVAILABLE PLAYERS · SORTED BY MARKET VALUE</div>
@@ -2432,7 +2468,16 @@ async function showPackPlayerList(tier) {
 
             // 4. Standard Pool Pull (If it wasn't a Promo or Limited)
             if (!pulledPlayer) {
-                const rule = pack.odds_config.find(r => roll < r.threshold);
+                                let cumulative = 0;
+                let rule = pack.odds_config[pack.odds_config.length - 1]; // Fallback to the top tier just in case
+
+                for (const r of pack.odds_config) {
+                    cumulative += r.chance;
+                    if (roll < cumulative) {
+                        rule = r;
+                        break;
+                    }
+                }
                 
                 let { data } = await _supabase.from('soccer_stars')
                     .select('*')
