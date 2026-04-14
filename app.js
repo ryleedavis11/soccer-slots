@@ -2383,30 +2383,78 @@ async function showPackPlayerList(tier) {
         }
 
         async function getStandardCardForBattle() {
-            // Standard pack odds — same brackets as the store
+            // 1. Fetch ALL the Standard Pack rules directly from our table
+            const { data: pack, error } = await _supabase
+                .from('packs')
+                .select('*') // Changed this to grab promo_odds and limited_odds too!
+                .eq('tier', 'std')
+                .single();
+
+            if (error || !pack) {
+                console.error("Failed to load Arena odds:", error);
+                return null;
+            }
+
             const roll = Math.random() * 100;
-            let minR, maxR;
-            if      (roll < 50)    { minR = 70; maxR = 79; }
-            else if (roll < 80)    { minR = 80; maxR = 82; }
-            else if (roll < 90)    { minR = 83; maxR = 83; }
-            else if (roll < 95)    { minR = 84; maxR = 85; }
-            else if (roll < 98)    { minR = 86; maxR = 86; }
-            else if (roll < 99.5)  { minR = 87; maxR = 89; }
-            else                   { minR = 90; maxR = 99; }
+            let pulledPlayer = null;
 
-            const { data, error } = await _supabase
-                .from('soccer_stars')
-                .select('*')
-                .gte('rating', minR)
-                .lte('rating', maxR)
-                .neq('rarity', 'Limited')
-                .neq('rarity', '1st edition')
-                .eq('in_packs', true);
+            // 2. Check Limited Pull (using DB odds)
+            if (Math.random() * 100 < pack.limited_odds) {
+                const { data: limitedPool } = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'Limited');
+                if (limitedPool && limitedPool.length > 0) {
+                    let potential = limitedPool[Math.floor(Math.random() * limitedPool.length)];
+                    const { data: countData } = await _supabase.rpc('count_limited_player', { pid: potential.id });
+                    if ((countData || 0) < 10) { pulledPlayer = potential; pulledPlayer.serial = (countData || 0) + 1; }
+                }
+            }
 
-            if (error || !data || data.length === 0) return null;
-            const card = data[Math.floor(Math.random() * data.length)];
-            if (card.rating >= holoConfig.min_rating && Math.random() < holoConfig.chance) card.isSuperHolo = true;
-            return card;
+            // 3. Check Promo/1st Edition Pull (using DB odds)
+            if (!pulledPlayer && pack.promo_odds > 0) {
+                if (roll < pack.promo_odds) {
+                    const promoRatingRoll = Math.random() * 100;
+                    let pMin, pMax;
+                    if (promoRatingRoll < 60)      { pMin = 80; pMax = 86; }
+                    else if (promoRatingRoll < 90) { pMin = 87; pMax = 89; }
+                    else                           { pMin = 90; pMax = 99; }
+
+                    let { data: promoPool } = await _supabase.from('soccer_stars').select('*')
+                        .ilike('rarity', '1st edition').gte('rating', pMin).lte('rating', pMax).eq('in_packs', true);
+                    
+                    if (!promoPool || promoPool.length === 0) {
+                        const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
+                        promoPool = fallbackPool.data;
+                    }
+                    if (promoPool && promoPool.length > 0) {
+                        pulledPlayer = promoPool[Math.floor(Math.random() * promoPool.length)];
+                    }
+                }
+            }
+
+            // 4. Standard Pool Pull (If it wasn't a Promo or Limited)
+            if (!pulledPlayer) {
+                const rule = pack.odds_config.find(r => roll < r.threshold);
+                
+                let { data } = await _supabase.from('soccer_stars')
+                    .select('*')
+                    .gte('rating', rule.min)
+                    .lte('rating', rule.max)
+                    .neq('rarity', 'Limited')
+                    .neq('rarity', '1st edition')
+                    .eq('in_packs', true);
+                    
+                if (!data || data.length === 0) { 
+                    let fallback = await _supabase.from('soccer_stars').select('*').limit(20); 
+                    data = fallback.data; 
+                }
+                pulledPlayer = data[Math.floor(Math.random() * data.length)];
+            }
+            
+            // 5. Apply the dynamic Holo settings!
+            if (pulledPlayer.rating >= holoConfig.min_rating && Math.random() < holoConfig.chance) {
+                pulledPlayer.isSuperHolo = true;
+            }
+            
+            return pulledPlayer;
         }
 
         async function startArenaBattle() {
