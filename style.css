@@ -822,11 +822,19 @@
 
         /* ─── TOP PULLS TODAY MARQUEE (Store) ────────────────────────────── */
         .store-pulls-wrap {
-            position: absolute; top: 100%; left: 0; width: 100%;
-            transform: translateY(-70%);
-            overflow: hidden; pointer-events: none;
-            height: 700px; z-index: 1; opacity: 0.12;
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            width: 100%;
+            transform: translateY(-85%); /* Adjusted slightly to move them down a bit */
+            overflow: hidden; /* Stops the horizontal scroll wheel */
+            pointer-events: none;
+            height: 800px; /* Increased height so scaled cards don't hit the top */
+            z-index: 1; 
+            opacity: 0.12;
             white-space: nowrap;
+            display: flex;
+            align-items: center; /* Centers the cards vertically so they don't cut off */
         }
         .store-pulls-track {
             display: inline-flex; gap: 20px;
@@ -1066,3 +1074,9 @@
         }
         .exc-filter-tab.active { background: #f97316; color: black; border-color: #f97316; }
         .exc-filter-tab:hover:not(.active) { border-color: #555; color: #aaa; }
+
+
+
+
+
+        
