@@ -620,6 +620,7 @@
     }
 
     // 3. Check Promo/1st Edition Pull (using DB odds)
+    // 3. Check Promo Pull (using DB odds)
     if (!pulledPlayer && pack.promo_odds > 0) {
         if (roll < pack.promo_odds) {
             const promoRatingRoll = Math.random() * 100;
@@ -628,11 +629,13 @@
             else if (promoRatingRoll < 90) { pMin = 87; pMax = 89; }
             else                           { pMin = 90; pMax = 99; }
 
+            // CRITICAL FIX: Changed '1st edition' to 'promo'
             let { data: promoPool } = await _supabase.from('soccer_stars').select('*')
-                .ilike('rarity', '1st edition').gte('rating', pMin).lte('rating', pMax).eq('in_packs', true);
+                .ilike('rarity', 'promo').gte('rating', pMin).lte('rating', pMax).eq('in_packs', true);
             
             if (!promoPool || promoPool.length === 0) {
-                const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', '1st edition').eq('in_packs', true);
+                // CRITICAL FIX: Changed '1st edition' to 'promo'
+                const fallbackPool = await _supabase.from('soccer_stars').select('*').ilike('rarity', 'promo').eq('in_packs', true);
                 promoPool = fallbackPool.data;
             }
             if (promoPool && promoPool.length > 0) {
@@ -644,22 +647,22 @@
     // 4. Standard Pool Pull (using JSON DB rules)
     if (!pulledPlayer) {
         let cumulative = 0;
-let rule = pack.odds_config[pack.odds_config.length - 1]; // Fallback to the top tier just in case
+        let rule = pack.odds_config[pack.odds_config.length - 1];
 
-for (const r of pack.odds_config) {
-    cumulative += r.chance;
-    if (roll < cumulative) {
-        rule = r;
-        break;
-    }
-}
+        for (const r of pack.odds_config) {
+            cumulative += r.chance;
+            if (roll < cumulative) {
+                rule = r;
+                break;
+            }
+        }
         
         let { data } = await _supabase.from('soccer_stars')
             .select('*')
             .gte('rating', rule.min)
             .lte('rating', rule.max)
             .neq('rarity', 'Limited')
-            .neq('rarity', '1st edition')
+            .neq('rarity', 'promo') // CRITICAL FIX: Prevent promos from slipping into normal pools
             .eq('in_packs', true);
             
         if (!data || data.length === 0) { 
@@ -694,7 +697,7 @@ for (const r of pack.odds_config) {
 
     const packVisual = document.getElementById('pack-visual');
     
-    if (currentPull.rarity.toLowerCase() === 'limited') {
+   if (currentPull.rarity.toLowerCase() === 'limited') {
         packVisual.classList.add('suspense-shake-limited'); 
         await new Promise(resolve => setTimeout(resolve, 5000)); 
         const flash = document.createElement('div');
@@ -702,14 +705,18 @@ for (const r of pack.odds_config) {
         document.body.appendChild(flash);
         setTimeout(() => flash.remove(), 2000);
         packVisual.classList.remove('suspense-shake-limited');
-    } else if (currentPull.rarity.toLowerCase() === '1st edition') {
+        
+    // Here is the updated line:
+    } else if (currentPull.rarity.toLowerCase() === 'promo') {
         packVisual.classList.add('suspense-shake-promo');
         await new Promise(resolve => setTimeout(resolve, 2500));
         const flash = document.createElement('div');
         flash.className = 'promo-flash';
         document.body.appendChild(flash);
-        setTimeout(() => flash.remove(), 1500);
+        setTimeout(() => flash.remove(), 1000);
         packVisual.classList.remove('suspense-shake-promo');
+        
+    } else if (currentPull.rating > 86) {
     } else if (currentPull.rating > 86) {
         packVisual.classList.add('suspense-shake');
         await new Promise(resolve => setTimeout(resolve, 2000));
