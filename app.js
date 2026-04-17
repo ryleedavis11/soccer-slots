@@ -8,7 +8,8 @@
             std: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Barcelona%20team%20-%20FootyRenders.png',
             pre: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Erling%20Braut%20Haaland%20-%20FootyRenders%20(1).png',
             elt: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/Neymar%20-%20FootyRenders%20(1).png',
-            promo: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/imagefor1sted-removebg-preview.png'
+            promo: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/imagefor1sted-removebg-preview.png',
+            supernova: 'https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/neyblur-removebg-preview.png'
         };
  
         // ─── STATE ───────────────────────────────────────────────────────────────
@@ -521,6 +522,11 @@
             document.getElementById('default-message').style.display = 'none';
             let specialLayer = '';
             if (tier === 'elt') { specialLayer = '<div class="galaxy-nebula"></div>'; }
+            // Around line 350 in app.js
+                else if (tier === 'supernova') { 
+                    // This adds a purple-tinted nebula effect
+                    specialLayer = '<div class="galaxy-nebula" style="filter: hue-rotate(280deg);"></div>'; 
+                }
             else if (tier === 'promo') { specialLayer = '<div class="promo-fire"></div>'; }
             else if (tier === 'pre') { specialLayer = '<div class="premium-glow"></div>'; }
             const visual = document.getElementById('pack-visual');
@@ -815,36 +821,43 @@ for (const r of pack.odds_config) {
  
         // ─── CARD HTML ───────────────────────────────────────────────────────────
         function generateCardHtml(p, clickable = true) {
-            const rarity = (p.rarity || 'common').toLowerCase();
-            const is1st   = rarity === '1st edition';
-            const holoClass = p.isSuperHolo ? 'super-holo' : '';
-            const artClass = p.id === 64 ? 'full-art' : '';
-            const val = getCardValue(p);
-            const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
-            const isFav = p.isFavorite ? true : false;
+    const rarity = (p.rarity || 'common').toLowerCase();
+    const is1st   = rarity === '1st edition';
+    const holoClass = p.isSuperHolo ? 'super-holo' : '';
+    const artClass = p.id === 64 ? 'full-art' : '';
+    const val = getCardValue(p);
+    const clickAttr = clickable ? `onclick="showCardDetails('${p.instanceId}')"` : '';
+    const isFav = p.isFavorite ? true : false;
 
-            // 1st edition: use cyan for pos/rating badges, add 1ST badge
-            const posBg  = is1st ? '#00c8ff' : '#3ecf8e';
-            const ovrBg  = is1st ? '#001aff' : '#ffd700';
-            const ovrColor = is1st ? '#fff' : 'black';
-            const firstBadge = is1st
-                ? `<div class="badge" style="top:auto;bottom:68px;left:10px;background:linear-gradient(135deg,#00f2ff,#0055ff);color:#fff;font-size:0.55rem;padding:2px 6px;letter-spacing:1px;">1ST ED</div>`
-                : '';
-            const favBadge = ''; // Fav shown in modal only (Fix 6)
+    // --- STEP 2 PART A: Define the dynamic background style ---
+    // If background_url exists in the DB, create an inline style string.
+    const bgStyle = (p.background_url && !p.isSuperHolo && !is1st) 
+        ? `style="background-image: url('${p.background_url}'); background-size: cover;"`
+        : '';
 
-            return `<div class="premium-card ${rarity} ${holoClass} ${artClass}" ${clickAttr}>
-                        <div class="badge card-pos" style="background:${posBg};color:black">${p.position}</div>
-                        <div class="badge card-ovr" style="background:${ovrBg};color:${ovrColor}">${p.rating}</div>
-                        ${firstBadge}
-                        ${p.serial ? `<div class="card-serial">LIMITED ${p.serial}/10</div>` : ''}
-                        ${favBadge}
-                        <img src="${p.image_url}" class="player-img">
-                        <div class="nameplate">
-                            <div class="card-name">${p.name}</div>
-                            <div class="card-price" style="${p.isSuperHolo ? 'color:#00f2ff' : ''}">Value: ${val.toLocaleString()}</div>
-                        </div>
-                    </div>`;
-        }
+    // 1st edition: use cyan for pos/rating badges, add 1ST badge
+    const posBg  = is1st ? '#00c8ff' : '#3ecf8e';
+    const ovrBg  = is1st ? '#001aff' : '#ffd700';
+    const ovrColor = is1st ? '#fff' : 'black';
+    const firstBadge = is1st
+        ? `<div class="badge" style="top:auto;bottom:68px;left:10px;background:linear-gradient(135deg,#00f2ff,#0055ff);color:#fff;font-size:0.55rem;padding:2px 6px;letter-spacing:1px;">1ST ED</div>`
+        : '';
+    const favBadge = ''; // Fav shown in modal only (Fix 6)
+
+    // --- STEP 2 PART B: Inject ${bgStyle} into the opening <div> tag ---
+    return `<div class="premium-card ${rarity} ${holoClass} ${artClass}" ${bgStyle} ${clickAttr}>
+                <div class="badge card-pos" style="background:${posBg};color:black">${p.position}</div>
+                <div class="badge card-ovr" style="background:${ovrBg};color:${ovrColor}">${p.rating}</div>
+                ${firstBadge}
+                ${p.serial ? `<div class="card-serial">LIMITED ${p.serial}/10</div>` : ''}
+                ${favBadge}
+                <img src="${p.image_url}" class="player-img">
+                <div class="nameplate">
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-price" style="${p.isSuperHolo ? 'color:#00f2ff' : ''}">Value: ${val.toLocaleString()}</div>
+                </div>
+            </div>`;
+}
  
         // ─── CARD DETAILS MODAL ──────────────────────────────────────────────────
         let _modalCurrentId = null; // track which card is open in modal
@@ -2651,4 +2664,3 @@ async function showPackPlayerList(tier) {
         list.appendChild(item);
     }
 }
-

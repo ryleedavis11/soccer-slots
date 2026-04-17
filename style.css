@@ -104,13 +104,13 @@
         .premium-card.silver    { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/silver.jpg'); }
         .premium-card.gold      { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/gold.avif'); }
         .premium-card.limited   { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/LimitedBackground.jpg'); border: 2px solid #bebebe; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
-        .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') !important; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
+        .premium-card.super-holo { background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/holo.jpg') ; border: 3px solid #00f2ff; box-shadow: 0 0 30px rgba(0, 242, 255, 0.6); }
         /* 🔥 UPGRADED 1ST EDITION CARD STYLING (Cool/Vibrant Palette) */
 .premium-card[class*="1st"] {
-    background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/firstedbackground.jpg') !important;
-    background-size: 100% 100% !important; 
-    background-position: center !important;
-    background-repeat: no-repeat !important;
+    background-image: url('https://owffrsfbnpnhdgizamhk.supabase.co/storage/v1/object/public/player-images/firstedbackground.jpg') ;
+    background-size: 100% 100% ; 
+    background-position: center ;
+    background-repeat: no-repeat ;
 
     border: 3px solid #00f2ff !important; /* Intense Electric Cyan Border */
     box-shadow: 0 0 35px rgba(0, 242, 255, 0.7), inset 0 0 20px rgba(0, 242, 255, 0.3) !important; /* Cyan & Blue Glowing Shadows */
