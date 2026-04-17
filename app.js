@@ -550,26 +550,37 @@
 
         
         async function loadStorePrices() {
-            // 1. Get all the pack costs from Supabase
-            const { data: packs, error } = await _supabase.from('packs').select('tier, cost');
-            if (error || !packs) return;
-            
-            // 2. The display names for our packs
-            const names = { 
-                std: 'Standard', 
-                pre: 'Premium', 
-                elt: 'Elite', 
-                promo: '1st Edition' 
-            };
+    // 1. ADD in_store to the select query so the game knows its status
+    const { data: packs, error } = await _supabase.from('packs').select('tier, cost, in_store');
+    if (error || !packs) return;
+    
+    // 2. The display names for our packs
+    const names = { 
+        std: 'Standard', 
+        pre: 'Premium', 
+        elt: 'Elite', 
+        promo: '1st Edition',
+        supernova: 'Promo'
+    };
 
-            // 3. Update the button text for each pack dynamically
-            packs.forEach(pack => {
-                const btn = document.getElementById(`btn-${pack.tier}`);
-                if (btn && names[pack.tier]) {
+    // 3. Update the button text OR hide it completely based on the DB
+    packs.forEach(pack => {
+        const btn = document.getElementById(`btn-${pack.tier}`);
+        
+        if (btn) {
+            // BI Logic: If the database says it's not in the store, hide the HTML button
+            if (pack.in_store === false) {
+                btn.style.display = 'none';
+            } else {
+                // Otherwise, ensure it is visible and update the price text
+                btn.style.display = 'block';
+                if (names[pack.tier]) {
                     btn.innerText = `${names[pack.tier]} (${pack.cost.toLocaleString()} 🪙)`;
                 }
-            });
+            }
         }
+    });
+}
 
 
         async function openPack() {
